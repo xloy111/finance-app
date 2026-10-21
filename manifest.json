@@ -1,7 +1,7 @@
 {
   "name": "Мои Финансы",
   "short_name": "Финансы",
-  "start_url": "./finance app.html",
+  "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#080c09",
   "theme_color": "#48e184",
