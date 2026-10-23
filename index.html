@@ -1355,26 +1355,27 @@
         : data.expenses.filter(item => Number(item.month) === Number(selected));
 
       const total = filteredExpenses.reduce((sum, item) => sum + Number(item.amount || 0), 0);
-
+            $("#expenseTotal").textContent = money(total);
+      
       // Фильтруем доходы за ТОТ ЖЕ ПЕРИОД для подсчета чистого дохода
       const filteredIncomes = selected === "year" 
         ? data.incomes 
         : data.incomes.filter(item => Number(item.month) === Number(selected));
       const totalInc = filteredIncomes.reduce((sum, item) => sum + Number(item.amount || 0), 0);
-
+      $("#expenseNetIncome").textContent = money(totalInc - total);
       // Меняем заголовки
+      const lang = localStorage.getItem('app_lang') || 'ru';
       if (selected === "year") {
-        $("#expenseLabelTotal").textContent = "Расходы за год";
-        $("#expenseLabelAverage").textContent = "Средний расход за месяц";
-        $("#expenseLabelNet").textContent = "Чистый доход за год";
+        $("#expenseLabelTotal").textContent = (lang === 'en') ? "Expenses for the year" : "Расходы за год";
+        $("#expenseLabelAverage").textContent = (lang === 'en') ? "Average monthly expense" : "Средний расход за месяц";
         $("#expenseAverageMonth").textContent = money(total / 12);
+        $("#expenseLabelNet").textContent = (lang === 'en') ? "Net income for the year" : "Чистый доход за год";
       } else {
-        $("#expenseLabelNet").textContent = "Чистый доход за месяц";
-        $("#expenseLabelTotal").textContent = "Расходы за месяц";
-        $("#expenseLabelAverage").textContent = "Средний расход за день";
+        $("#expenseLabelTotal").textContent = (lang === 'en') ? "Monthly expenses" : "Расходы за месяц";
+        $("#expenseLabelAverage").textContent = (lang === 'en') ? "Average daily expense" : "Средний расход за день";
         $("#expenseAverageMonth").textContent = money(total / 30);
+        $("#expenseLabelNet").textContent = (lang === 'en') ? "Net income for the month" : "Чистый доход за месяц";
       }
-
       // Выводим цифры
     ($("#expenseTotal")).textContent = money(total);
       $("#expenseNetIncome").textContent = money(totalInc - total); // Чистый доход за выбранный период
@@ -1454,23 +1455,20 @@
         : data.incomes.filter(item => Number(item.month) === Number(selected));
 
       const total = filteredIncomes.reduce((sum, item) => sum + Number(item.amount || 0), 0);
-
-      // Меняем заголовки карточек в зависимости от выбора
-      if (selected === "year") {
-        $("#incomeLabelTotal").textContent = "Доход за год";
-        $("#incomeLabelAverage").textContent = "Средний доход за месяц";
-        $("#incomeAverage").textContent = money(total / 12);
-      } else {
-        $("#incomeLabelTotal").textContent = "Доход за месяц";
-        $("#incomeLabelAverage").textContent = "Средний доход за день";
-        $("#incomeAverage").textContent = money(total / 30);
-      }
-
-      // Выводим цифры
       $("#incomeTotal").textContent = money(total);
       $("#incomeCount").textContent = filteredIncomes.length;
       $("#incomeNet").textContent = money(total - totalExpenses());
-      
+      // Меняем заголовки карточек в зависимости от выбора
+                    const lang = localStorage.getItem('app_lang') || 'ru';
+      if (selected === "year") {
+        $("#incomeLabelTotal").textContent = (lang === 'en') ? "Income for the year" : "Доход за год";
+        $("#incomeLabelAverage").textContent = (lang === 'en') ? "Average monthly income" : "Средний доход за месяц";
+        $("#incomeAverage").textContent = money(total / 12);
+      } else {
+        $("#incomeLabelTotal").textContent = (lang === 'en') ? "Monthly income" : "Доход за месяц";
+        $("#incomeLabelAverage").textContent = (lang === 'en') ? "Average daily income" : "Средний доход за день";
+        $("#incomeAverage").textContent = money(total / 30);
+      }
       const isEnglish = localStorage.getItem('app_lang') === 'en';
       const incomeLabelWord = isEnglish ? "Total income: " : "Общий доход: ";
       $("#incomeLabelText").textContent = incomeLabelWord;
@@ -2245,6 +2243,8 @@ document.querySelectorAll("[data-currency]").forEach(button => {
       }
     };
 
+        
+
     document.querySelectorAll("[data-lang]").forEach(button => {
       button.addEventListener("click", function() {
         document.querySelectorAll("[data-lang]").forEach(b => {
@@ -2293,6 +2293,10 @@ document.querySelectorAll("[data-currency]").forEach(button => {
         node.nodeValue = original;
       }
     }
+            // Перерисовываем карточки, чтобы заголовки тоже перевелись
+        renderIncome();
+        renderExpenses();
+                // Принудительно переводим заголовки карточек
   }); // <-- закрывает addEventListener
 }); // <-- закрывает forEach
 
@@ -2321,5 +2325,6 @@ document.addEventListener("DOMContentLoaded", () => {
  </script>
 </body>
 </html>
+
 
  
