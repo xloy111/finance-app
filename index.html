@@ -2227,7 +2227,21 @@ document.querySelectorAll("[data-currency]").forEach(button => {
         "Создать аккаунт": "Sign Up",
         "Тема": "Theme",
         "Валюта": "Currency",
-        "Язык": "Language"
+        "Язык": "Language",
+             // Месяцы (для выпадающих списков)
+        "Январь": "January", "Февраль": "February", "Март": "March",
+        "Апрель": "April", "Май": "May", "Июнь": "June",
+        "Июль": "July", "Август": "August", "Сентябрь": "September",
+        "Октябрь": "October", "Ноябрь": "November", "Декабрь": "December",
+        "За год": "For the year", "Показать за:": "Show for:",
+
+        // Новые заголовки карточек
+        "Доход за месяц": "Monthly income",
+        "Средний доход за день": "Average daily income",
+        "Расходы за месяц": "Monthly expenses",
+        "Средний расход за день": "Average daily expense",
+        "Чистый доход за месяц": "Net income for the month",
+        "Чистый доход за год": "Net income for the year",
       }
     };
 
@@ -2247,7 +2261,18 @@ document.querySelectorAll("[data-currency]").forEach(button => {
         currentLang = lang;
 
        localStorage.setItem('app_lang', currentLang);
-
+        // Переводим выпадающие списки (месяцы)
+        document.querySelectorAll("select option").forEach(option => {
+            if (!option.originalText) {
+                option.originalText = option.textContent.trim();
+            }
+            const original = option.originalText;
+            if (lang === 'en' && dict[original]) {
+                option.textContent = dict[original];
+            } else if (lang === 'ru') {
+                option.textContent = original;
+            }
+        });
             // Проходим по всем элементам на странице и переводим текст
     const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, null, false);
     let node;
@@ -2256,6 +2281,7 @@ document.querySelectorAll("[data-currency]").forEach(button => {
       if (!node.originalText) {
         node.originalText = node.nodeValue.trim();
       }
+              
 
       const original = node.originalText;
       
@@ -2295,3 +2321,5 @@ document.addEventListener("DOMContentLoaded", () => {
  </script>
 </body>
 </html>
+
+ 
