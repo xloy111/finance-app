@@ -7,7 +7,7 @@
     <link rel="icon" type="image/svg+xml" href="icon.svg">
     <link rel="manifest" href="manifest.json">
 
-  <!-- ПОДКЛЮЧЕНИЕ SUPABASE. ИСПОЛЬЗУЕМ window.supabase, ЧТОБЫ ИЗБЕЖАТЬ ОШИБКИ ДУБЛИКАТОВ -->
+  <!-- ПОДКЛЮЧЕНИЕ SUPABASE -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
     window.SUPABASE_URL = 'https://bmlspsvrollhsjfrhdqw.supabase.co';
@@ -191,7 +191,6 @@
         </div>
       </div>
 </div>
-</div>
   <div class="app">
     <header class="topbar"><div class="brand"><span class="brand-icon">✦</span><span>МОИ ФИНАНСЫ</span></div></header>
     <div class="layout">
@@ -200,6 +199,7 @@
         <button class="nav-button" data-view="income"><span class="nav-icon">↗</span><span class="nav-label">Доходы</span></button>
         <button class="nav-button" data-view="expenses"><span class="nav-icon">↙</span><span class="nav-label">Расходы</span></button>
         <button class="nav-button" data-view="savings"><span class="nav-icon">◉</span><span class="nav-label">Накопления</span></button>
+        <button class="nav-button" data-view="debts"><span class="nav-icon">✉</span><span class="nav-label">Долги</span></button>
         <button class="nav-button" data-view="goals"><span class="nav-icon">✓</span><span class="nav-label">Задачи и цели</span></button>
         <button class="nav-button" data-view="assistant"><span class="nav-icon">🖥</span><span class="nav-label">ИИ-ассистент</span></button>
         <button class="nav-button" data-view="payment"><span class="nav-icon">▭</span><span class="nav-label">Оплата</span></button>
@@ -210,11 +210,9 @@
         <section class="view active " id="view-home">
           <div class="welcome-card card"><h2>Добро пожаловать</h2><p>Следи за доходами, планируй накопления и отмечай выполненные задачи — всё в одном месте.</p><div class="welcome-actions"><button class="button" data-go="income">Анализ доходов</button><button class="button secondary" data-go="savings">Мои накопления</button><button class="button secondary" data-go="goals">Задачи и цели</button></div></div>
           <div class="grid stats-grid" style="margin-top:16px"><article class="card"><p class="stat-label">Доходы за месяц</p><p class="stat-value" id="homeIncome">0 $</p></article><article class="card"><p class="stat-label">Всего накоплено</p><p class="stat-value" id="homeSavings">0 $</p></article><article class="card"><p class="stat-label">Задачи выполнены</p><p class="stat-value" id="homeTasks">0 / 0</p></article></div>
-                    <!-- КАРТОЧКА ЧИСТОГО ДОХОДА (с кнопками внутри) -->
           <article class="card" style="margin-bottom: 16px; text-align: center;">
             <p class="stat-label">Чистый доход</p>
             <p class="stat-value" id="homeNetIncome" style="margin-bottom: 20px;">0 ₽</p>
-            
             <div class="button-row" style="justify-content: center; margin-top: 0;">
               <button class="button" id="homeAddIncomeBtn" style="background: #173320; border-color: #48e184;">+ Добавить доход</button>
               <button class="button" id="homeAddExpenseBtn" style="background: #281416; border-color: #ff596d; color: #ff596d;">+ Добавить расход</button>
@@ -239,6 +237,34 @@
           <h1 class="page-heading">Анализ накоплений</h1><p class="page-subtitle">Сколько уже отложено и как продвигаются цели.</p>
           <div class="grid stats-grid"><article class="card"><p class="stat-label">Всего накоплено</p><p class="stat-value" id="savingsTotal">0 $</p></article><article class="card"><p class="stat-label">Целей накопления</p><p class="stat-value" id="savingsCount">0</p></article><article class="card"><p class="stat-label">Ближайшая цель</p><p class="stat-value" id="nearestGoal" style="font-size:20px">—</p></article></div>
           <article class="card"><h2 class="card-title"><span>Мои накопления</span><button class="button" id="addSavingButton">+ Добавить цель</button></h2><div class="list" id="savingsList"></div></article>
+        </section>
+        <!-- Долги и кредиты -->
+        <section class="view " id="view-debts">
+          <h1 class="page-heading">Долги и кредиты</h1>
+          <p class="page-subtitle">Контролируй свои обязательства и то, что должны тебе.</p>
+
+          <div class="grid stats-grid">
+            <article class="card">
+              <p class="stat-label">Я должен</p>
+              <p class="stat-value" id="debtsIOwe" style="color: var(--red);">0 ₽</p>
+            </article>
+            <article class="card">
+              <p class="stat-label">Мне должны</p>
+              <p class="stat-value" id="debtsOwedToMe" style="color: var(--green);">0 ₽</p>
+            </article>
+            <article class="card">
+              <p class="stat-label">Общий баланс</p>
+              <p class="stat-value" id="debtsNet" style="color: var(--text);">0 ₽</p>
+            </article>
+          </div>
+
+          <article class="card">
+            <h2 class="card-title">
+              <span>Мои обязательства</span>
+              <button class="button" id="addDebtButton">+ Добавить долг</button>
+            </h2>
+            <div class="list" id="debtsList"></div>
+          </article>
         </section>
         <section class="view " id="view-goals">
           <h1 class="page-heading">Задачи и цели</h1><p class="page-subtitle">Выбирай приоритеты и отмечай сделанное.</p>
@@ -267,7 +293,78 @@
   <dialog class="modal" id="expenseDialog"><form class="modal-inner" id="expenseForm"><h2 id="expenseDialogTitle">Добавить расход</h2><label class="field">Название траты<input id="expenseName" required maxlength="50" placeholder="Например, Продукты"></label><label class="field">Сумма за месяц<input id="expenseAmount" type="number" min="0" step="0.01" required placeholder="5000"></label><label class="field">Месяц<select id="expenseMonth"><option value="0">Январь</option><option value="1">Февраль</option><option value="2">Март</option><option value="3">Апрель</option><option value="4">Май</option><option value="5">Июнь</option><option value="6">Июль</option><option value="7">Август</option><option value="8">Сентябрь</option><option value="9">Октябрь</option><option value="10">Ноябрь</option><option value="11">Декабрь</option></select></label><label class="field">Цвет на диаграмме<select id="expenseColor"><option value="#48e184">Зелёный</option><option value="#ff596d">Красный</option><option value="#e4db52">Жёлтый</option><option value="#d064ca">Фиолетовый</option><option value="#50b8ff">Голубой</option><option value="#ff9f43">Оранжевый</option><option value="#00d2d3">Бирюзовый</option><option value="#f368e0">Розовый</option><option value="#a29bfe">Лавандовый</option><option value="#cd6133">Коричневый</option><option value="#c8d6e5">Серый</option><option value="#1dd1a1">Изумрудный</option></select></label><div class="modal-actions"><button class="button secondary" type="button" data-close>Отмена</button><button class="button" type="submit">Сохранить</button></div></form></dialog>
   <dialog class="modal" id="incomeDialog"><form class="modal-inner" id="incomeForm"><h2 id="incomeDialogTitle">Добавить доход</h2><label class="field">Источник дохода<input id="incomeName" required maxlength="50" placeholder="Например, фриланс"></label><label class="field">Сумма за месяц<input id="incomeAmount" type="number" min="0" step="0.01" required placeholder="5000"></label><label class="field">Месяц<select id="incomeMonth"><option value="0">Январь</option><option value="1">Февраль</option><option value="2">Март</option><option value="3">Апрель</option><option value="4">Май</option><option value="5">Июнь</option><option value="6">Июль</option><option value="7">Август</option><option value="8">Сентябрь</option><option value="9">Октябрь</option><option value="10">Ноябрь</option><option value="11">Декабрь</option></select></label><label class="field">Цвет на диаграмме<select id="incomeColor"><option value="#48e184">Зелёный</option><option value="#ff596d">Красный</option><option value="#e4db52">Жёлтый</option><option value="#d064ca">Фиолетовый</option><option value="#50b8ff">Голубой</option><option value="#ff9f43">Оранжевый</option><option value="#00d2d3">Бирюзовый</option><option value="#f368e0">Розовый</option><option value="#a29bfe">Лавандовый</option><option value="#cd6133">Коричневый</option><option value="#c8d6e5">Серый</option><option value="#1dd1a1">Изумрудный</option></select></label><div class="modal-actions"><button class="button secondary" type="button" data-close>Отмена</button><button class="button" type="submit">Сохранить</button></div></form></dialog>
   <dialog class="modal" id="taskDialog"><form class="modal-inner" id="taskForm"><h2>Добавить задачу</h2><label class="field">Название задачи<input id="taskName" required maxlength="100" placeholder="Например, начать ходить в зал"></label><div class="modal-actions"><button class="button secondary" type="button" data-close>Отмена</button><button class="button" type="submit">Добавить</button></div></form></dialog>
+    <!-- Диалог долга -->
+  <dialog class="modal" id="debtDialog">
+    <form class="modal-inner" id="debtForm">
+      <h2 id="debtDialogTitle">Добавить долг</h2>
+      <label class="field">
+        Название
+        <input id="debtName" required maxlength="50" placeholder="Например: Кредит / Друг Вася">
+      </label>
+      <label class="field">
+        Тип
+        <select id="debtType">
+          <option value="owe">Я должен</option>
+          <option value="owed">Мне должны</option>
+        </select>
+      </label>
+      <label class="field">
+        Общая сумма
+        <input id="debtTotal" type="number" min="0.01" step="0.01" required placeholder="50000">
+      </label>
+      <label class="field">
+        Уже выплачено
+        <input id="debtPaid" type="number" min="0" step="0.01" value="0" required>
+      </label>
+      <div class="modal-actions">
+        <button class="button secondary" type="button" data-close>Отмена</button>
+        <button class="button" type="submit">Сохранить</button>
+      </div>
+    </form>
+  </dialog>
   
+  <!-- НОВОЕ ОКНО ДЛЯ ПОГАШЕНИЯ ДОЛГА -->
+  <dialog class="modal" id="payDebtDialog">
+    <form class="modal-inner" id="payDebtForm">
+      <h2 id="payDebtTitle">Погасить долг</h2>
+      <label class="field">
+        Сумма к выплате
+        <input id="payDebtAmount" type="number" min="0.01" step="0.01" required placeholder="500">
+      </label>
+      <div class="modal-actions">
+        <button class="button secondary" type="button" data-close>Отмена</button>
+        <button class="button" type="submit">Выплатить</button>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- ОКНО ДЛЯ ИЗМЕНЕНИЯ СУММЫ (заменяет prompt) -->
+  <dialog class="modal" id="editAmountDialog">
+    <form class="modal-inner" id="editAmountForm">
+      <h2 id="editAmountTitle">Изменить сумму</h2>
+      <label class="field">
+        Новое значение
+        <input id="editAmountInput" type="number" min="0" step="0.01" required>
+      </label>
+      <div class="modal-actions">
+        <button class="button secondary" type="button" data-close>Отмена</button>
+        <button class="button" type="submit">Сохранить</button>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- УНИВЕРСАЛЬНОЕ ОКНО ПОДТВЕРЖДЕНИЯ (заменяет confirm) -->
+  <dialog class="modal" id="confirmDialog" style="max-width: 350px; text-align: center;">
+    <div class="modal-inner">
+      <h2 id="confirmTitle" style="margin-bottom: 10px; font-size: 18px;">Подтверждение</h2>
+      <p id="confirmText" style="color: var(--muted); margin-bottom: 20px; font-size: 14px;">Вы уверены?</p>
+      <div class="modal-actions" style="justify-content: center;">
+        <button class="button secondary" type="button" onclick="closeConfirm()">Отмена</button>
+        <button class="button danger" type="button" id="confirmBtn">Удалить</button>
+      </div>
+    </div>
+  </dialog>
+
  <script>
     const KEY = "personal-finance-app-v1";
     let currentCurrency = localStorage.getItem('app_currency') || '₽';
@@ -276,6 +373,7 @@
       incomes: [ { id: 1, name: "Бизнес", amount: 23000, color: "#48e184" }, { id: 2, name: "Фриланс", amount: 45000, color: "#ff596d" }, { id: 3, name: "Кафе", amount: 5000, color: "#e4db52" }, { id: 4, name: "Подработка", amount: 3000, color: "#d064ca" } ],
       expenses: [],
       savings: [ { id: 11, name: "Отпуск", current: 15000, target: 25000 }, { id: 12, name: "Машина", current: 60098, target: 90000 } ],
+      debts: [], 
       primaryGoal: { name: "Купить новый телефон", current: 15000, target: 30000 },
       goals: [ { id: 21, name: "Начать ходить в зал", current: 70, target: 100, unit: "%" }, { id: 22, name: "Прочитать 10 книг", current: 4, target: 10, unit: "книг" } ],
       tasks: [ { id: 31, text: "Начать ходить в зал", done: false }, { id: 32, text: "Читать книги", done: false }, { id: 33, text: "Купить продукты", done: true } ]
@@ -292,6 +390,7 @@
             return item;
           });
         }
+        if (!loadedData.debts) { loadedData.debts = []; }
         return loadedData;
       } catch { return clone(defaultData); }
     }
@@ -300,6 +399,8 @@
     let editingGoalId = null;
     let editingIncomeId = null;
     let goalMode = "saving";
+    let currentDebtId = null; 
+    let currentEditCallback = null; 
 
     async function checkAuth() {
         const { data: { session } } = await window.supabase.auth.getSession();
@@ -324,10 +425,8 @@
 
     checkAuth();
 
-        // Переменная для хранения текущего режима (вход или регистрация)
     let authMode = 'login';
 
-    // Функция переключения вкладок
     window.switchAuthTab = function(mode) {
         authMode = mode;
         const tabLogin = document.getElementById('tab-login');
@@ -347,10 +446,9 @@
             tabLogin.style.color = 'var(--muted)';
             submitBtn.textContent = 'Создать аккаунт';
         }
-        document.getElementById('auth-message').textContent = ''; // Очищаем ошибки
+        document.getElementById('auth-message').textContent = '';
     };
 
-    // Универсальная функция обработки нажатия на главную кнопку
     window.handleAuthAction = async function() {
         const email = document.getElementById('auth-email').value;
         const password = document.getElementById('auth-password').value;
@@ -364,23 +462,21 @@
         msg.textContent = 'Загрузка...';
         
         if (authMode === 'login') {
-            // ЛОГИКА ВХОДА
             const { error } = await window.supabase.auth.signInWithPassword({ email, password });
             if (error) {
                 msg.textContent = error.message;
             } else {
                 msg.textContent = '';
-                checkAuth(); // Загружаем приложение
+                checkAuth();
             }
         } else {
-            // ЛОГИКА РЕГИСТРАЦИИ
             const { error } = await window.supabase.auth.signUp({ email, password });
             if (error) {
                 msg.textContent = error.message;
             } else {
                 msg.textContent = '';
                 alert('Аккаунт создан! Теперь войдите.');
-                switchAuthTab('login'); // Автоматически переключаем на вкладку входа
+                switchAuthTab('login');
             }
         }
     };
@@ -423,11 +519,7 @@
       const p = percent(goal.current, goal.target);
       container.innerHTML = `<div class="primary-goal"><div class="eyebrow">Главный приоритет</div><h3>${escapeHtml(goal.name)}</h3><div class="progress-meta"><span>Накоплено: <strong>${money(goal.current)}</strong></span><span>Цель: <strong>${money(goal.target)}</strong></span></div><div class="track"><div class="fill" style="width:${p}%"></div></div><div class="progress-percent">${p}% выполнено</div></div>${compact ? "" : `<div class="button-row"><button class="button secondary" data-primary-edit>Изменить результат</button><button class="button secondary" data-primary-change>Изменить цель</button></div>`}`;
       container.querySelector("[data-primary-edit]")?.addEventListener("click", () => {
-        const value = prompt("Сколько уже накоплено?", goal.current);
-        if (value === null) return;
-        const amount = Number(value);
-        if (!Number.isFinite(amount) || amount < 0) return alert("Введите корректную сумму.");
-        goal.current = amount; update();
+        updateAmount('primaryGoal');
       });
       container.querySelector("[data-primary-change]")?.addEventListener("click", () => { openGoalDialog("primary"); });
     }
@@ -472,7 +564,12 @@
       filteredExpenses.forEach(item => { const share = total ? item.amount / total * 100 : 0; stops.push(`${item.color} ${cursor}% ${cursor + share}%`); cursor += share; });
       $("#expenseDonut").style.background = stops.length ? `conic-gradient(${stops.join(",")})` : "#203328";
       list.querySelectorAll("[data-delete-expense]").forEach(button => {
-        button.addEventListener("click", () => { data.expenses = data.expenses.filter(item => item.id !== Number(button.dataset.deleteExpense)); update(); });
+        button.addEventListener("click", () => { 
+          showConfirm("Удалить расход?", "Вы уверены?", () => {
+            data.expenses = data.expenses.filter(item => item.id !== Number(button.dataset.deleteExpense)); 
+            update(); 
+          });
+        });
       });
     }
 
@@ -513,7 +610,14 @@
       filteredIncomes.forEach(item => { const share = total ? item.amount / total * 100 : 0; stops.push(`${item.color} ${cursor}% ${cursor + share}%`); cursor += share; });
       $("#incomeDonut").style.background = stops.length ? `conic-gradient(${stops.join(",")})` : "#203328";
       list.querySelectorAll("[data-edit-income]").forEach(button => { button.addEventListener("click", () => openIncomeDialog(Number(button.dataset.editIncome))); });
-      list.querySelectorAll("[data-delete-income]").forEach(button => { button.addEventListener("click", () => { data.incomes = data.incomes.filter(item => item.id !== Number(button.dataset.deleteIncome)); update(); }); });
+      list.querySelectorAll("[data-delete-income]").forEach(button => { 
+        button.addEventListener("click", () => { 
+          showConfirm("Удалить доход?", "Вы уверены?", () => {
+            data.incomes = data.incomes.filter(item => item.id !== Number(button.dataset.deleteIncome)); 
+            update(); 
+          });
+        }); 
+      });
       renderChart(total);
     }
 
@@ -546,9 +650,80 @@
       const list = $("#savingsList");
       if (!data.savings.length) { list.innerHTML = '<div class="empty">Целей накопления пока нет.</div>'; return; }
       list.innerHTML = data.savings.map(item => `<div class="list-item"><div class="item-info"><div class="item-name">${escapeHtml(item.name)}</div>${progressMarkup(item.current, item.target)}</div><div class="item-actions"><button class="icon-button" title="Изменить результат" data-saving-result="${item.id}">↗</button><button class="icon-button" title="Изменить цель" data-saving-edit="${item.id}">✎</button><button class="icon-button delete" title="Удалить" data-saving-delete="${item.id}">×</button></div></div>`).join("");
-      list.querySelectorAll("[data-saving-result]").forEach(button => { button.addEventListener("click", () => updateAmount(data.savings, Number(button.dataset.savingResult))); });
+      list.querySelectorAll("[data-saving-result]").forEach(button => { button.addEventListener("click", () => updateAmount('savings', Number(button.dataset.savingResult))); });
       list.querySelectorAll("[data-saving-edit]").forEach(button => { button.addEventListener("click", () => openGoalDialog("saving", Number(button.dataset.savingEdit))); });
-      list.querySelectorAll("[data-saving-delete]").forEach(button => { button.addEventListener("click", () => { data.savings = data.savings.filter(item => item.id !== Number(button.dataset.savingDelete)); update(); }); });
+      list.querySelectorAll("[data-saving-delete]").forEach(button => { 
+        button.addEventListener("click", () => { 
+          showConfirm("Удалить цель?", "Вы уверены?", () => {
+            data.savings = data.savings.filter(item => item.id !== Number(button.dataset.savingDelete)); 
+            update(); 
+          });
+        }); 
+      });
+    }
+
+    function renderDebts() {
+      const list = $("#debtsList");
+      if (!data.debts || !data.debts.length) {
+        list.innerHTML = '<div class="empty">Долгов пока нет. Добавь первый!</div>';
+      } else {
+        list.innerHTML = data.debts.map(debt => {
+          const remaining = debt.total - debt.paid;
+          const p = percent(debt.paid, debt.total);
+          const isOwe = debt.type === 'owe';
+          
+          return `
+            <div class="list-item">
+              <div class="item-info">
+                <div class="item-name">
+                  <span class="dot" style="background:${isOwe ? 'var(--red)' : 'var(--green)'}"></span>
+                  ${escapeHtml(debt.name)} 
+                  <span style="font-size: 11px; color: var(--muted); font-weight: normal; margin-left: 5px;">
+                    (${isOwe ? 'Я должен' : 'Мне должны'})
+                  </span>
+                </div>
+                <div class="item-sub">
+                  <span>Выплачено: ${money(debt.paid)} из ${money(debt.total)}</span>
+                  <span class="amount" style="color:${isOwe ? 'var(--red)' : 'var(--green)'}">Осталось: ${money(remaining)}</span>
+                </div>
+                <div class="track"><div class="fill" style="width:${p}%; background:${isOwe ? 'var(--red)' : 'var(--green)'}"></div></div>
+              </div>
+              <div class="item-actions">
+                <button class="icon-button" title="Погасить часть" data-debt-pay="${debt.id}">₽</button>
+                <button class="icon-button delete" title="Удалить" data-debt-delete="${debt.id}">×</button>
+              </div>
+            </div>
+          `;
+        }).join("");
+      }
+
+      const totalIOwe = data.debts.filter(d => d.type === 'owe').reduce((sum, d) => sum + (d.total - d.paid), 0);
+      const totalOwedToMe = data.debts.filter(d => d.type === 'owed').reduce((sum, d) => sum + (d.total - d.paid), 0);
+      
+      $("#debtsIOwe").textContent = money(totalIOwe);
+      $("#debtsOwedToMe").textContent = money(totalOwedToMe);
+      $("#debtsNet").textContent = money(totalOwedToMe - totalIOwe);
+
+      list.querySelectorAll("[data-debt-pay]").forEach(button => {
+        button.addEventListener("click", () => {
+          currentDebtId = Number(button.dataset.debtPay);
+          const debt = data.debts.find(d => d.id === currentDebtId);
+          if (!debt) return;
+          
+          document.getElementById('payDebtTitle').textContent = `Погасить: ${debt.name}`;
+          document.getElementById('payDebtForm').reset();
+          document.getElementById('payDebtDialog').showModal();
+        });
+      });
+
+      list.querySelectorAll("[data-debt-delete]").forEach(button => {
+        button.addEventListener("click", () => {
+          showConfirm("Удалить долг?", "Вы уверены, что хотите удалить эту запись?", () => {
+            data.debts = data.debts.filter(d => d.id !== Number(button.dataset.debtDelete));
+            update();
+          });
+        });
+      });
     }
 
     function renderGoals() {
@@ -556,9 +731,16 @@
       if (!data.goals.length) { list.innerHTML = '<div class="empty">Других целей пока нет.</div>'; } else {
         list.innerHTML = data.goals.map(goal => `<div class="list-item"><div class="item-info"><div class="item-name">${escapeHtml(goal.name)}</div>${progressMarkup(goal.current, goal.target, `${goal.current} ${goal.unit || ""} из ${goal.target} ${goal.unit || ""}`)}</div><div class="item-actions"><button class="icon-button" title="Изменить результат" data-goal-result="${goal.id}">↗</button><button class="icon-button" title="Сделать основной" data-make-primary="${goal.id}">★</button><button class="icon-button delete" title="Удалить" data-goal-delete="${goal.id}">×</button></div></div>`).join("");
       }
-      list.querySelectorAll("[data-goal-result]").forEach(button => { button.addEventListener("click", () => updateAmount(data.goals, Number(button.dataset.goalResult))); });
+      list.querySelectorAll("[data-goal-result]").forEach(button => { button.addEventListener("click", () => updateAmount('goals', Number(button.dataset.goalResult))); });
       list.querySelectorAll("[data-make-primary]").forEach(button => { button.addEventListener("click", () => { const goal = data.goals.find(item => item.id === Number(button.dataset.makePrimary)); if (!goal) return; data.primaryGoal = { name: goal.name, current: Number(goal.current), target: Number(goal.target) }; data.goals = data.goals.filter(item => item.id !== goal.id); update(); }); });
-      list.querySelectorAll("[data-goal-delete]").forEach(button => { button.addEventListener("click", () => { data.goals = data.goals.filter(item => item.id !== Number(button.dataset.goalDelete)); update(); }); });
+      list.querySelectorAll("[data-goal-delete]").forEach(button => { 
+        button.addEventListener("click", () => { 
+          showConfirm("Удалить цель?", "Вы уверены?", () => {
+            data.goals = data.goals.filter(item => item.id !== Number(button.dataset.goalDelete)); 
+            update(); 
+          });
+        }); 
+      });
       renderPrimary("primaryGoal");
     }
 
@@ -567,7 +749,15 @@
       if (!data.tasks.length) { list.innerHTML = '<div class="empty">Задач пока нет. Добавь первую!</div>'; return; }
       list.innerHTML = data.tasks.map(task => `<label class="list-item task-item ${task.done ? "done" : ""}"><input type="checkbox" data-task-check="${task.id}" ${task.done ? "checked" : ""}><span class="task-text">${escapeHtml(task.text)}</span><button class="icon-button delete" type="button" title="Удалить" data-task-delete="${task.id}">×</button></label>`).join("");
       list.querySelectorAll("[data-task-check]").forEach(input => { input.addEventListener("change", () => { const task = data.tasks.find(item => item.id === Number(input.dataset.taskCheck)); if (task) task.done = input.checked; update(); }); });
-      list.querySelectorAll("[data-task-delete]").forEach(button => { button.addEventListener("click", event => { event.preventDefault(); data.tasks = data.tasks.filter(item => item.id !== Number(button.dataset.taskDelete)); update(); }); });
+      list.querySelectorAll("[data-task-delete]").forEach(button => { 
+        button.addEventListener("click", event => { 
+          event.preventDefault(); 
+          showConfirm("Удалить задачу?", "Вы уверены?", () => {
+            data.tasks = data.tasks.filter(item => item.id !== Number(button.dataset.taskDelete)); 
+            update(); 
+          });
+        }); 
+      });
     }
 
     function renderHome() {
@@ -579,16 +769,32 @@
       $("#homeNetIncome").textContent = money(totalIncome() - totalExpenses());
     }
 
-    function update() { save(); renderIncome(); renderExpenses(); renderSavings(); renderGoals(); renderTasks(); renderHome(); }
+    function update() { save(); renderIncome(); renderExpenses(); renderSavings(); renderDebts(); renderGoals(); renderTasks(); renderHome(); }
 
-    function updateAmount(collection, id) {
-      const item = collection.find(entry => entry.id === id);
+    // Обновленная функция изменения суммы (вместо prompt)
+    function updateAmount(typeOrCollection, id) {
+      let item = null;
+      
+      if (typeOrCollection === 'primaryGoal') {
+        item = data.primaryGoal;
+      } else if (typeOrCollection === 'savings') {
+        item = data.savings.find(entry => entry.id === id);
+      } else if (typeOrCollection === 'goals') {
+        item = data.goals.find(entry => entry.id === id);
+      }
+      
       if (!item) return;
-      const value = prompt(`Введите новый результат для «${item.name}»:`, item.current);
-      if (value === null) return;
-      const amount = Number(value);
-      if (!Number.isFinite(amount) || amount < 0) { alert("Введите число не меньше нуля."); return; }
-      item.current = amount; update();
+
+      document.getElementById('editAmountTitle').textContent = `Изменить: ${item.name}`;
+      document.getElementById('editAmountForm').reset();
+      document.getElementById('editAmountInput').value = item.current;
+      
+      currentEditCallback = (amount) => {
+        item.current = amount;
+        update();
+      };
+
+      document.getElementById('editAmountDialog').showModal();
     }
 
     function openGoalDialog(mode, id = null) {
@@ -661,6 +867,54 @@
       data.tasks.push({ id: Date.now(), text, done: false }); $("#taskDialog").close(); update();
     });
 
+    $("#addDebtButton").addEventListener("click", () => { $("#debtForm").reset(); $("#debtDialog").showModal(); });
+    $("#debtForm").addEventListener("submit", event => {
+      event.preventDefault();
+      const item = { id: Date.now(), name: $("#debtName").value.trim(), type: $("#debtType").value, total: Number($("#debtTotal").value), paid: Number($("#debtPaid").value) };
+      if (!item.name || item.total <= 0 || item.paid < 0) { alert("Проверь название и суммы."); return; }
+      if (item.paid > item.total) { alert("Выплачено не может быть больше общей суммы!"); return; }
+      data.debts.push(item); $("#debtDialog").close(); update();
+    });
+
+    // Обработчик формы погашения долга
+    $("#payDebtForm").addEventListener("submit", event => {
+      event.preventDefault();
+      const amount = Number($("#payDebtAmount").value);
+      if (!Number.isFinite(amount) || amount <= 0) { alert("Введите сумму больше нуля."); return; }
+      const debt = data.debts.find(d => d.id === currentDebtId);
+      if (!debt) return;
+      if (debt.paid + amount > debt.total) { alert("Сумма больше оставшегося долга!"); return; }
+      debt.paid += amount;
+      $("#payDebtDialog").close();
+      update();
+    });
+
+    // Обработчик формы изменения суммы
+    $("#editAmountForm").addEventListener("submit", event => {
+      event.preventDefault();
+      const amount = Number($("#editAmountInput").value);
+      if (!Number.isFinite(amount) || amount < 0) { alert("Введите число не меньше нуля."); return; }
+      if (currentEditCallback) currentEditCallback(amount);
+      $("#editAmountDialog").close();
+    });
+
+    // Универсальное подтверждение
+    window.confirmCallback = null;
+    window.showConfirm = function(title, text, callback) {
+      document.getElementById('confirmTitle').textContent = title;
+      document.getElementById('confirmText').textContent = text;
+      window.confirmCallback = callback;
+      document.getElementById('confirmDialog').showModal();
+    };
+    window.closeConfirm = function() {
+      document.getElementById('confirmDialog').close();
+      window.confirmCallback = null;
+    };
+    document.getElementById('confirmBtn').addEventListener('click', () => {
+      if (window.confirmCallback) window.confirmCallback();
+      window.closeConfirm();
+    });
+
     document.querySelectorAll("[data-close]").forEach(button => { button.addEventListener("click", () => button.closest("dialog").close()); });
 
     update();
@@ -713,9 +967,208 @@ document.querySelectorAll("[data-currency]").forEach(button => {
   });
 });
 
-    const translations = {
+         const translations = {
       ru: { "Главная": "Главная", "Доходы": "Доходы", "Накопления": "Накопления", "Задачи и цели": "Задачи и цели", "ИИ-ассистент": "ИИ-ассистент", "Оплата": "Оплата", "Вход и регистрация": "Вход и регистрация", "Настройки": "Настройки", "Добро пожаловать": "Добро пожаловать", "Анализ доходов": "Анализ доходов", "Анализ накоплений": "Анализ накоплений", "Добавить доход": "Добавить доход", "Добавить цель": "Добавить цель", "Войти": "Войти", "Создать аккаунт": "Создать аккаунт", "Тема": "Тема", "Валюта": "Валюта", "Язык": "Язык" },
-      en: { "Следи за доходами, планируй накопления и отмечай выполненные задачи — всё в одном месте.": "Track your income, plan your savings, and check off completed tasks — all in one place.", "Мои накопления": "My Savings", "Задачи и цели": "Tasks & Goals", "Всего накоплено": "Total saved", "Доходы за месяц": "Monthly income", "Задачи выполнены": "Tasks completed", "Основная цель": "Main goal", "Накоплено": "Saved", "Цель": "Goal", "выполнено": "completed", "Изменить результат": "Edit result", "Изменить цель": "Edit goal", "Чистый доход": "Net income", "Источники дохода и их доля в общей сумме.": "Income sources and their share of the total.", "Доход за месяц": "Monthly income", "Средний доход за день": "Average daily income", "Источников дохода": "Income sources", "Общий доход": "Total income", "Источники дохода": "Income sources", "Распределение доходов": "Income distribution", "за месяц": "per month", "от общего дохода": "of total income", "Нет данных для диаграммы.": "No data for the chart.", "Динамика накоплений": "Savings dynamics", "Расходы": "Expenses", "Анализ расходов": "Expense Analysis", "Куда уходят твои деньги.": "Where your money goes.", "Расходы за месяц": "Monthly expenses", "Средний расход за день": "Average daily expense", "Категорий расходов": "Expense categories", "Список расходов": "Expense list", "Общий расход": "Total expense", "Структура расходов": "Expense structure", "+ Добавить расход": "+ Add expense", "Название траты": "Expense name", "Например, Продукты": "For example, Groceries", "Расходов пока нет. Добавь первую трату.": "No expenses yet. Add the first one.", "от всех трат": "of all expenses", "Общий расход: ": "Total expense: ", "Сколько уже отложено и как продвигаются цели.": "How much is saved and how goals are progressing.", "Целей накопления": "Savings goals", "Ближайшая цель": "Nearest goal", "Все выполнены": "All completed", "Целей накопления пока нет.": "No savings goals yet.", "Выбирай приоритеты и отмечай сделанное.": "Choose priorities and mark what's done.", "Другие цели": "Other goals", "Других целей пока нет.": "No other goals yet.", "Сделать основной": "Make main", "Задачи": "Tasks", "Задач пока нет. Добавь первую!": "No tasks yet. Add the first one!", "Задай вопрос — получи совет по финансам.": "Ask a question — get financial advice.", "Чат с ИИ": "AI Chat", "Напиши свой первый вопрос...": "Write your first question...", "Например: как накопить на машину?": "For example: how to save for a car?", "Отправить": "Send", "Выберите подходящий тариф.": "Choose a suitable plan.", "1 месяц": "1 month", "6 месяцев": "6 months", "1 год": "1 year", "Оплата каждый месяц": "Monthly payment", "Выгоднее на 15%": "15% more profitable", "Выгоднее на 30%": "30% more profitable", "Выбрать": "Select", "Что входит в подписку": "What's included in the subscription", "Анализ доходов и накоплений": "Income and savings analysis", "ИИ-ассистент для советов по финансам": "AI assistant for financial advice", "Неограниченное количество целей и задач": "Unlimited goals and tasks", "Синхронизация между устройствами": "Sync between devices", "Войдите в аккаунт или создайте новый.": "Log in to your account or create a new one.", "Вход": "Login", "Регистрация": "Registration", "Email": "Email", "Пароль": "Password", "Минимум 6 символов": "Minimum 6 characters", "Войти": "Log in", "Создать аккаунт": "Create account", "Настрой приложение под себя.": "Customize the app for yourself.", "Валюта": "Currency", "Тема": "Theme", "Язык": "Language", "₽ Рубль": "₽ Ruble", "$ Доллар": "$ Dollar", "€ Евро": "€ Euro", "Тёмная": "Dark", "Светлая": "Light", "Русский": "Russian", "English": "English", "Общий доход": "Total income", "Цена": "Price", "Накоплено": "Saved", "+ Добавить задачу": "+ Add task", "+ Добавить основную цель": "+ Add main goal", "Ближайшая цель": "Nearest goal", "+ Добавить доход": "+ Add income", "+ Добавить цель": "+ Add goal", "Главный приоритет": "Main priority", "Источники дохода": "Income sources", "Распределение доходов": "Income distribution", "Динамика накоплений": "Savings dynamics", "Задачи выполнены": "Tasks completed", "Ваш тариф": "Your plan", "Что входит в подписку": "What's included", "Чат с ИИ": "AI Chat", "Доллар": "Dollar", "Евро": "Euro", "Главная": "Home", "Доходы": "Income", "Накопления": "Savings", "Задачи и цели": "Goals & Tasks", "ИИ-ассистент": "AI Assistant", "Оплата": "Pricing", "Вход и регистрация": "Login & Sign Up", "Настройки": "Settings", "Добро пожаловать": "Welcome", "Анализ доходов": "Income Analysis", "Анализ накоплений": "Savings Analysis", "Добавить доход": "Add Income", "Добавить цель": "Add Goal", "Войти": "Log In", "Создать аккаунт": "Sign Up", "Январь": "January", "Февраль": "February", "Март": "March", "Апрель": "April", "Май": "May", "Июнь": "June", "Июль": "July", "Август": "August", "Сентябрь": "September", "Октябрь": "October", "Ноябрь": "November", "Декабрь": "December", "За год": "For the year", "Показать за:": "Show for:", "Чистый доход за месяц": "Net income for the month", "Чистый доход за год": "Net income for the year" }
+      en: { 
+        "Следи за доходами, планируй накопления и отмечай выполненные задачи — всё в одном месте.": "Track your income, plan your savings, and check off completed tasks — all in one place.", 
+        "Мои накопления": "My Savings", 
+        "Задачи и цели": "Tasks & Goals", 
+        "Всего накоплено": "Total saved", 
+        "Доходы за месяц": "Monthly income", 
+        "Задачи выполнены": "Tasks completed", 
+        "Основная цель": "Main goal", 
+        "Накоплено": "Saved", 
+        "Цель": "Goal", 
+        "выполнено": "completed", 
+        "Изменить результат": "Edit result", 
+        "Изменить цель": "Edit goal", 
+        "Чистый доход": "Net income", 
+        "Источники дохода и их доля в общей сумме.": "Income sources and their share of the total.", 
+        "Доход за месяц": "Monthly income", 
+        "Средний доход за день": "Average daily income", 
+        "Источников дохода": "Income sources", 
+        "Общий доход": "Total income", 
+        "Источники дохода": "Income sources", 
+        "Распределение доходов": "Income distribution", 
+        "за месяц": "per month", 
+        "от общего дохода": "of total income", 
+        "Нет данных для диаграммы.": "No data for the chart.", 
+        "Динамика накоплений": "Savings dynamics", 
+        "Расходы": "Expenses", 
+        "Анализ расходов": "Expense Analysis", 
+        "Куда уходят твои деньги.": "Where your money goes.", 
+        "Расходы за месяц": "Monthly expenses", 
+        "Средний расход за день": "Average daily expense", 
+        "Категорий расходов": "Expense categories", 
+        "Список расходов": "Expense list", 
+        "Общий расход": "Total expense", 
+        "Структура расходов": "Expense structure", 
+        "+ Добавить расход": "+ Add expense", 
+        "Название траты": "Expense name", 
+        "Например, Продукты": "For example, Groceries", 
+        "Расходов пока нет. Добавь первую трату.": "No expenses yet. Add the first one.", 
+        "от всех трат": "of all expenses", 
+        "Общий расход: ": "Total expense: ", 
+        "Сколько уже отложено и как продвигаются цели.": "How much is saved and how goals are progressing.", 
+        "Целей накопления": "Savings goals", 
+        "Ближайшая цель": "Nearest goal", 
+        "Все выполнены": "All completed", 
+        "Целей накопления пока нет.": "No savings goals yet.", 
+        "Выбирай приоритеты и отмечай сделанное.": "Choose priorities and mark what's done.", 
+        "Другие цели": "Other goals", 
+        "Других целей пока нет.": "No other goals yet.", 
+        "Сделать основной": "Make main", 
+        "Задачи": "Tasks", 
+        "Задач пока нет. Добавь первую!": "No tasks yet. Add the first one!", 
+        "Задай вопрос — получи совет по финансам.": "Ask a question — get financial advice.", 
+        "Чат с ИИ": "AI Chat", 
+        "Напиши свой первый вопрос...": "Write your first question...", 
+        "Например: как накопить на машину?": "For example: how to save for a car?", 
+        "Отправить": "Send", 
+        "Выберите подходящий тариф.": "Choose a suitable plan.", 
+        "1 месяц": "1 month", 
+        "6 месяцев": "6 months", 
+        "1 год": "1 year", 
+        "Оплата каждый месяц": "Monthly payment", 
+        "Выгоднее на 15%": "15% more profitable", 
+        "Выгоднее на 30%": "30% more profitable", 
+        "Выбрать": "Select", 
+        "Что входит в подписку": "What's included in the subscription", 
+        "Анализ доходов и накоплений": "Income and savings analysis", 
+        "ИИ-ассистент для советов по финансам": "AI assistant for financial advice", 
+        "Неограниченное количество целей и задач": "Unlimited goals and tasks", 
+        "Синхронизация между устройствами": "Sync between devices", 
+        "Войдите в аккаунт или создайте новый.": "Log in to your account or create a new one.", 
+        "Вход": "Login", 
+        "Регистрация": "Registration", 
+        "Email": "Email", 
+        "Пароль": "Password", 
+        "Минимум 6 символов": "Minimum 6 characters", 
+        "Войти": "Log in", 
+        "Создать аккаунт": "Create account", 
+        "Настрой приложение под себя.": "Customize the app for yourself.", 
+        "Валюта": "Currency", 
+        "Тема": "Theme", 
+        "Язык": "Language", 
+        "₽ Рубль": "₽ Ruble", 
+        "$ Доллар": "$ Dollar", 
+        "€ Евро": "€ Euro", 
+        "Тёмная": "Dark", 
+        "Светлая": "Light", 
+        "Русский": "Russian", 
+        "English": "English", 
+        "Общий доход": "Total income", 
+        "Цена": "Price", 
+        "Накоплено": "Saved", 
+        "+ Добавить задачу": "+ Add task", 
+        "+ Добавить основную цель": "+ Add main goal", 
+        "Ближайшая цель": "Nearest goal", 
+        "+ Добавить доход": "+ Add income", 
+        "+ Добавить цель": "+ Add goal", 
+        "Главный приоритет": "Main priority", 
+        "Источники дохода": "Income sources", 
+        "Распределение доходов": "Income distribution", 
+        "Динамика накоплений": "Savings dynamics", 
+        "Задачи выполнены": "Tasks completed", 
+        "Ваш тариф": "Your plan", 
+        "Что входит в подписку": "What's included", 
+        "Чат с ИИ": "AI Chat", 
+        "Доллар": "Dollar", 
+        "Евро": "Euro", 
+        "Главная": "Home", 
+        "Доходы": "Income", 
+        "Накопления": "Savings", 
+        "Задачи и цели": "Goals & Tasks", 
+        "ИИ-ассистент": "AI Assistant", 
+        "Оплата": "Pricing", 
+        "Вход и регистрация": "Login & Sign Up", 
+        "Настройки": "Settings", 
+        "Добро пожаловать": "Welcome", 
+        "Анализ доходов": "Income Analysis", 
+        "Анализ накоплений": "Savings Analysis", 
+        "Добавить доход": "Add Income", 
+        "Добавить цель": "Add Goal", 
+        "Войти": "Log In", 
+        "Создать аккаунт": "Sign Up", 
+        "Январь": "January", 
+        "Февраль": "February", 
+        "Март": "March", 
+        "Апрель": "April", 
+        "Май": "May", 
+        "Июнь": "June", 
+        "Июль": "July", 
+        "Август": "August", 
+        "Сентябрь": "September", 
+        "Октябрь": "October", 
+        "Ноябрь": "November", 
+        "Декабрь": "December", 
+        "За год": "For the year", 
+        "Показать за:": "Show for:", 
+        "Чистый доход за месяц": "Net income for the month", 
+        "Чистый доход за год": "Net income for the year",
+        "Долги": "Debts",
+        "Выйти": "Log Out",
+        "Долги и кредиты": "Debts & Credits",
+        "Контролируй свои обязательства и то, что должны тебе.": "Track your obligations and what others owe you.",
+        "Я должен": "I Owe",
+        "Мне должны": "Owed to Me",
+        "Общий баланс": "Net Balance",
+        "Мои обязательства": "My Obligations",
+        "+ Добавить долг": "+ Add Debt",
+        "Долгов пока нет. Добавь первый!": "No debts yet. Add the first one!",
+        "Погасить: ": "Pay off: ",
+        "Выплачено: ": "Paid: ",
+        " из ": " of ",
+        "Осталось: ": "Remaining: ",
+        "(Я должен)": "(I Owe)",
+        "(Мне должны)": "(Owed to Me)",
+        "Погасить долг": "Pay Off Debt",
+        "Сумма к выплате": "Payment Amount",
+        "Выплатить": "Pay",
+        "Удалить долг?": "Delete debt?",
+        "Вы уверены, что хотите удалить эту запись?": "Are you sure you want to delete this record?",
+        "Удалить": "Delete",
+        "Отмена": "Cancel",
+        "Подтверждение": "Confirmation",
+        "Вы уверены?": "Are you sure?",
+        "Удалить расход?": "Delete expense?",
+        "Удалить доход?": "Delete income?",
+        "Удалить цель?": "Delete goal?",
+        "Удалить задачу?": "Delete task?",
+        "Изменить сумму": "Edit Amount",
+        "Новое значение": "New Value",
+        "Изменить: ": "Edit: ",
+        "Основная цель пока не добавлена.": "Main goal not added yet.",
+        "Добавить цель": "Add Goal",
+        "Уже накоплено": "Already saved",
+        "Целевая сумма": "Target amount",
+        "Название": "Name",
+        "Тип": "Type",
+        "Общая сумма": "Total amount",
+        "Уже выплачено": "Already paid",
+        "Сохранить": "Save",
+        "Добавить задачу": "Add Task",
+        "Название задачи": "Task name",
+        "Добавить": "Add",
+        "Источник дохода": "Income source",
+        "Сумма за месяц": "Amount per month",
+        "Месяц": "Month",
+        "Цвет на диаграмме": "Chart color",
+        "Название траты": "Expense name",
+        "Добавить долг": "Add Debt",
+        "Зелёный": "Green",
+        "Красный": "Red",
+        "Жёлтый": "Yellow",
+        "Фиолетовый": "Purple",
+        "Голубой": "Light Blue",
+        "Оранжевый": "Orange",
+        "Бирюзовый": "Turquoise",
+        "Розовый": "Pink",
+        "Лавандовый": "Lavender",
+        "Коричневый": "Brown",
+        "Серый": "Grey",
+        "Изумрудный": "Emerald"
+      }
     };
 
     document.querySelectorAll("[data-lang]").forEach(button => {
