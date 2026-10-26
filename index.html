@@ -150,14 +150,47 @@
   </style>
 </head>
 <body>
-<div id="auth-screen" style="display: flex; position: fixed; inset: 0; background: #080c09; z-index: 9999; flex-direction: column; align-items: center; justify-content: center; color: white; padding: 20px;">
-    <div style="background: #101812; border: 1px solid #275f3a; padding: 30px; border-radius: 16px; width: 100%; max-width: 350px; text-align: center; box-shadow: 0 14px 35px rgba(0,0,0,0.6);">
-        <h2 style="color: #48e184; font-size: 28px; margin-top: 0; margin-bottom: 20px;">Мои Финансы</h2>
-        <input id="auth-email" type="email" placeholder="Email" style="margin-bottom: 12px; padding: 12px; border-radius: 8px; border: 1px solid #36513d; background: #080d09; color: white; width: 100%; box-sizing: border-box; outline: none;">
-        <input id="auth-password" type="password" placeholder="Пароль" style="margin-bottom: 20px; padding: 12px; border-radius: 8px; border: 1px solid #36513d; background: #080d09; color: white; width: 100%; box-sizing: border-box; outline: none;">
-        <button onclick="loginOrRegister()" style="padding: 12px; background: #48e184; color: #080c09; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; width: 100%;">Войти / Создать аккаунт</button>
-        <p id="auth-message" style="color: #ff6e7a; font-size: 13px; margin-top: 15px; min-height: 18px;"></p>
-    </div>
+<!-- Экран входа -->
+<div id="auth-screen" style="display: flex; position: fixed; inset: 0; background: #080c09; z-index: 9999; flex-direction: column; align-items: center; justify-content: center; color: white; padding: 20px; font-family: Arial, Helvetica, sans-serif;">
+    <div style="background: #101812; border: 1px solid #275f3a; padding: 30px; border-radius: 24px; width: 100%; max-width: 380px; box-shadow: 0 20px 60px rgba(0,0,0,0.8);">
+        
+        <!-- Логотип и заголовок -->
+        <div style="text-align: center; margin-bottom: 25px;">
+            <div style="display: inline-flex; align-items: center; justify-content: center; width: 50px; height: 50px; background: #173320; border-radius: 15px; border: 1px solid #48e184; margin-bottom: 15px;">
+                <span style="color: #48e184; font-size: 24px;">✦</span>
+            </div>
+            <h2 style="color: var(--green); font-size: 26px; margin: 0; font-weight: 800;">МОИ ФИНАНСЫ</h2>
+            <p style="color: var(--muted); font-size: 14px; margin-top: 5px;">С возвращением!</p>
+        </div>
+
+        <!-- Вкладки (Вход / Регистрация) -->
+        <div style="display: flex; background: #080d09; border-radius: 12px; padding: 5px; margin-bottom: 20px;">
+            <button id="tab-login" onclick="switchAuthTab('login')" style="flex: 1; padding: 10px; border: none; border-radius: 8px; background: #48e184; color: #080c09; font-weight: bold; cursor: pointer; transition: 0.3s;">Вход</button>
+            <button id="tab-register" onclick="switchAuthTab('register')" style="flex: 1; padding: 10px; border: none; border-radius: 8px; background: transparent; color: var(--muted); font-weight: bold; cursor: pointer; transition: 0.3s;">Регистрация</button>
+        </div>
+
+        <!-- Поля ввода -->
+        <div style="display: flex; flex-direction: column; gap: 15px;">
+            <div style="position: relative;">
+                <span style="position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: var(--muted);">✉</span>
+                <input id="auth-email" type="email" placeholder="Email" style="width: 100%; padding: 14px 14px 14px 40px; border-radius: 12px; border: 1px solid #36513d; background: #080d09; color: white; outline: none; box-sizing: border-box; font-family: Arial, Helvetica, sans-serif;">
+            </div>
+            <div style="position: relative;">
+                <span style="position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: var(--muted);">🔒</span>
+                <input id="auth-password" type="password" placeholder="Пароль" style="width: 100%; padding: 14px 14px 14px 40px; border-radius: 12px; border: 1px solid #36513d; background: #080d09; color: white; outline: none; box-sizing: border-box; font-family: Arial, Helvetica, sans-serif;">
+            </div>
+        </div>
+
+        <!-- Кнопка действия -->
+        <button onclick="handleAuthAction()" id="auth-submit-btn" style="width: 100%; padding: 15px; margin-top: 25px; background: #48e184; color: #080c09; border: none; border-radius: 12px; font-weight: bold; font-size: 16px; cursor: pointer; transition: 0.3s;">Войти</button>
+
+        <!-- Сообщение об ошибке -->
+        <p id="auth-message" style="color: #ff6e7a; font-size: 13px; margin-top: 15px; min-height: 18px; text-align: center;"></p>
+            <div style="text-align: center; margin-top: 25px; font-size: 12px; color: var(--muted); letter-spacing: 0.5px;">
+            Made by Kirill Kuvardin
+        </div>
+      </div>
+</div>
 </div>
   <div class="app">
     <header class="topbar"><div class="brand"><span class="brand-icon">✦</span><span>МОИ ФИНАНСЫ</span></div></header>
@@ -291,21 +324,65 @@
 
     checkAuth();
 
-    window.loginOrRegister = async function() {
+        // Переменная для хранения текущего режима (вход или регистрация)
+    let authMode = 'login';
+
+    // Функция переключения вкладок
+    window.switchAuthTab = function(mode) {
+        authMode = mode;
+        const tabLogin = document.getElementById('tab-login');
+        const tabRegister = document.getElementById('tab-register');
+        const submitBtn = document.getElementById('auth-submit-btn');
+
+        if (mode === 'login') {
+            tabLogin.style.background = '#48e184';
+            tabLogin.style.color = '#080c09';
+            tabRegister.style.background = 'transparent';
+            tabRegister.style.color = 'var(--muted)';
+            submitBtn.textContent = 'Войти';
+        } else {
+            tabRegister.style.background = '#48e184';
+            tabRegister.style.color = '#080c09';
+            tabLogin.style.background = 'transparent';
+            tabLogin.style.color = 'var(--muted)';
+            submitBtn.textContent = 'Создать аккаунт';
+        }
+        document.getElementById('auth-message').textContent = ''; // Очищаем ошибки
+    };
+
+    // Универсальная функция обработки нажатия на главную кнопку
+    window.handleAuthAction = async function() {
         const email = document.getElementById('auth-email').value;
         const password = document.getElementById('auth-password').value;
         const msg = document.getElementById('auth-message');
-        if(!email || !password) { msg.textContent = 'Заполни email и пароль'; return; }
+        
+        if(!email || !password) {
+            msg.textContent = 'Заполни email и пароль';
+            return;
+        }
+
         msg.textContent = 'Загрузка...';
-        let { error } = await window.supabase.auth.signInWithPassword({ email, password });
-        if (error && error.message.includes('Invalid login credentials')) {
-            const { error: signUpError } = await window.supabase.auth.signUp({ email, password });
-            if (signUpError) { msg.textContent = signUpError.message; return; }
-            const { error: signInError } = await window.supabase.auth.signInWithPassword({ email, password });
-            if (signInError) { msg.textContent = signInError.message; return; }
-        } else if (error) { msg.textContent = error.message; return; }
-        msg.textContent = '';
-        checkAuth();
+        
+        if (authMode === 'login') {
+            // ЛОГИКА ВХОДА
+            const { error } = await window.supabase.auth.signInWithPassword({ email, password });
+            if (error) {
+                msg.textContent = error.message;
+            } else {
+                msg.textContent = '';
+                checkAuth(); // Загружаем приложение
+            }
+        } else {
+            // ЛОГИКА РЕГИСТРАЦИИ
+            const { error } = await window.supabase.auth.signUp({ email, password });
+            if (error) {
+                msg.textContent = error.message;
+            } else {
+                msg.textContent = '';
+                alert('Аккаунт создан! Теперь войдите.');
+                switchAuthTab('login'); // Автоматически переключаем на вкладку входа
+            }
+        }
     };
 
     window.signOut = async function() {
