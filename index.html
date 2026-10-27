@@ -169,18 +169,25 @@
             <button id="tab-register" onclick="switchAuthTab('register')" style="flex: 1; padding: 10px; border: none; border-radius: 8px; background: transparent; color: var(--muted); font-weight: bold; cursor: pointer; transition: 0.3s;">Регистрация</button>
         </div>
 
-        <!-- Поля ввода -->
+                <!-- Поля ввода -->
         <div style="display: flex; flex-direction: column; gap: 15px;">
+            <!-- Поле Email -->
             <div style="position: relative;">
                 <span style="position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: var(--muted);">✉</span>
                 <input id="auth-email" type="email" placeholder="Email" style="width: 100%; padding: 14px 14px 14px 40px; border-radius: 12px; border: 1px solid #36513d; background: #080d09; color: white; outline: none; box-sizing: border-box; font-family: Arial, Helvetica, sans-serif;">
             </div>
+            
+            <!-- Поле Пароля (закрываем блок сразу после инпута) -->
             <div style="position: relative;">
                 <span style="position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: var(--muted);">🔒</span>
                 <input id="auth-password" type="password" placeholder="Пароль" style="width: 100%; padding: 14px 14px 14px 40px; border-radius: 12px; border: 1px solid #36513d; background: #080d09; color: white; outline: none; box-sizing: border-box; font-family: Arial, Helvetica, sans-serif;">
             </div>
+            
+            <!-- Кнопка "Забыли пароль?" (идет отдельно, под полем) -->
+            <div style="text-align: right; margin-top: -5px; margin-bottom: 5px;">
+                <button onclick="openForgotPasswordDialog()" type="button" style="background: none; border: none; color: var(--muted); font-size: 13px; cursor: pointer; text-decoration: underline;">Забыли пароль?</button>
+            </div>
         </div>
-
         <!-- Кнопка действия -->
         <button onclick="handleAuthAction()" id="auth-submit-btn" style="width: 100%; padding: 15px; margin-top: 25px; background: #48e184; color: #080c09; border: none; border-radius: 12px; font-weight: bold; font-size: 16px; cursor: pointer; transition: 0.3s;">Войти</button>
 
@@ -293,7 +300,37 @@
   <dialog class="modal" id="expenseDialog"><form class="modal-inner" id="expenseForm"><h2 id="expenseDialogTitle">Добавить расход</h2><label class="field">Название траты<input id="expenseName" required maxlength="50" placeholder="Например, Продукты"></label><label class="field">Сумма за месяц<input id="expenseAmount" type="number" min="0" step="0.01" required placeholder="5000"></label><label class="field">Месяц<select id="expenseMonth"><option value="0">Январь</option><option value="1">Февраль</option><option value="2">Март</option><option value="3">Апрель</option><option value="4">Май</option><option value="5">Июнь</option><option value="6">Июль</option><option value="7">Август</option><option value="8">Сентябрь</option><option value="9">Октябрь</option><option value="10">Ноябрь</option><option value="11">Декабрь</option></select></label><label class="field">Цвет на диаграмме<select id="expenseColor"><option value="#48e184">Зелёный</option><option value="#ff596d">Красный</option><option value="#e4db52">Жёлтый</option><option value="#d064ca">Фиолетовый</option><option value="#50b8ff">Голубой</option><option value="#ff9f43">Оранжевый</option><option value="#00d2d3">Бирюзовый</option><option value="#f368e0">Розовый</option><option value="#a29bfe">Лавандовый</option><option value="#cd6133">Коричневый</option><option value="#c8d6e5">Серый</option><option value="#1dd1a1">Изумрудный</option></select></label><div class="modal-actions"><button class="button secondary" type="button" data-close>Отмена</button><button class="button" type="submit">Сохранить</button></div></form></dialog>
   <dialog class="modal" id="incomeDialog"><form class="modal-inner" id="incomeForm"><h2 id="incomeDialogTitle">Добавить доход</h2><label class="field">Источник дохода<input id="incomeName" required maxlength="50" placeholder="Например, фриланс"></label><label class="field">Сумма за месяц<input id="incomeAmount" type="number" min="0" step="0.01" required placeholder="5000"></label><label class="field">Месяц<select id="incomeMonth"><option value="0">Январь</option><option value="1">Февраль</option><option value="2">Март</option><option value="3">Апрель</option><option value="4">Май</option><option value="5">Июнь</option><option value="6">Июль</option><option value="7">Август</option><option value="8">Сентябрь</option><option value="9">Октябрь</option><option value="10">Ноябрь</option><option value="11">Декабрь</option></select></label><label class="field">Цвет на диаграмме<select id="incomeColor"><option value="#48e184">Зелёный</option><option value="#ff596d">Красный</option><option value="#e4db52">Жёлтый</option><option value="#d064ca">Фиолетовый</option><option value="#50b8ff">Голубой</option><option value="#ff9f43">Оранжевый</option><option value="#00d2d3">Бирюзовый</option><option value="#f368e0">Розовый</option><option value="#a29bfe">Лавандовый</option><option value="#cd6133">Коричневый</option><option value="#c8d6e5">Серый</option><option value="#1dd1a1">Изумрудный</option></select></label><div class="modal-actions"><button class="button secondary" type="button" data-close>Отмена</button><button class="button" type="submit">Сохранить</button></div></form></dialog>
   <dialog class="modal" id="taskDialog"><form class="modal-inner" id="taskForm"><h2>Добавить задачу</h2><label class="field">Название задачи<input id="taskName" required maxlength="100" placeholder="Например, начать ходить в зал"></label><div class="modal-actions"><button class="button secondary" type="button" data-close>Отмена</button><button class="button" type="submit">Добавить</button></div></form></dialog>
-    <!-- Диалог долга -->
+     <!-- Окно восстановления пароля -->
+  <dialog class="modal" id="forgotPasswordDialog">
+    <form class="modal-inner" id="forgotPasswordForm">
+      <h2>Восстановление пароля</h2>
+      <p style="color: var(--muted); font-size: 13px; margin-bottom: 15px;">Введите ваш Email, и мы отправим ссылку для сброса пароля.</p>
+      <label class="field">
+        Email
+        <input id="forgotEmail" type="email" required placeholder="example@mail.ru">
+      </label>
+      <div class="modal-actions">
+        <button class="button secondary" type="button" onclick="document.getElementById('forgotPasswordDialog').close()">Отмена</button>
+        <button class="button" type="submit">Отправить ссылку</button>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- Окно ввода нового пароля -->
+  <dialog class="modal" id="resetPasswordDialog">
+    <form class="modal-inner" id="resetPasswordForm">
+      <h2>Новый пароль</h2>
+      <p style="color: var(--muted); font-size: 13px; margin-bottom: 15px;">Придумайте новый пароль для вашего аккаунта.</p>
+      <label class="field">
+        Новый пароль
+        <input id="newPassword" type="password" required minlength="6" placeholder="Минимум 6 символов">
+      </label>
+      <div class="modal-actions">
+        <button class="button" type="submit">Сохранить пароль</button>
+      </div>
+    </form>
+  </dialog>
+  <!-- Диалог долга -->
   <dialog class="modal" id="debtDialog">
     <form class="modal-inner" id="debtForm">
       <h2 id="debtDialogTitle">Добавить долг</h2>
@@ -480,6 +517,61 @@
             }
         }
     };
+        // --- ЛОГИКА СБРОСА ПАРОЛЯ ---
+
+    // Открыть окно "Забыли пароль"
+    window.openForgotPasswordDialog = function() {
+      document.getElementById('forgotPasswordForm').reset();
+      document.getElementById('forgotPasswordDialog').showModal();
+    };
+
+    // Отправка письма для сброса пароля
+    document.getElementById('forgotPasswordForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const email = document.getElementById('forgotEmail').value;
+      
+      // Отправляем запрос в Supabase
+      const { error } = await window.supabase.auth.resetPasswordForEmail(email, {
+        redirectTo: window.location.origin + window.location.pathname, // Ссылка, куда вернется пользователь
+      });
+
+      if (error) {
+        alert('Ошибка: ' + error.message);
+      } else {
+        alert('Письмо с ссылкой для сброса пароля отправлено на ' + email);
+        document.getElementById('forgotPasswordDialog').close();
+      }
+    });
+
+    // Проверка, не перешел ли пользователь по ссылке сброса
+    async function checkPasswordRecovery() {
+      // Проверяем, есть ли в URL хэш с токеном сброса
+      if (window.location.hash.includes('type=recovery')) {
+        document.getElementById('auth-screen').style.display = 'none'; // Прячем вход
+        document.querySelector('.app').style.display = 'none'; // Прячем приложение
+        document.getElementById('resetPasswordDialog').showModal(); // Показываем окно смены пароля
+      }
+    }
+
+    // Обработка формы нового пароля
+    document.getElementById('resetPasswordForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const newPassword = document.getElementById('newPassword').value;
+
+      const { error } = await window.supabase.auth.updateUser({ password: newPassword });
+
+      if (error) {
+        alert('Ошибка: ' + error.message);
+      } else {
+        alert('Пароль успешно изменен! Теперь войдите с новым паролем.');
+        document.getElementById('resetPasswordDialog').close();
+        window.location.hash = ''; // Очищаем ссылку
+        window.location.reload(); // Перезагружаем страницу
+      }
+    });
+
+    // Вызываем проверку при загрузке
+    checkPasswordRecovery();
 
     window.signOut = async function() {
         await window.supabase.auth.signOut();
