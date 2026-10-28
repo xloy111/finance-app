@@ -59,14 +59,19 @@
     .topbar { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 24px; }
     .brand { display: flex; align-items: center; gap: 11px; color: var(--green); font-size: 18px; font-weight: 800; font-style: italic; }
     .brand-icon { display: grid; width: 38px; height: 38px; place-items: center; border: 1px solid #46d77a88; border-radius: 12px; background: #173320; box-shadow: 0 0 20px #42df7d24; font-size: 20px; }
-    .top-total { color: var(--muted); font-size: 13px; text-align: right; }
-    .top-total strong { display: block; margin-top: 3px; color: var(--green); font-size: 18px; }
+    
+    /* Скрываем кнопку-гамбургер на десктопе */
+    .mobile-menu-btn { display: none; background: none; border: none; color: var(--green); font-size: 28px; cursor: pointer; }
+
     .layout { display: grid; grid-template-columns: 220px minmax(0, 1fr); gap: 20px; align-items: start; }
-    .sidebar { position: sticky; top: 18px; padding: 12px; border: 1px solid #214b30; border-radius: 17px; background: #0d140fdd; box-shadow: var(--shadow); }
+    
+    .sidebar { position: sticky; top: 18px; padding: 12px; border: 1px solid #214b30; border-radius: 17px; background: #0d140fdd; box-shadow: var(--shadow); transition: transform 0.3s ease; }
+    
     .nav-button { display: flex; width: 100%; align-items: center; gap: 12px; margin: 3px 0; padding: 12px; border: 1px solid transparent; border-radius: 11px; background: transparent; color: #b7c8bc; cursor: pointer; text-align: left; transition: 150ms ease; }
     .nav-button:hover { background: #15251a; color: var(--green-2); }
     .nav-button.active { border-color: #32854c; background: linear-gradient(100deg, #193d24, #122016); color: var(--green); }
     .nav-icon { width: 22px; font-size: 17px; text-align: center; }
+    
     .main { min-width: 0; }
     .view { display: none; animation: appear 180ms ease; }
     .view.active { display: block; }
@@ -138,8 +143,60 @@
     .field input, .field select { width: 100%; min-height: 42px; padding: 10px 12px; border: 1px solid #36513d; border-radius: 9px; outline: none; background: #080d09; color: var(--text); }
     .field input:focus, .field select:focus { border-color: var(--green); box-shadow: 0 0 0 3px #48e18420; }
     .modal-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 18px; }
-    @media (max-width: 760px) { .app { padding: 15px; } .layout { grid-template-columns: 1fr; } .sidebar { position: static; display: flex; gap: 5px; overflow-x: auto; padding: 7px; } .nav-button { width: auto; min-width: max-content; justify-content: center; padding: 10px 12px; } .nav-button .nav-label { display: none; } .nav-icon { width: auto; } .two-col { grid-template-columns: 1fr; } }
-    @media (max-width: 520px) { .stats-grid { grid-template-columns: 1fr; } .top-total { font-size: 11px; } .top-total strong { font-size: 15px; } .card { padding: 15px; } .list-item { align-items: flex-start; } .item-actions { flex-direction: column; } }
+    
+    /* Оверлей для мобильного меню */
+    .sidebar-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: #000b;
+      z-index: 999;
+      backdrop-filter: blur(2px);
+    }
+
+    /* Медиа-запрос для мобилок */
+    @media (max-width: 760px) { 
+      .app { padding: 15px; } 
+      .layout { grid-template-columns: 1fr; } 
+      
+      /* Показываем кнопку гамбургера */
+      .mobile-menu-btn { display: block; }
+
+      /* Прячем сайдбар за экран */
+      .sidebar { 
+        position: fixed;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        width: 260px;
+        background: #101812;
+        z-index: 1000;
+        transform: translateX(-100%);
+        border-radius: 0 17px 17px 0;
+        border: none;
+        border-right: 1px solid #275f3a;
+        padding-top: 20px;
+      }
+
+      /* Класс для открытия меню */
+      .sidebar.open { transform: translateX(0); }
+      .sidebar-overlay.open { display: block; }
+
+      .nav-button { width: 100%; justify-content: flex-start; padding: 14px 12px; }
+      .nav-button .nav-label { display: block; font-size: 15px; } /* Показываем названия! */
+      .nav-icon { width: 24px; font-size: 18px; }
+      
+      .two-col { grid-template-columns: 1fr; } 
+    }
+    
+    @media (max-width: 520px) { 
+      .stats-grid { grid-template-columns: 1fr; } 
+      .top-total { font-size: 11px; } 
+      .top-total strong { font-size: 15px; } 
+      .card { padding: 15px; } 
+      .list-item { align-items: flex-start; } 
+      .item-actions { flex-direction: column; } 
+    }
     @keyframes slideUpFade { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
     .view.active .card { animation: slideUpFade 0.5s ease-out forwards; }
     .view.active .card:nth-child(2) { animation-delay: 0.1s; opacity: 0; }
@@ -154,7 +211,6 @@
 <div id="auth-screen" style="display: flex; position: fixed; inset: 0; background: #080c09; z-index: 9999; flex-direction: column; align-items: center; justify-content: center; color: white; padding: 20px; font-family: Arial, Helvetica, sans-serif;">
     <div style="background: #101812; border: 1px solid #275f3a; padding: 30px; border-radius: 24px; width: 100%; max-width: 380px; box-shadow: 0 20px 60px rgba(0,0,0,0.8);">
         
-        <!-- Логотип и заголовок -->
         <div style="text-align: center; margin-bottom: 25px;">
             <div style="display: inline-flex; align-items: center; justify-content: center; width: 50px; height: 50px; background: #173320; border-radius: 15px; border: 1px solid #48e184; margin-bottom: 15px;">
                 <span style="color: #48e184; font-size: 24px;">✦</span>
@@ -163,13 +219,11 @@
             <p style="color: var(--muted); font-size: 14px; margin-top: 5px;">С возвращением!</p>
         </div>
 
-        <!-- Вкладки (Вход / Регистрация) -->
         <div style="display: flex; background: #080d09; border-radius: 12px; padding: 5px; margin-bottom: 20px;">
             <button id="tab-login" onclick="switchAuthTab('login')" style="flex: 1; padding: 10px; border: none; border-radius: 8px; background: #48e184; color: #080c09; font-weight: bold; cursor: pointer; transition: 0.3s;">Вход</button>
             <button id="tab-register" onclick="switchAuthTab('register')" style="flex: 1; padding: 10px; border: none; border-radius: 8px; background: transparent; color: var(--muted); font-weight: bold; cursor: pointer; transition: 0.3s;">Регистрация</button>
         </div>
 
-        <!-- Поля ввода -->
         <div style="display: flex; flex-direction: column; gap: 15px;">
             <div style="position: relative;">
                 <span style="position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: var(--muted);">✉</span>
@@ -184,20 +238,30 @@
             </div>
         </div>
 
-        <!-- Кнопка действия -->
         <button onclick="handleAuthAction()" id="auth-submit-btn" style="width: 100%; padding: 15px; margin-top: 25px; background: #48e184; color: #080c09; border: none; border-radius: 12px; font-weight: bold; font-size: 16px; cursor: pointer; transition: 0.3s;">Войти</button>
 
-        <!-- Сообщение об ошибке -->
         <p id="auth-message" style="color: #ff6e7a; font-size: 13px; margin-top: 15px; min-height: 18px; text-align: center;"></p>
             <div style="text-align: center; margin-top: 25px; font-size: 12px; color: var(--muted); letter-spacing: 0.5px;">
             Made by Kirill Kuvardin
         </div>
       </div>
 </div>
+
+  <!-- Оверлей (затемнение) для мобильного меню -->
+  <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleMenu()"></div>
+
   <div class="app">
-    <header class="topbar"><div class="brand"><span class="brand-icon">✦</span><span>МОИ ФИНАНСЫ</span></div></header>
+    <header class="topbar">
+      <div class="brand">
+        <!-- Кнопка-гамбургер для мобилки -->
+        <button class="mobile-menu-btn" onclick="toggleMenu()">☰</button>
+        <span class="brand-icon">✦</span>
+        <span>МОИ ФИНАНСЫ</span>
+      </div>
+    </header>
+    
     <div class="layout">
-      <nav class="sidebar" aria-label="Разделы приложения">
+      <nav class="sidebar" id="sidebar" aria-label="Разделы приложения">
         <button class="nav-button active" data-view="home"><span class="nav-icon">⌂</span><span class="nav-label">Главная</span></button>
         <button class="nav-button" data-view="income"><span class="nav-icon">↗</span><span class="nav-label">Доходы</span></button>
         <button class="nav-button" data-view="expenses"><span class="nav-icon">↙</span><span class="nav-label">Расходы</span></button>
@@ -246,54 +310,23 @@
         <section class="view " id="view-debts">
           <h1 class="page-heading">Долги и кредиты</h1>
           <p class="page-subtitle">Контролируй свои обязательства и то, что должны тебе.</p>
-
           <div class="grid stats-grid">
-            <article class="card">
-              <p class="stat-label">Я должен</p>
-              <p class="stat-value" id="debtsIOwe" style="color: var(--red);">0 ₽</p>
-            </article>
-            <article class="card">
-              <p class="stat-label">Мне должны</p>
-              <p class="stat-value" id="debtsOwedToMe" style="color: var(--green);">0 ₽</p>
-            </article>
-            <article class="card">
-              <p class="stat-label">Общий баланс</p>
-              <p class="stat-value" id="debtsNet" style="color: var(--text);">0 ₽</p>
-            </article>
+            <article class="card"><p class="stat-label">Я должен</p><p class="stat-value" id="debtsIOwe" style="color: var(--red);">0 ₽</p></article>
+            <article class="card"><p class="stat-label">Мне должны</p><p class="stat-value" id="debtsOwedToMe" style="color: var(--green);">0 ₽</p></article>
+            <article class="card"><p class="stat-label">Общий баланс</p><p class="stat-value" id="debtsNet" style="color: var(--text);">0 ₽</p></article>
           </div>
-
-          <article class="card">
-            <h2 class="card-title">
-              <span>Мои обязательства</span>
-              <button class="button" id="addDebtButton">+ Добавить долг</button>
-            </h2>
-            <div class="list" id="debtsList"></div>
-          </article>
+          <article class="card"><h2 class="card-title"><span>Мои обязательства</span><button class="button" id="addDebtButton">+ Добавить долг</button></h2><div class="list" id="debtsList"></div></article>
         </section>
 
         <!-- РЕГУЛЯРНЫЕ ПЛАТЕЖИ -->
         <section class="view " id="view-subscriptions">
           <h1 class="page-heading">Регулярные платежи</h1>
           <p class="page-subtitle">Подписки и обязательные траты, которые повторяются каждый месяц.</p>
-
           <div class="grid stats-grid">
-            <article class="card">
-              <p class="stat-label">В месяц уходит</p>
-              <p class="stat-value" id="subsTotal" style="color: var(--red);">0 ₽</p>
-            </article>
-            <article class="card">
-              <p class="stat-label">Активных подписок</p>
-              <p class="stat-value" id="subsCount" style="color: var(--green);">0</p>
-            </article>
+            <article class="card"><p class="stat-label">В месяц уходит</p><p class="stat-value" id="subsTotal" style="color: var(--red);">0 ₽</p></article>
+            <article class="card"><p class="stat-label">Активных подписок</p><p class="stat-value" id="subsCount" style="color: var(--green);">0</p></article>
           </div>
-
-          <article class="card">
-            <h2 class="card-title">
-              <span>Мои подписки</span>
-              <button class="button" id="addSubButton">+ Добавить</button>
-            </h2>
-            <div class="list" id="subsList"></div>
-          </article>
+          <article class="card"><h2 class="card-title"><span>Мои подписки</span><button class="button" id="addSubButton">+ Добавить</button></h2><div class="list" id="subsList"></div></article>
         </section>
 
         <section class="view " id="view-goals">
@@ -327,63 +360,30 @@
   <dialog class="modal" id="debtDialog">
     <form class="modal-inner" id="debtForm">
       <h2 id="debtDialogTitle">Добавить долг</h2>
-      <label class="field">
-        Название
-        <input id="debtName" required maxlength="50" placeholder="Например: Кредит / Друг Вася">
-      </label>
-      <label class="field">
-        Тип
-        <select id="debtType">
-          <option value="owe">Я должен</option>
-          <option value="owed">Мне должны</option>
-        </select>
-      </label>
-      <label class="field">
-        Общая сумма
-        <input id="debtTotal" type="number" min="0.01" step="0.01" required placeholder="50000">
-      </label>
-      <label class="field">
-        Уже выплачено
-        <input id="debtPaid" type="number" min="0" step="0.01" value="0" required>
-      </label>
-      <div class="modal-actions">
-        <button class="button secondary" type="button" data-close>Отмена</button>
-        <button class="button" type="submit">Сохранить</button>
-      </div>
+      <label class="field">Название<input id="debtName" required maxlength="50" placeholder="Например: Кредит / Друг Вася"></label>
+      <label class="field">Тип<select id="debtType"><option value="owe">Я должен</option><option value="owed">Мне должны</option></select></label>
+      <label class="field">Общая сумма<input id="debtTotal" type="number" min="0.01" step="0.01" required placeholder="50000"></label>
+      <label class="field">Уже выплачено<input id="debtPaid" type="number" min="0" step="0.01" value="0" required></label>
+      <div class="modal-actions"><button class="button secondary" type="button" data-close>Отмена</button><button class="button" type="submit">Сохранить</button></div>
     </form>
   </dialog>
   
-  <!-- НОВОЕ ОКНО ДЛЯ ПОГАШЕНИЯ ДОЛГА -->
   <dialog class="modal" id="payDebtDialog">
     <form class="modal-inner" id="payDebtForm">
       <h2 id="payDebtTitle">Погасить долг</h2>
-      <label class="field">
-        Сумма к выплате
-        <input id="payDebtAmount" type="number" min="0.01" step="0.01" required placeholder="500">
-      </label>
-      <div class="modal-actions">
-        <button class="button secondary" type="button" data-close>Отмена</button>
-        <button class="button" type="submit">Выплатить</button>
-      </div>
+      <label class="field">Сумма к выплате<input id="payDebtAmount" type="number" min="0.01" step="0.01" required placeholder="500"></label>
+      <div class="modal-actions"><button class="button secondary" type="button" data-close>Отмена</button><button class="button" type="submit">Выплатить</button></div>
     </form>
   </dialog>
 
-  <!-- ОКНО ДЛЯ ИЗМЕНЕНИЯ СУММЫ (заменяет prompt) -->
   <dialog class="modal" id="editAmountDialog">
     <form class="modal-inner" id="editAmountForm">
       <h2 id="editAmountTitle">Изменить сумму</h2>
-      <label class="field">
-        Новое значение
-        <input id="editAmountInput" type="number" min="0" step="0.01" required>
-      </label>
-      <div class="modal-actions">
-        <button class="button secondary" type="button" data-close>Отмена</button>
-        <button class="button" type="submit">Сохранить</button>
-      </div>
+      <label class="field">Новое значение<input id="editAmountInput" type="number" min="0" step="0.01" required></label>
+      <div class="modal-actions"><button class="button secondary" type="button" data-close>Отмена</button><button class="button" type="submit">Сохранить</button></div>
     </form>
   </dialog>
 
-  <!-- УНИВЕРСАЛЬНОЕ ОКНО ПОДТВЕРЖДЕНИЯ (заменяет confirm) -->
   <dialog class="modal" id="confirmDialog" style="max-width: 350px; text-align: center;">
     <div class="modal-inner">
       <h2 id="confirmTitle" style="margin-bottom: 10px; font-size: 18px;">Подтверждение</h2>
@@ -395,74 +395,32 @@
     </div>
   </dialog>
 
-  <!-- ОКНО ВОССТАНОВЛЕНИЯ ПАРОЛЯ -->
   <dialog class="modal" id="forgotPasswordDialog">
     <form class="modal-inner" id="forgotPasswordForm">
       <h2>Восстановление пароля</h2>
       <p style="color: var(--muted); font-size: 13px; margin-bottom: 15px;">Введите ваш Email, и мы отправим ссылку для сброса пароля.</p>
-      <label class="field">
-        Email
-        <input id="forgotEmail" type="email" required placeholder="example@mail.ru">
-      </label>
-      <div class="modal-actions">
-        <button class="button secondary" type="button" onclick="document.getElementById('forgotPasswordDialog').close()">Отмена</button>
-        <button class="button" type="submit">Отправить ссылку</button>
-      </div>
+      <label class="field">Email<input id="forgotEmail" type="email" required placeholder="example@mail.ru"></label>
+      <div class="modal-actions"><button class="button secondary" type="button" onclick="document.getElementById('forgotPasswordDialog').close()">Отмена</button><button class="button" type="submit">Отправить ссылку</button></div>
     </form>
   </dialog>
 
-  <!-- ОКНО ВВОДА НОВОГО ПАРОЛЯ -->
   <dialog class="modal" id="resetPasswordDialog">
     <form class="modal-inner" id="resetPasswordForm">
       <h2>Новый пароль</h2>
       <p style="color: var(--muted); font-size: 13px; margin-bottom: 15px;">Придумайте новый пароль для вашего аккаунта.</p>
-      <label class="field">
-        Новый пароль
-        <input id="newPassword" type="password" required minlength="6" placeholder="Минимум 6 символов">
-      </label>
-      <div class="modal-actions">
-        <button class="button" type="submit">Сохранить пароль</button>
-      </div>
+      <label class="field">Новый пароль<input id="newPassword" type="password" required minlength="6" placeholder="Минимум 6 символов"></label>
+      <div class="modal-actions"><button class="button" type="submit">Сохранить пароль</button></div>
     </form>
   </dialog>
 
-  <!-- ДИАЛОГ ПОДПИСКИ (НОВЫЙ РАЗДЕЛ) -->
   <dialog class="modal" id="subDialog">
     <form class="modal-inner" id="subForm">
       <h2 id="subDialogTitle">Добавить подписку</h2>
-      <label class="field">
-        Название
-        <input id="subName" required maxlength="50" placeholder="Например: Яндекс Плюс">
-      </label>
-      <label class="field">
-        Сумма в месяц
-        <input id="subAmount" type="number" min="0.01" step="0.01" required placeholder="399">
-      </label>
-      <label class="field">
-        День списания
-        <input id="subDay" type="number" min="1" max="31" required placeholder="15" value="1">
-      </label>
-      <label class="field">
-        За какой месяц
-        <select id="subMonth">
-          <option value="0">Январь</option>
-          <option value="1">Февраль</option>
-          <option value="2">Март</option>
-          <option value="3">Апрель</option>
-          <option value="4">Май</option>
-          <option value="5">Июнь</option>
-          <option value="6">Июль</option>
-          <option value="7">Август</option>
-          <option value="8">Сентябрь</option>
-          <option value="9">Октябрь</option>
-          <option value="10">Ноябрь</option>
-          <option value="11">Декабрь</option>
-        </select>
-      </label>
-      <div class="modal-actions">
-        <button class="button secondary" type="button" data-close>Отмена</button>
-        <button class="button" type="submit">Сохранить</button>
-      </div>
+      <label class="field">Название<input id="subName" required maxlength="50" placeholder="Например: Яндекс Плюс"></label>
+      <label class="field">Сумма в месяц<input id="subAmount" type="number" min="0.01" step="0.01" required placeholder="399"></label>
+      <label class="field">День списания<input id="subDay" type="number" min="1" max="31" required placeholder="15" value="1"></label>
+      <label class="field">За какой месяц<select id="subMonth"><option value="0">Январь</option><option value="1">Февраль</option><option value="2">Март</option><option value="3">Апрель</option><option value="4">Май</option><option value="5">Июнь</option><option value="6">Июль</option><option value="7">Август</option><option value="8">Сентябрь</option><option value="9">Октябрь</option><option value="10">Ноябрь</option><option value="11">Декабрь</option></select></label>
+      <div class="modal-actions"><button class="button secondary" type="button" data-close>Отмена</button><button class="button" type="submit">Сохранить</button></div>
     </form>
   </dialog>
 
@@ -584,8 +542,6 @@
         }
     };
 
-    // --- ЛОГИКА СБРОСА ПАРОЛЯ ---
-
     window.openForgotPasswordDialog = function() {
       document.getElementById('forgotPasswordForm').reset();
       document.getElementById('forgotPasswordDialog').showModal();
@@ -662,7 +618,17 @@
     function showView(name) {
       document.querySelectorAll(".view").forEach(view => { view.classList.toggle("active", view.id === `view-${name}`); });
       document.querySelectorAll(".nav-button").forEach(button => { button.classList.toggle("active", button.dataset.view === name); });
+      // Закрываем меню на мобилке при выборе
+      if (window.innerWidth <= 760) {
+          toggleMenu();
+      }
     }
+
+    // Функция открытия/закрытия мобильного меню
+    window.toggleMenu = function() {
+      document.getElementById('sidebar').classList.toggle('open');
+      document.getElementById('sidebarOverlay').classList.toggle('open');
+    };
 
     function renderPrimary(containerId, compact = false) {
       const container = document.getElementById(containerId);
@@ -961,10 +927,8 @@
 
     function update() { save(); renderIncome(); renderExpenses(); renderSavings(); renderDebts(); renderSubscriptions(); renderGoals(); renderTasks(); renderHome(); }
 
-    // Обновленная функция изменения суммы (вместо prompt)
     function updateAmount(typeOrCollection, id) {
       let item = null;
-      
       if (typeOrCollection === 'primaryGoal') {
         item = data.primaryGoal;
       } else if (typeOrCollection === 'savings') {
@@ -972,18 +936,14 @@
       } else if (typeOrCollection === 'goals') {
         item = data.goals.find(entry => entry.id === id);
       }
-      
       if (!item) return;
-
       document.getElementById('editAmountTitle').textContent = `Изменить: ${item.name}`;
       document.getElementById('editAmountForm').reset();
       document.getElementById('editAmountInput').value = item.current;
-      
       currentEditCallback = (amount) => {
         item.current = amount;
         update();
       };
-
       document.getElementById('editAmountDialog').showModal();
     }
 
@@ -1066,7 +1026,6 @@
       data.debts.push(item); $("#debtDialog").close(); update();
     });
 
-    // --- ЛОГИКА ПОДПИСОК (С ДОБАВЛЕНИЕМ В РАСХОДЫ) ---
     $("#addSubButton").addEventListener("click", () => { $("#subForm").reset(); $("#subDialog").showModal(); });
     $("#subForm").addEventListener("submit", event => {
       event.preventDefault();
@@ -1079,22 +1038,19 @@
       };
       if (!subItem.name || subItem.amount <= 0 || subItem.day < 1 || subItem.day > 31) { alert("Проверь название, сумму и день (1-31)."); return; }
       
-      // Добавляем подписку
       data.subscriptions.push(subItem); 
       
-      // АВТОМАТИЧЕСКИ ДОБАВЛЯЕМ В РАСХОДЫ
       data.expenses.push({
         id: Date.now() + 1,
         name: `Подписка: ${subItem.name}`,
         amount: subItem.amount,
-        color: "#d064ca", // Фиолетовый цвет для подписок
+        color: "#d064ca",
         month: subItem.month
       });
 
       $("#subDialog").close(); update();
     });
 
-    // Обработчик формы погашения долга
     $("#payDebtForm").addEventListener("submit", event => {
       event.preventDefault();
       const amount = Number($("#payDebtAmount").value);
@@ -1107,7 +1063,6 @@
       update();
     });
 
-    // Обработчик формы изменения суммы
     $("#editAmountForm").addEventListener("submit", event => {
       event.preventDefault();
       const amount = Number($("#editAmountInput").value);
@@ -1116,7 +1071,6 @@
       $("#editAmountDialog").close();
     });
 
-    // Универсальное подтверждение
     window.confirmCallback = null;
     window.showConfirm = function(title, text, callback) {
       document.getElementById('confirmTitle').textContent = title;
