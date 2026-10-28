@@ -1,0 +1,1526 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Личный финансовый помощник</title>
+
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #080c09;
+      --panel: #101812;
+      --panel-2: #142119;
+      --green: #48e184;
+      --green-2: #a0ffbd;
+      --text: #e5efe8;
+      --muted: #97a89b;
+      --border: #275f3a;
+      --red: #ff6e7a;
+      --yellow: #e4db52;
+      --purple: #d064ca;
+      --shadow: 0 14px 35px #0006;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      min-height: 100vh;
+      margin: 0;
+      color: var(--text);
+      background:
+        radial-gradient(ellipse at 48% -10%, #193821 0, transparent 43%),
+        var(--bg);
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    button, input, select { font: inherit; }
+
+    button { color: inherit; }
+
+    .app {
+      width: min(1180px, 100%);
+      min-height: 100vh;
+      margin: 0 auto;
+      padding: 22px;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      color: var(--green);
+      font-size: 18px;
+      font-weight: 800;
+      font-style: italic;
+    }
+
+    .brand-icon {
+      display: grid;
+      width: 38px;
+      height: 38px;
+      place-items: center;
+      border: 1px solid #46d77a88;
+      border-radius: 12px;
+      background: #173320;
+      box-shadow: 0 0 20px #42df7d24;
+      font-size: 20px;
+    }
+
+    .top-total {
+      color: var(--muted);
+      font-size: 13px;
+      text-align: right;
+    }
+
+    .top-total strong {
+      display: block;
+      margin-top: 3px;
+      color: var(--green);
+      font-size: 18px;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 220px minmax(0, 1fr);
+      gap: 20px;
+      align-items: start;
+    }
+
+    .sidebar {
+      position: sticky;
+      top: 18px;
+      padding: 12px;
+      border: 1px solid #214b30;
+      border-radius: 17px;
+      background: #0d140fdd;
+      box-shadow: var(--shadow);
+    }
+
+    .nav-button {
+      display: flex;
+      width: 100%;
+      align-items: center;
+      gap: 12px;
+      margin: 3px 0;
+      padding: 12px;
+      border: 1px solid transparent;
+      border-radius: 11px;
+      background: transparent;
+      color: #b7c8bc;
+      cursor: pointer;
+      text-align: left;
+      transition: 150ms ease;
+    }
+
+    .nav-button:hover {
+      background: #15251a;
+      color: var(--green-2);
+    }
+
+    .nav-button.active {
+      border-color: #32854c;
+      background: linear-gradient(100deg, #193d24, #122016);
+      color: var(--green);
+    }
+
+    .nav-icon {
+      width: 22px;
+      font-size: 17px;
+      text-align: center;
+    }
+
+    .main { min-width: 0; }
+
+    .view { display: none; animation: appear 180ms ease; }
+    .view.active { display: block; }
+
+    @keyframes appear {
+      from { opacity: .4; transform: translateY(4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .page-heading {
+      margin: 0 0 6px;
+      color: var(--green);
+      font-size: clamp(26px, 4vw, 36px);
+      font-style: italic;
+    }
+
+    .page-subtitle {
+      margin: 0 0 22px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .grid {
+      display: grid;
+      gap: 16px;
+    }
+
+    .stats-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      margin-bottom: 16px;
+    }
+
+    .two-col {
+      grid-template-columns: minmax(0, 1.5fr) minmax(250px, 1fr);
+    }
+
+    .card {
+      min-width: 0;
+      padding: 19px;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      background:
+        linear-gradient(145deg, #142019, #0c120e 75%);
+      box-shadow: var(--shadow), inset 0 1px #ffffff08;
+    }
+
+    .stat-label {
+      margin: 0 0 10px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .stat-value {
+      margin: 0;
+      color: var(--green);
+      font-size: clamp(22px, 3vw, 30px);
+      font-weight: 800;
+    }
+
+    .card-title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin: 0 0 15px;
+      color: var(--green);
+      font-size: 17px;
+      font-style: italic;
+    }
+
+    .primary-goal {
+      padding: 20px;
+      border: 1px solid #32834b;
+      border-radius: 15px;
+      background:
+        radial-gradient(circle at 100% 0, #38dc7826, transparent 45%),
+        #101a13;
+    }
+
+    .eyebrow {
+      margin-bottom: 8px;
+      color: var(--green);
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+    }
+
+    .primary-goal h3 {
+      margin: 0 0 16px;
+      font-size: 22px;
+    }
+
+    .progress-meta {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 8px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .progress-meta strong { color: var(--text); }
+
+    .track {
+      height: 10px;
+      overflow: hidden;
+      border: 1px solid #33523a;
+      border-radius: 99px;
+      background: #070b08;
+    }
+
+    .fill {
+      height: 100%;
+      width: 0;
+      border-radius: inherit;
+      background: linear-gradient(90deg, #158f45, #54ef8a);
+      box-shadow: 0 0 13px #48e18480;
+      transition: width 250ms ease;
+    }
+
+    .progress-percent {
+      margin-top: 7px;
+      color: var(--green);
+      font-size: 12px;
+      font-weight: 700;
+      text-align: right;
+    }
+
+    .button {
+      display: inline-flex;
+      min-height: 40px;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      padding: 9px 13px;
+      border: 1px solid #32834b;
+      border-radius: 10px;
+      background: #15331e;
+      color: var(--green);
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: 150ms ease;
+    }
+
+    .button:hover {
+      transform: translateY(-1px);
+      border-color: var(--green);
+      background: #1c482a;
+    }
+
+    .button.secondary {
+      border-color: #36513d;
+      background: #111913;
+      color: var(--text);
+    }
+
+    .button.danger {
+      border-color: #73383b;
+      background: #281416;
+      color: var(--red);
+    }
+
+    .button-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 14px;
+    }
+
+    .list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .list-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px;
+      border: 1px solid #203d2a;
+      border-radius: 12px;
+      background: #0a100c;
+    }
+
+    .item-info { min-width: 0; flex: 1; }
+
+    .item-name {
+      margin-bottom: 7px;
+      font-weight: 700;
+      overflow-wrap: anywhere;
+    }
+
+    .item-sub {
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 6px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .item-sub .amount { color: var(--text); }
+
+    .item-actions { display: flex; gap: 6px; }
+
+    .icon-button {
+      display: grid;
+      width: 34px;
+      height: 34px;
+      flex: 0 0 34px;
+      place-items: center;
+      border: 1px solid #35513c;
+      border-radius: 9px;
+      background: #111a13;
+      color: var(--green);
+      cursor: pointer;
+    }
+
+    .icon-button:hover { border-color: var(--green); background: #18321f; }
+    .icon-button.delete { color: var(--red); }
+
+    .empty {
+      padding: 18px 12px;
+      border: 1px dashed #35513c;
+      border-radius: 12px;
+      color: var(--muted);
+      font-size: 13px;
+      text-align: center;
+    }
+
+    .income-summary {
+      margin-bottom: 16px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .income-summary strong {
+      color: var(--green);
+      font-size: 24px;
+    }
+
+    .income-item .item-name {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+    }
+
+    .dot {
+      width: 11px;
+      height: 11px;
+      flex: 0 0 11px;
+      border-radius: 50%;
+      background: var(--green);
+      box-shadow: 0 0 10px currentColor;
+    }
+
+    .chart-wrap { width: 100%; overflow: hidden; }
+
+    .chart {
+      display: block;
+      width: 100%;
+      height: auto;
+      min-height: 200px;
+    }
+
+    .chart .gridline { stroke: #1c3b26; stroke-width: 1; }
+    .chart .axis { stroke: #258c49; stroke-width: 2; }
+    .chart text {
+      fill: #78d998;
+      font-family: Arial, sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+    }
+    .chart .line {
+      fill: none;
+      stroke: #66f395;
+      stroke-width: 3;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      filter: drop-shadow(0 0 4px #48e18488);
+    }
+    .chart .area { fill: url(#chartGradient); }
+
+    .donut {
+      display: grid;
+      width: 170px;
+      max-width: 100%;
+      aspect-ratio: 1;
+      margin: 6px auto 18px;
+      place-items: center;
+      border-radius: 50%;
+      background: conic-gradient(var(--green) 0 100%);
+      box-shadow: 0 0 26px #48e18428;
+    }
+
+    .donut::before {
+      content: "";
+      grid-area: 1 / 1;
+      width: 72%;
+      aspect-ratio: 1;
+      border: 1px solid #2c633c;
+      border-radius: 50%;
+      background: #0c120e;
+    }
+
+    .donut-center {
+      z-index: 1;
+      grid-area: 1 / 1;
+      color: var(--green);
+      font-size: 17px;
+      font-weight: 800;
+      text-align: center;
+    }
+
+    .donut-center small {
+      display: block;
+      margin-top: 4px;
+      color: var(--muted);
+      font-size: 10px;
+      font-weight: 400;
+    }
+
+    .legend { display: grid; gap: 10px; }
+
+    .legend-row {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      color: var(--text);
+      font-size: 13px;
+    }
+
+    .legend-row .legend-value {
+      margin-left: auto;
+      color: var(--muted);
+    }
+
+    .task-item { cursor: pointer; }
+    .task-item input {
+      width: 18px;
+      height: 18px;
+      accent-color: var(--green);
+      cursor: pointer;
+    }
+    .task-item.done .task-text {
+      color: var(--muted);
+      text-decoration: line-through;
+    }
+    .task-text { flex: 1; overflow-wrap: anywhere; }
+
+    .welcome-card {
+      padding: clamp(24px, 6vw, 48px);
+      text-align: center;
+    }
+
+    .welcome-card h2 {
+      margin: 0 0 10px;
+      color: var(--green);
+      font-size: clamp(28px, 5vw, 42px);
+      font-style: italic;
+    }
+
+    .welcome-card p {
+      max-width: 580px;
+      margin: 0 auto 24px;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .welcome-actions {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .modal {
+      width: min(430px, calc(100% - 24px));
+      max-height: min(90vh, 720px);
+      padding: 0;
+      overflow: auto;
+      border: 1px solid #327347;
+      border-radius: 16px;
+      background: #101812;
+      color: var(--text);
+      box-shadow: 0 20px 70px #000b;
+    }
+
+    .modal::backdrop {
+      background: #000b;
+      backdrop-filter: blur(4px);
+    }
+
+    .modal-inner { padding: 22px; }
+
+    .modal h2 {
+      margin: 0 0 17px;
+      color: var(--green);
+      font-size: 20px;
+    }
+
+    .field {
+      display: grid;
+      gap: 7px;
+      margin-bottom: 13px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .field input,
+    .field select {
+      width: 100%;
+      min-height: 42px;
+      padding: 10px 12px;
+      border: 1px solid #36513d;
+      border-radius: 9px;
+      outline: none;
+      background: #080d09;
+      color: var(--text);
+    }
+
+    .field input:focus,
+    .field select:focus {
+      border-color: var(--green);
+      box-shadow: 0 0 0 3px #48e18420;
+    }
+
+    .modal-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+      margin-top: 18px;
+    }
+
+    @media (max-width: 760px) {
+      .app { padding: 15px; }
+      .layout { grid-template-columns: 1fr; }
+      .sidebar {
+        position: static;
+        display: flex;
+        gap: 5px;
+        overflow-x: auto;
+        padding: 7px;
+      }
+      .nav-button {
+        width: auto;
+        min-width: max-content;
+        justify-content: center;
+        padding: 10px 12px;
+      }
+      .nav-button .nav-label { display: none; }
+      .nav-icon { width: auto; }
+      .two-col { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 520px) {
+      .stats-grid { grid-template-columns: 1fr; }
+      .top-total { font-size: 11px; }
+      .top-total strong { font-size: 15px; }
+      .card { padding: 15px; }
+      .list-item { align-items: flex-start; }
+      .item-actions { flex-direction: column; }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="app">
+    <header class="topbar">
+      <div class="brand">
+        <span class="brand-icon">✦</span>
+        <span>МОИ ФИНАНСЫ</span>
+      </div>
+      <div class="top-total">
+        Всего накоплено
+        <strong id="headerSavings">0 $</strong>
+      </div>
+    </header>
+
+    <div class="layout">
+      <nav class="sidebar" aria-label="Разделы приложения">
+        <button class="nav-button active" data-view="home">
+          <span class="nav-icon">⌂</span><span class="nav-label">Главная</span>
+        </button>
+        <button class="nav-button" data-view="income">
+          <span class="nav-icon">↗</span><span class="nav-label">Доходы</span>
+        </button>
+        <button class="nav-button" data-view="savings">
+          <span class="nav-icon">◉</span><span class="nav-label">Накопления</span>
+        </button>
+        <button class="nav-button" data-view="goals">
+          <span class="nav-icon">✓</span><span class="nav-label">Задачи и цели</span>
+        </button>
+        <button class="nav-button" data-view="assistant">
+  <span class="nav-icon">🖥</span><span class="nav-label">ИИ-ассистент</span>
+</button>
+<button class="nav-button" data-view="payment">
+  <span class="nav-icon">▭</span><span class="nav-label">Оплата</span>
+</button>
+<button class="nav-button" data-view="login">
+  <span class="nav-icon">🗝</span><span class="nav-label">Вход и регистрация</span>
+</button>
+<button class="nav-button" data-view="settings">
+          <span class="nav-icon">⚙</span><span class="nav-label">Настройки</span>
+        </button>
+      </nav>
+
+      <main class="main">
+        <!-- Главная -->
+        <section class="view active" id="view-home">
+          <div class="welcome-card card">
+            <h2>Добро пожаловать</h2>
+            <p>
+              Следи за доходами, планируй накопления и отмечай выполненные задачи —
+              всё в одном месте.
+            </p>
+            <div class="welcome-actions">
+              <button class="button" data-go="income">Анализ доходов</button>
+              <button class="button secondary" data-go="savings">Мои накопления</button>
+              <button class="button secondary" data-go="goals">Задачи и цели</button>
+            </div>
+          </div>
+
+          <div class="grid stats-grid" style="margin-top:16px">
+            <article class="card">
+              <p class="stat-label">Доходы за месяц</p>
+              <p class="stat-value" id="homeIncome">0 $</p>
+            </article>
+            <article class="card">
+              <p class="stat-label">Всего накоплено</p>
+              <p class="stat-value" id="homeSavings">0 $</p>
+            </article>
+            <article class="card">
+              <p class="stat-label">Задачи выполнены</p>
+              <p class="stat-value" id="homeTasks">0 / 0</p>
+            </article>
+          </div>
+
+          <article class="card">
+            <h2 class="card-title">Основная цель</h2>
+            <div id="homePrimary"></div>
+          </article>
+        </section>
+
+        <!-- Доходы -->
+        <section class="view" id="view-income">
+          <h1 class="page-heading">Анализ доходов</h1>
+          <p class="page-subtitle">Источники дохода и их доля в общей сумме.</p>
+
+          <div class="grid stats-grid">
+            <article class="card">
+              <p class="stat-label">Доход за месяц</p>
+              <p class="stat-value" id="incomeTotal">0 $</p>
+            </article>
+            <article class="card">
+              <p class="stat-label">Средний доход за день</p>
+              <p class="stat-value" id="incomeAverage">0 $</p>
+            </article>
+            <article class="card">
+              <p class="stat-label">Источников дохода</p>
+              <p class="stat-value" id="incomeCount">0</p>
+            </article>
+          </div>
+
+          <div class="grid two-col">
+            <article class="card">
+              <h2 class="card-title">Источники дохода</h2>
+              <div class="income-summary">Общий доход: <strong id="incomeTotalLabel">0 $</strong></div>
+              <div class="list" id="incomeList"></div>
+              <div class="button-row">
+                <button class="button" id="addIncomeButton">+ Добавить доход</button>
+              </div>
+            </article>
+
+            <article class="card">
+              <h2 class="card-title">Распределение доходов</h2>
+              <div class="donut" id="incomeDonut">
+                <div class="donut-center" id="donutTotal">0 $<small>за месяц</small></div>
+              </div>
+              <div class="legend" id="incomeLegend"></div>
+            </article>
+          </div>
+
+          <article class="card" style="margin-top:16px">
+            <h2 class="card-title">Динамика накоплений</h2>
+            <div class="chart-wrap">
+              <svg class="chart" viewBox="0 0 700 240" role="img"
+                   aria-label="График динамики накоплений">
+                <defs>
+                  <linearGradient id="chartGradient" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stop-color="#48e184" stop-opacity=".28"/>
+                    <stop offset="100%" stop-color="#48e184" stop-opacity="0"/>
+                  </linearGradient>
+                </defs>
+                <line class="gridline" x1="45" y1="35" x2="680" y2="35"/>
+                <line class="gridline" x1="45" y1="85" x2="680" y2="85"/>
+                <line class="gridline" x1="45" y1="135" x2="680" y2="135"/>
+                <line class="gridline" x1="45" y1="185" x2="680" y2="185"/>
+                <line class="axis" x1="45" y1="20" x2="45" y2="190"/>
+                <line class="axis" x1="45" y1="190" x2="680" y2="190"/>
+                <text x="48" y="218">янв</text><text x="158" y="218">мар</text>
+                <text x="268" y="218">май</text><text x="378" y="218">июл</text>
+                <text x="488" y="218">сен</text><text x="598" y="218">ноя</text>
+                <path class="area" id="chartArea"></path>
+                <path class="line" id="chartLine"></path>
+              </svg>
+            </div>
+          </article>
+        </section>
+
+        <!-- Накопления -->
+        <section class="view" id="view-savings">
+          <h1 class="page-heading">Анализ накоплений</h1>
+          <p class="page-subtitle">Сколько уже отложено и как продвигаются цели.</p>
+
+          <div class="grid stats-grid">
+            <article class="card">
+              <p class="stat-label">Всего накоплено</p>
+              <p class="stat-value" id="savingsTotal">0 $</p>
+            </article>
+            <article class="card">
+              <p class="stat-label">Целей накопления</p>
+              <p class="stat-value" id="savingsCount">0</p>
+            </article>
+            <article class="card">
+              <p class="stat-label">Ближайшая цель</p>
+              <p class="stat-value" id="nearestGoal" style="font-size:20px">—</p>
+            </article>
+          </div>
+
+          <article class="card">
+            <h2 class="card-title">
+              <span>Мои накопления</span>
+              <button class="button" id="addSavingButton">+ Добавить цель</button>
+            </h2>
+            <div class="list" id="savingsList"></div>
+          </article>
+        </section>
+
+        <!-- Задачи и цели -->
+        <section class="view" id="view-goals">
+          <h1 class="page-heading">Задачи и цели</h1>
+          <p class="page-subtitle">Выбирай приоритеты и отмечай сделанное.</p>
+
+          <div class="grid two-col">
+            <div class="grid">
+              <article class="card">
+                <h2 class="card-title">Основная цель</h2>
+                <div id="primaryGoal"></div>
+                <div class="button-row">
+                  <button class="button" id="setPrimaryButton">+ Добавить основную цель</button>
+                </div>
+              </article>
+
+              <article class="card">
+                <h2 class="card-title">Другие цели</h2>
+                <div class="list" id="goalsList"></div>
+                <div class="button-row">
+                  <button class="button" id="addGoalButton">+ Добавить цель</button>
+                </div>
+              </article>
+            </div>
+
+            <article class="card">
+              <h2 class="card-title">Задачи</h2>
+              <div class="list" id="tasksList"></div>
+              <div class="button-row">
+                <button class="button" id="addTaskButton">+ Добавить задачу</button>
+              </div>
+            </article>
+          </div>
+        </section>
+        <!-- ИИ-ассистент -->
+        <section class="view" id="view-assistant">
+          <h1 class="page-heading">ИИ-ассистент</h1>
+          <p class="page-subtitle">Задай вопрос — получи совет по финансам.</p>
+          <section class="view" id="view-assistant">
+  <article class="card">
+    <div class="list" id="chatMessages" style="min-height: 200px; margin-bottom: 16px;">
+      <div class="empty">Напиши свой первый вопрос...</div>
+    </div>
+    <div class="button-row">
+      <input type="text" id="chatInput" placeholder="Например: как накопить на машину?" style="flex:1; min-height:42px; padding:10px 12px; border:1px solid #36513d; border-radius:9px; background:#080d09; color:var(--text);">
+      <button class="button" id="sendChatButton">Отправить</button>
+    </div>
+  </article>
+</section>
+
+       <section class="view" id="view-payment">
+          <h1 class="page-heading">Оплата</h1>
+          <p class="page-subtitle">Выберите подходящий тариф.</p>
+
+          <div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));">
+            
+            <article class="card" style="text-align: center;">
+              <h2 class="card-title" style="justify-content: center;">1 месяц</h2>
+              <p style="font-size: 32px; font-weight: 800; color: var(--green); margin: 10px 0;">590 ₽</p>
+              <p style="color: var(--muted); font-size: 13px; margin-bottom: 16px;">Оплата каждый месяц</p>
+              <button class="button" style="width: 100%;">Выбрать</button>
+            </article>
+
+            <article class="card" style="text-align: center; border-color: var(--green);">
+              <h2 class="card-title" style="justify-content: center;">6 месяцев</h2>
+              <p style="font-size: 32px; font-weight: 800; color: var(--green); margin: 10px 0;">2590 ₽</p>
+              <p style="color: var(--muted); font-size: 13px; margin-bottom: 16px;">Выгоднее на 15%</p>
+              <button class="button" style="width: 100%;">Выбрать</button>
+            </article>
+
+            <article class="card" style="text-align: center;">
+              <h2 class="card-title" style="justify-content: center;">1 год</h2>
+              <p style="font-size: 32px; font-weight: 800; color: var(--green); margin: 10px 0;">5990 ₽</p>
+              <p style="color: var(--muted); font-size: 13px; margin-bottom: 16px;">Выгоднее на 30%</p>
+              <button class="button" style="width: 100%;">Выбрать</button>
+            </article>
+
+          </div>
+
+          <article class="card" style="margin-top: 16px;">
+            <h2 class="card-title">Что входит в подписку</h2>
+            <ul style="color: var(--muted); line-height: 1.8; padding-left: 20px;">
+              <li>Анализ доходов и накоплений</li>
+              <li>ИИ-ассистент для советов по финансам</li>
+              <li>Неограниченное количество целей и задач</li>
+              <li>Синхронизация между устройствами</li>
+            </ul>
+          </article>
+        </section>
+        
+        <!-- Вход и регистрация -->
+        <section class="view" id="view-login">
+          <h1 class="page-heading">Вход и регистрация</h1>
+          <p class="page-subtitle">Войдите в аккаунт или создайте новый.</p>
+          <article class="card">
+            <h2 class="card-title">Аккаунт</h2>
+            <p style="color: var(--muted);">Здесь будет форма входа и регистрации.</p>
+          </article>
+        </section>
+        <!-- Настройки -->
+<section class="view" id="view-settings">
+          <h1 class="page-heading">Настройки</h1>
+          <p class="page-subtitle">Настрой приложение под себя.</p>
+
+          <article class="card">
+            <h2 class="card-title">Валюта</h2>
+            <div class="button-row">
+              <button class="button" onclick="alert('Валюта: Рубль')">₽ Рубль</button>
+              <button class="button secondary" onclick="alert('Валюта: Доллар')">$ Доллар</button>
+              <button class="button secondary" onclick="alert('Валюта: Евро')">€ Евро</button>
+            </div>
+          </article>
+
+          <article class="card" style="margin-top: 16px;">
+            <h2 class="card-title">Тема</h2>
+            <div class="button-row">
+              <button class="button" onclick="document.body.style.background='#080c09'; document.body.style.color='#e5efe8';">Тёмная</button>
+              <button class="button secondary" onclick="document.body.style.background='#f0f0f0'; document.body.style.color='#111';">Светлая</button>
+            </div>
+          </article>
+
+          <article class="card" style="margin-top: 16px;">
+            <h2 class="card-title">Язык</h2>
+            <div class="button-row">
+              <button class="button" onclick="alert('Язык: Русский')">Русский</button>
+              <button class="button secondary" onclick="alert('Язык: English')">English</button>
+            </div>
+          </article>
+        </section>
+      </main>
+    </div>
+  
+
+  <!-- Диалог цели -->
+  <dialog class="modal" id="goalDialog">
+    <form class="modal-inner" id="goalForm">
+      <h2 id="goalDialogTitle">Добавить цель</h2>
+      <label class="field">
+        Название
+        <input id="goalName" required maxlength="60" placeholder="Например, отпуск">
+      </label>
+      <label class="field">
+        Уже накоплено
+        <input id="goalCurrent" type="number" min="0" step="0.01" value="0" required>
+      </label>
+      <label class="field">
+        Целевая сумма
+        <input id="goalTarget" type="number" min="0.01" step="0.01" required placeholder="25000">
+      </label>
+      <div class="modal-actions">
+        <button class="button secondary" type="button" data-close>Отмена</button>
+        <button class="button" type="submit">Сохранить</button>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- Диалог дохода -->
+  <dialog class="modal" id="incomeDialog">
+    <form class="modal-inner" id="incomeForm">
+      <h2 id="incomeDialogTitle">Добавить доход</h2>
+      <label class="field">
+        Источник дохода
+        <input id="incomeName" required maxlength="50" placeholder="Например, фриланс">
+      </label>
+      <label class="field">
+        Сумма за месяц
+        <input id="incomeAmount" type="number" min="0" step="0.01" required placeholder="5000">
+      </label>
+      <label class="field">
+        Цвет на диаграмме
+        <select id="incomeColor">
+          <option value="#48e184">Зелёный</option>
+          <option value="#ff596d">Красный</option>
+          <option value="#e4db52">Жёлтый</option>
+          <option value="#d064ca">Фиолетовый</option>
+          <option value="#50b8ff">Голубой</option>
+        </select>
+      </label>
+      <div class="modal-actions">
+        <button class="button secondary" type="button" data-close>Отмена</button>
+        <button class="button" type="submit">Сохранить</button>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- Диалог задачи -->
+  <dialog class="modal" id="taskDialog">
+    <form class="modal-inner" id="taskForm">
+      <h2>Добавить задачу</h2>
+      <label class="field">
+        Название задачи
+        <input id="taskName" required maxlength="100" placeholder="Например, начать ходить в зал">
+      </label>
+      <div class="modal-actions">
+        <button class="button secondary" type="button" data-close>Отмена</button>
+        <button class="button" type="submit">Добавить</button>
+      </div>
+    </form>
+  </dialog>
+  
+ <script>
+    const KEY = "personal-finance-app-v1";
+    const defaultData = {
+      incomes: [
+        { id: 1, name: "Бизнес", amount: 23000, color: "#48e184" },
+        { id: 2, name: "Фриланс", amount: 45000, color: "#ff596d" },
+        { id: 3, name: "Кафе", amount: 5000, color: "#e4db52" },
+        { id: 4, name: "Подработка", amount: 3000, color: "#d064ca" }
+      ],
+      savings: [
+        { id: 11, name: "Отпуск", current: 15000, target: 25000 },
+        { id: 12, name: "Машина", current: 60098, target: 90000 }
+      ],
+      primaryGoal: {
+        name: "Купить новый телефон",
+        current: 15000,
+        target: 30000
+      },
+      goals: [
+        { id: 21, name: "Начать ходить в зал", current: 70, target: 100, unit: "%" },
+        { id: 22, name: "Прочитать 10 книг", current: 4, target: 10, unit: "книг" }
+      ],
+      tasks: [
+        { id: 31, text: "Начать ходить в зал", done: false },
+        { id: 32, text: "Читать книги", done: false },
+        { id: 33, text: "Купить продукты", done: true }
+      ]
+    };
+
+    function clone(value) {
+      return JSON.parse(JSON.stringify(value));
+    }
+
+    function loadData() {
+      try {
+        const saved = localStorage.getItem(KEY);
+        return saved ? { ...clone(defaultData), ...JSON.parse(saved) } : clone(defaultData);
+      } catch {
+        return clone(defaultData);
+      }
+    }
+
+    let data = loadData();
+    let editingGoalId = null;
+    let editingIncomeId = null;
+    let goalMode = "saving";
+
+    const $ = selector => document.querySelector(selector);
+
+    function save() {
+      localStorage.setItem(KEY, JSON.stringify(data));
+    }
+
+    function escapeHtml(value) {
+      return String(value).replace(/[&<>"']/g, char => ({
+        "&": "&amp;", "<": "&lt;", ">": "&gt;",
+        '"': "&quot;", "'": "&#039;"
+      })[char]);
+    }
+
+    function money(value) {
+      return new Intl.NumberFormat("ru-RU", {
+        maximumFractionDigits: 2
+      }).format(Number(value) || 0) + " $";
+    }
+
+    function percent(current, target) {
+      if (!Number(target) || target <= 0) return 0;
+      return Math.min(100, Math.round((Number(current) / Number(target)) * 100));
+    }
+
+    function totalIncome() {
+      return data.incomes.reduce((sum, item) => sum + Number(item.amount || 0), 0);
+    }
+
+    function totalSavings() {
+      return data.savings.reduce((sum, item) => sum + Number(item.current || 0), 0);
+    }
+
+    function progressMarkup(current, target, label = "") {
+      const value = percent(current, target);
+      return `
+        <div class="progress-meta">
+          <span>${escapeHtml(label || `${money(current)} из ${money(target)}`)}</span>
+          <strong>${value}%</strong>
+        </div>
+        <div class="track"><div class="fill" style="width:${value}%"></div></div>
+      `;
+    }
+
+    function showView(name) {
+      document.querySelectorAll(".view").forEach(view => {
+        view.classList.toggle("active", view.id === `view-${name}`);
+      });
+      document.querySelectorAll(".nav-button").forEach(button => {
+        button.classList.toggle("active", button.dataset.view === name);
+      });
+    }
+
+    function renderPrimary(containerId, compact = false) {
+      const container = document.getElementById(containerId);
+      const goal = data.primaryGoal;
+
+      if (!goal) {
+        container.innerHTML = '<div class="empty">Основная цель пока не добавлена.</div>';
+        return;
+      }
+
+      const p = percent(goal.current, goal.target);
+      container.innerHTML = `
+        <div class="primary-goal">
+          <div class="eyebrow">Главный приоритет</div>
+          <h3>${escapeHtml(goal.name)}</h3>
+          <div class="progress-meta">
+            <span>Накоплено: <strong>${money(goal.current)}</strong></span>
+            <span>Цель: <strong>${money(goal.target)}</strong></span>
+          </div>
+          <div class="track"><div class="fill" style="width:${p}%"></div></div>
+          <div class="progress-percent">${p}% выполнено</div>
+        </div>
+        ${compact ? "" : `
+          <div class="button-row">
+            <button class="button secondary" data-primary-edit>Изменить результат</button>
+            <button class="button secondary" data-primary-change>Изменить цель</button>
+          </div>
+        `}
+      `;
+
+      container.querySelector("[data-primary-edit]")?.addEventListener("click", () => {
+        const value = prompt("Сколько уже накоплено?", goal.current);
+        if (value === null) return;
+        const amount = Number(value);
+        if (!Number.isFinite(amount) || amount < 0) return alert("Введите корректную сумму.");
+        goal.current = amount;
+        update();
+      });
+
+      container.querySelector("[data-primary-change]")?.addEventListener("click", () => {
+        openGoalDialog("primary");
+      });
+    }
+
+    function renderIncome() {
+      const total = totalIncome();
+      $("#incomeTotal").textContent = money(total);
+      $("#incomeTotalLabel").textContent = money(total);
+      $("#donutTotal").innerHTML = `${money(total)}<small>за месяц</small>`;
+      $("#incomeAverage").textContent = money(total / 30);
+      $("#incomeCount").textContent = data.incomes.length;
+
+      const list = $("#incomeList");
+      if (!data.incomes.length) {
+        list.innerHTML = '<div class="empty">Доходов пока нет. Добавь первый источник.</div>';
+      } else {
+        list.innerHTML = data.incomes.map(item => {
+          const share = total ? Math.round(item.amount / total * 100) : 0;
+          return `
+            <div class="list-item income-item">
+              <div class="item-info">
+                <div class="item-name">
+                  <span class="dot" style="background:${escapeHtml(item.color)};color:${escapeHtml(item.color)}"></span>
+                  ${escapeHtml(item.name)}
+                </div>
+                <div class="item-sub">
+                  <span>${share}% от общего дохода</span>
+                  <span class="amount">${money(item.amount)}</span>
+                </div>
+                <div class="track"><div class="fill" style="width:${share}%;background:${escapeHtml(item.color)}"></div></div>
+              </div>
+              <div class="item-actions">
+                <button class="icon-button" title="Изменить" data-edit-income="${item.id}">✎</button>
+                <button class="icon-button delete" title="Удалить" data-delete-income="${item.id}">×</button>
+              </div>
+            </div>
+          `;
+        }).join("");
+      }
+
+      $("#incomeLegend").innerHTML = data.incomes.map(item => `
+        <div class="legend-row">
+          <span class="dot" style="background:${escapeHtml(item.color)};color:${escapeHtml(item.color)}"></span>
+          <span>${escapeHtml(item.name)}</span>
+          <span class="legend-value">${money(item.amount)}</span>
+        </div>
+      `).join("") || '<div class="empty">Нет данных для диаграммы.</div>';
+
+      const stops = [];
+      let cursor = 0;
+      data.incomes.forEach(item => {
+        const share = total ? item.amount / total * 100 : 0;
+        stops.push(`${item.color} ${cursor}% ${cursor + share}%`);
+        cursor += share;
+      });
+      $("#incomeDonut").style.background = stops.length
+        ? `conic-gradient(${stops.join(",")})`
+        : "#203328";
+
+      list.querySelectorAll("[data-edit-income]").forEach(button => {
+        button.addEventListener("click", () => openIncomeDialog(Number(button.dataset.editIncome)));
+      });
+
+      list.querySelectorAll("[data-delete-income]").forEach(button => {
+        button.addEventListener("click", () => {
+          data.incomes = data.incomes.filter(item => item.id !== Number(button.dataset.deleteIncome));
+          update();
+        });
+      });
+
+      renderChart(total);
+    }
+
+    function renderChart(total) {
+      const points = total > 0
+        ? [0.10, 0.13, 0.17, 0.16, 0.25, 0.31, 0.29, 0.42, 0.51, 0.56, 0.73, 0.92]
+        : [0.08, 0.08, 0.09, 0.09, 0.10, 0.10, 0.11, 0.11, 0.12, 0.12, 0.13, 0.13];
+
+      const coords = points.map((p, i) => {
+        const x = 55 + i * 55;
+        const y = 185 - p * 155;
+        return `${i === 0 ? "M" : "L"} ${x} ${y}`;
+      }).join(" ");
+
+      $("#chartLine").setAttribute("d", coords);
+      $("#chartArea").setAttribute("d", `${coords} L 660 190 L 55 190 Z`);
+    }
+
+    function renderSavings() {
+      $("#savingsTotal").textContent = money(totalSavings());
+      $("#savingsCount").textContent = data.savings.length;
+
+      const nearest = data.savings
+        .filter(item => item.target > item.current)
+        .sort((a, b) => (a.target - a.current) - (b.target - b.current))[0];
+      $("#nearestGoal").textContent = nearest ? nearest.name : "Все выполнены";
+
+      const list = $("#savingsList");
+      if (!data.savings.length) {
+        list.innerHTML = '<div class="empty">Целей накопления пока нет.</div>';
+        return;
+      }
+
+      list.innerHTML = data.savings.map(item => `
+        <div class="list-item">
+          <div class="item-info">
+            <div class="item-name">${escapeHtml(item.name)}</div>
+            ${progressMarkup(item.current, item.target)}
+          </div>
+          <div class="item-actions">
+            <button class="icon-button" title="Изменить результат" data-saving-result="${item.id}">↗</button>
+            <button class="icon-button" title="Изменить цель" data-saving-edit="${item.id}">✎</button>
+            <button class="icon-button delete" title="Удалить" data-saving-delete="${item.id}">×</button>
+          </div>
+        </div>
+      `).join("");
+
+      list.querySelectorAll("[data-saving-result]").forEach(button => {
+        button.addEventListener("click", () => updateAmount(data.savings, Number(button.dataset.savingResult)));
+      });
+      list.querySelectorAll("[data-saving-edit]").forEach(button => {
+        button.addEventListener("click", () => openGoalDialog("saving", Number(button.dataset.savingEdit)));
+      });
+      list.querySelectorAll("[data-saving-delete]").forEach(button => {
+        button.addEventListener("click", () => {
+          data.savings = data.savings.filter(item => item.id !== Number(button.dataset.savingDelete));
+          update();
+        });
+      });
+    }
+
+    function renderGoals() {
+      const list = $("#goalsList");
+
+      if (!data.goals.length) {
+        list.innerHTML = '<div class="empty">Других целей пока нет.</div>';
+      } else {
+        list.innerHTML = data.goals.map(goal => `
+          <div class="list-item">
+            <div class="item-info">
+              <div class="item-name">${escapeHtml(goal.name)}</div>
+              ${progressMarkup(goal.current, goal.target, `${goal.current} ${goal.unit || ""} из ${goal.target} ${goal.unit || ""}`)}
+            </div>
+            <div class="item-actions">
+              <button class="icon-button" title="Изменить результат" data-goal-result="${goal.id}">↗</button>
+              <button class="icon-button" title="Сделать основной" data-make-primary="${goal.id}">★</button>
+              <button class="icon-button delete" title="Удалить" data-goal-delete="${goal.id}">×</button>
+            </div>
+          </div>
+        `).join("");
+      }
+
+      list.querySelectorAll("[data-goal-result]").forEach(button => {
+        button.addEventListener("click", () => updateAmount(data.goals, Number(button.dataset.goalResult)));
+      });
+
+      list.querySelectorAll("[data-make-primary]").forEach(button => {
+        button.addEventListener("click", () => {
+          const goal = data.goals.find(item => item.id === Number(button.dataset.makePrimary));
+          if (!goal) return;
+          data.primaryGoal = {
+            name: goal.name,
+            current: Number(goal.current),
+            target: Number(goal.target)
+          };
+          data.goals = data.goals.filter(item => item.id !== goal.id);
+          update();
+        });
+      });
+
+      list.querySelectorAll("[data-goal-delete]").forEach(button => {
+        button.addEventListener("click", () => {
+          data.goals = data.goals.filter(item => item.id !== Number(button.dataset.goalDelete));
+          update();
+        });
+      });
+
+      renderPrimary("primaryGoal");
+    }
+
+    function renderTasks() {
+      const list = $("#tasksList");
+      if (!data.tasks.length) {
+        list.innerHTML = '<div class="empty">Задач пока нет. Добавь первую!</div>';
+        return;
+      }
+
+      list.innerHTML = data.tasks.map(task => `
+        <label class="list-item task-item ${task.done ? "done" : ""}">
+          <input type="checkbox" data-task-check="${task.id}" ${task.done ? "checked" : ""}>
+          <span class="task-text">${escapeHtml(task.text)}</span>
+          <button class="icon-button delete" type="button" title="Удалить"
+            data-task-delete="${task.id}">×</button>
+        </label>
+      `).join("");
+
+      list.querySelectorAll("[data-task-check]").forEach(input => {
+        input.addEventListener("change", () => {
+          const task = data.tasks.find(item => item.id === Number(input.dataset.taskCheck));
+          if (task) task.done = input.checked;
+          update();
+        });
+      });
+
+      list.querySelectorAll("[data-task-delete]").forEach(button => {
+        button.addEventListener("click", event => {
+          event.preventDefault();
+          data.tasks = data.tasks.filter(item => item.id !== Number(button.dataset.taskDelete));
+          update();
+        });
+      });
+    }
+
+    function renderHome() {
+      $("#headerSavings").textContent = money(totalSavings());
+      $("#homeIncome").textContent = money(totalIncome());
+      $("#homeSavings").textContent = money(totalSavings());
+      const done = data.tasks.filter(task => task.done).length;
+      $("#homeTasks").textContent = `${done} / ${data.tasks.length}`;
+      renderPrimary("homePrimary", true);
+    }
+
+    function update() {
+      save();
+      renderIncome();
+      renderSavings();
+      renderGoals();
+      renderTasks();
+      renderHome();
+    }
+
+    function updateAmount(collection, id) {
+      const item = collection.find(entry => entry.id === id);
+      if (!item) return;
+
+      const value = prompt(`Введите новый результат для «${item.name}»:`, item.current);
+      if (value === null) return;
+
+      const amount = Number(value);
+      if (!Number.isFinite(amount) || amount < 0) {
+        alert("Введите число не меньше нуля.");
+        return;
+      }
+
+      item.current = amount;
+      update();
+    }
+
+    function openGoalDialog(mode, id = null) {
+      goalMode = mode;
+      editingGoalId = id;
+
+      const isPrimary = mode === "primary";
+      const collection = mode === "goal" ? data.goals : data.savings;
+      const existing = isPrimary
+        ? data.primaryGoal
+        : id ? collection.find(item => item.id === id) : null;
+
+      $("#goalDialogTitle").textContent = existing
+        ? "Изменить цель"
+        : isPrimary ? "Основная цель" : "Добавить цель";
+
+      $("#goalName").value = existing?.name || "";
+      $("#goalCurrent").value = existing?.current ?? 0;
+      $("#goalTarget").value = existing?.target ?? "";
+      $("#goalDialog").showModal();
+    }
+
+    function openIncomeDialog(id = null) {
+      editingIncomeId = id;
+      const existing = id ? data.incomes.find(item => item.id === id) : null;
+      $("#incomeDialogTitle").textContent = existing ? "Изменить доход" : "Добавить доход";
+      $("#incomeName").value = existing?.name || "";
+      $("#incomeAmount").value = existing?.amount ?? "";
+      $("#incomeColor").value = existing?.color || "#48e184";
+      $("#incomeDialog").showModal();
+    }
+
+    document.querySelectorAll(".nav-button").forEach(button => {
+      button.addEventListener("click", () => showView(button.dataset.view));
+    });
+
+    document.querySelectorAll("[data-go]").forEach(button => {
+      button.addEventListener("click", () => showView(button.dataset.go));
+    });
+
+    $("#addIncomeButton").addEventListener("click", () => openIncomeDialog());
+    $("#addSavingButton").addEventListener("click", () => openGoalDialog("saving"));
+    $("#addGoalButton").addEventListener("click", () => openGoalDialog("goal"));
+    $("#setPrimaryButton").addEventListener("click", () => openGoalDialog("primary"));
+
+    $("#addTaskButton").addEventListener("click", () => {
+      $("#taskName").value = "";
+      $("#taskDialog").showModal();
+      $("#taskName").focus();
+    });
+
+    $("#goalForm").addEventListener("submit", event => {
+      event.preventDefault();
+
+      const item = {
+        name: $("#goalName").value.trim(),
+        current: Number($("#goalCurrent").value),
+        target: Number($("#goalTarget").value)
+      };
+
+      if (!item.name || item.current < 0 || item.target <= 0) {
+        alert("Проверь название и суммы цели.");
+        return;
+      }
+
+      if (goalMode === "primary") {
+        data.primaryGoal = item;
+      } else {
+        const collection = goalMode === "goal" ? data.goals : data.savings;
+        const existing = editingGoalId
+          ? collection.find(entry => entry.id === editingGoalId)
+          : null;
+
+        if (existing) {
+          Object.assign(existing, item);
+        } else {
+          item.id = Date.now();
+          if (goalMode === "goal") item.unit = "шагов";
+          collection.push(item);
+        }
+      }
+
+      $("#goalDialog").close();
+      update();
+    });
+
+    $("#incomeForm").addEventListener("submit", event => {
+      event.preventDefault();
+
+      const item = {
+        name: $("#incomeName").value.trim(),
+        amount: Number($("#incomeAmount").value),
+        color: $("#incomeColor").value
+      };
+
+      if (!item.name || item.amount < 0) {
+        alert("Проверь название и сумму дохода.");
+        return;
+      }
+
+      const existing = editingIncomeId
+        ? data.incomes.find(entry => entry.id === editingIncomeId)
+        : null;
+
+      if (existing) {
+        Object.assign(existing, item);
+      } else {
+        item.id = Date.now();
+        data.incomes.push(item);
+      }
+
+      $("#incomeDialog").close();
+      update();
+    });
+
+    $("#taskForm").addEventListener("submit", event => {
+      event.preventDefault();
+      const text = $("#taskName").value.trim();
+      if (!text) return;
+
+      data.tasks.push({ id: Date.now(), text, done: false });
+      $("#taskDialog").close();
+      update();
+    });
+
+    document.querySelectorAll("[data-close]").forEach(button => {
+      button.addEventListener("click", () => button.closest("dialog").close());
+    });
+
+    update();
+ // Логика для ИИ-ассистента
+const chatInput = document.getElementById('chatInput');
+const sendChatButton = document.getElementById('sendChatButton');
+const chatMessages = document.getElementById('chatMessages');
+
+if (sendChatButton) {
+  sendChatButton.addEventListener('click', () => {
+    const text = chatInput.value.trim();
+    if (!text) return;
+
+    const empty = chatMessages.querySelector('.empty');
+    if (empty) empty.remove();
+
+    const userMessage = document.createElement('div');
+    userMessage.className = 'list-item';
+    userMessage.innerHTML = `<div class="item-info"><div class="item-name">Ты:</div><div class="item-sub"><span class="amount">${text}</span></div></div>`;
+    chatMessages.appendChild(userMessage);
+
+    chatInput.value = '';
+
+    setTimeout(() => {
+      const aiMessage = document.createElement('div');
+      aiMessage.className = 'list-item';
+      aiMessage.innerHTML = `<div class="item-info"><div class="item-name">ИИ-ассистент:</div><div class="item-sub"><span class="amount">Это демо-ответ. Скоро здесь будет настоящий ИИ.</span></div></div>`;
+      chatMessages.appendChild(aiMessage);
+    }, 1000);
+  });
+}
+ </script>
+</body>
+</html>
