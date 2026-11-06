@@ -1,15 +1,28 @@
 {
   "name": "Мои Финансы",
   "short_name": "Финансы",
-  "start_url": "./index.html",
+  "start_url": "./finance app.html",
   "display": "standalone",
   "background_color": "#080c09",
   "theme_color": "#48e184",
+  "description": "Личный финансовый помощник",
   "icons": [
     {
       "src": "icon.svg",
       "sizes": "any",
       "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
       "purpose": "any maskable"
     }
   ]
