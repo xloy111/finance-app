@@ -1,7 +1,7 @@
 const CACHE_NAME = 'finance-app-v1';
 const ASSETS = [
   './',
-  './finance app.html', // Укажи точное имя твоего HTML файла
+  './index.html', // Укажи точное имя твоего HTML файла
   './manifest.json',
   './icon.svg',
   'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2'
