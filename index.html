@@ -204,6 +204,20 @@
     .card:hover { transform: translateY(-3px); box-shadow: 0 10px 25px #0006; }
     html[data-theme="light"] .card:hover { box-shadow: 0 10px 25px rgba(0, 0, 0, 0.06); }
 
+    /* Плавное первое появление карточек главной */
+    #view-home .home-animate-card {
+      opacity: 0;
+      transform: translateY(14px) scale(.985);
+      animation: homeCardIn .55s cubic-bezier(.22,1,.36,1) forwards;
+      animation-delay: var(--home-delay, 0ms);
+    }
+    @keyframes homeCardIn {
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      #view-home .home-animate-card { animation: none; opacity: 1; transform: none; }
+    }
+
     .stat-label { margin: 0 0 10px; color: var(--muted); font-size: 13px; }
     
     .stat-value { 
@@ -483,6 +497,20 @@
     .view.active .card:nth-child(4) { animation-delay: 0.3s; opacity: 0; }
     .view.active .card:nth-child(5) { animation-delay: 0.4s; opacity: 0; }
     .view.active .card:nth-child(6) { animation-delay: 0.5s; opacity: 0; }
+
+    @keyframes sectionWaveIn {
+      0% { opacity: 0; transform: translate3d(0, 14px, 0) scale(.992); }
+      100% { opacity: 1; transform: translate3d(0, 0, 0) scale(1); }
+    }
+    .view.active .card.section-wave-card {
+      animation: sectionWaveIn .42s cubic-bezier(.2,.75,.25,1) both !important;
+      animation-delay: var(--wave-delay, 0ms) !important;
+      will-change: opacity, transform;
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .view.active .card.section-wave-card { animation: none !important; opacity: 1; transform: none; will-change: auto; }
+    }
+
   </style>
 <base target="_blank">
 </head>
@@ -844,7 +872,7 @@
   <dialog class="modal" id="confirmDialog" style="max-width: 350px; text-align: center;"><div class="modal-inner"><h2 id="confirmTitle" style="margin-bottom: 10px; font-size: 18px;">Подтверждение</h2><p id="confirmText" style="color: var(--muted); margin-bottom: 20px; font-size: 14px;">Вы уверены?</p><div class="modal-actions" style="justify-content: center;"><button class="button secondary" type="button" onclick="closeConfirm()">Отмена</button><button class="button danger" type="button" id="confirmBtn">Удалить</button></div></div></dialog>
   <dialog class="modal" id="forgotPasswordDialog"><form class="modal-inner" id="forgotPasswordForm"><h2>Восстановление пароля</h2><p style="color: var(--muted); font-size: 13px; margin-bottom: 15px;">Введите ваш Email, и мы отправим ссылку для сброса пароля.</p><label class="field">Email<input id="forgotEmail" type="email" required placeholder="example@mail.ru"></label><div class="modal-actions"><button class="button secondary" type="button" onclick="document.getElementById('forgotPasswordDialog').close()">Отмена</button><button class="button" type="submit">Отправить ссылку</button></div></form></dialog>
   <dialog class="modal" id="resetPasswordDialog"><form class="modal-inner" id="resetPasswordForm"><h2>Новый пароль</h2><p style="color: var(--muted); font-size: 13px; margin-bottom: 15px;">Придумайте новый пароль для вашего аккаунта.</p><label class="field">Новый пароль<input id="newPassword" type="password" required minlength="6" placeholder="Минимум 6 символов"></label><div class="modal-actions"><button class="button" type="submit">Сохранить пароль</button></div></form></dialog>
-  <dialog class="modal" id="subDialog"><form class="modal-inner" id="subForm"><h2 id="subDialogTitle">Добавить подписку</h2><label class="field">Название<input id="subName" required maxlength="50" placeholder="Например: Яндекс Плюс"></label><label class="field">Сумма в месяц<input id="subAmount" type="number" min="0.01" step="0.01" required placeholder="399"></label><label class="field">День списания<input id="subDay" type="number" min="1" max="31" required placeholder="15" value="1"></label><label class="field">За какой месяц<select id="subMonth"><option value="0">Январь</option><option value="1">Февраль</option><option value="2">Март</option><option value="3">Апрель</option><option value="4">Май</option><option value="5">Июнь</option><option value="6">Июль</option><option value="7">Август</option><option value="8">Сентябрь</option><option value="9">Октябрь</option><option value="10">Ноябрь</option><option value="11">Декабрь</option></select></label><div class="modal-actions"><button class="button secondary" type="button" data-close>Отмена</button><button class="button" type="submit">Сохранить</button></div></form></dialog>
+  <dialog class="modal" id="subDialog"><form class="modal-inner" id="subForm"><h2 id="subDialogTitle">Добавить подписку</h2><label class="field">Название<input id="subName" required maxlength="50" placeholder="Например: Яндекс Плюс"></label><label class="field">Сумма списания<input id="subAmount" type="number" min="0.01" step="0.01" required placeholder="399"></label><label class="field">Периодичность<select id="subFrequency"><option value="monthly">Каждый месяц</option><option value="yearly">1 раз ежегодно</option></select></label><label class="field">День списания<input id="subDay" type="number" min="1" max="31" required placeholder="15" value="1"></label><label class="field">За какой месяц<select id="subMonth"><option value="0">Январь</option><option value="1">Февраль</option><option value="2">Март</option><option value="3">Апрель</option><option value="4">Май</option><option value="5">Июнь</option><option value="6">Июль</option><option value="7">Август</option><option value="8">Сентябрь</option><option value="9">Октябрь</option><option value="10">Ноябрь</option><option value="11">Декабрь</option></select></label><div class="modal-actions"><button class="button secondary" type="button" data-close>Отмена</button><button class="button" type="submit">Сохранить</button></div></form></dialog>
 
  <script>
     const KEY = "personal-finance-app-v1";
@@ -1093,30 +1121,47 @@
       return `<div class="progress-meta"><span>${escapeHtml(label || `${money(current)} из ${money(target)}`)}</span><strong>${value}%</strong></div><div class="track"><div class="fill" style="width:${value}%"></div></div>`;
     }
 
+    // Запоминаем показанные балансы: повторный вход в раздел не перезапускает анимацию.
+    const bankBalanceAnimationState = new Map();
+    let banksFirstOpened = false;
+    let homeCardsAnimated = false;
+
+    function animateHomeCardsOnce() {
+      if (homeCardsAnimated) return;
+      const home = document.getElementById("view-home");
+      if (!home) return;
+      const cards = home.querySelectorAll(":scope > .card, :scope > .grid > .card");
+      cards.forEach((card, index) => {
+        card.classList.add("home-animate-card");
+        card.style.setProperty("--home-delay", `${index * 75}ms`);
+      });
+      homeCardsAnimated = true;
+    }
+
+    function animateSectionCards(name) {
+      if (!["income", "expenses", "subscriptions"].includes(name)) return;
+      const view = document.getElementById(`view-${name}`);
+      if (!view || window.matchMedia?.("(prefers-reduced-motion: reduce)").matches) return;
+      const cards = [...view.querySelectorAll(".card")];
+      // Перезапускаем волну без blur и тяжёлых эффектов, чтобы не тормозить интерфейс.
+      cards.forEach(card => card.classList.remove("section-wave-card"));
+      requestAnimationFrame(() => {
+        cards.forEach((card, index) => {
+          card.style.setProperty("--wave-delay", `${Math.min(index, 7) * 45}ms`);
+          card.classList.add("section-wave-card");
+        });
+      });
+    }
+
     function showView(name) {
       document.querySelectorAll(".view").forEach(view => { view.classList.toggle("active", view.id === `view-${name}`); });
       document.querySelectorAll(".nav-button").forEach(button => { button.classList.toggle("active", button.dataset.view === name); });
-      
-      // Если открыли Банки - принудительно запускаем анимацию цифр
-      if (name === 'banks') {
-        setTimeout(() => {
-          const accounts = Array.isArray(data.bankAccounts) ? data.bankAccounts : [];
-          const total = accounts.reduce((sum, account) => sum + Math.max(0, Number(account.balance) || 0), 0);
-          const providers = new Set(accounts.map(account => account.provider));
-          
-          animateBankNumbers("#banksTotal", total, true);
-          animateBankNumbers("#banksAccountCount", accounts.length, false);
-          animateBankNumbers("#banksBankCount", providers.size, false);
-          
-          document.querySelectorAll(".account-balance-value").forEach(el => {
-            const target = Number(el.dataset.balance);
-            if (isFinite(target) && target > 0) {
-              animateSingleBalance(el, target);
-            }
-          });
-        }, 100); // Небольшая задержка для мобильных
+      if (name === "home") animateHomeCardsOnce();
+      animateSectionCards(name);
+      if (name === "banks") {
+        renderBanks();
+        banksFirstOpened = true;
       }
-      
       if (window.innerWidth <= 760) { toggleMenu(); }
     }
 
@@ -1149,12 +1194,12 @@
       const total = accounts.reduce((sum, account) => sum + Math.max(0, Number(account.balance) || 0), 0);
       const providers = new Set(accounts.map(account => account.provider));
       
-      // Запускаем анимацию верхних цифр с задержкой для мобильных
-      setTimeout(() => {
+      const banksVisible = document.getElementById("view-banks")?.classList.contains("active");
+      if (banksVisible) {
         animateBankNumbers("#banksTotal", total, true);
         animateBankNumbers("#banksAccountCount", accounts.length, false);
         animateBankNumbers("#banksBankCount", providers.size, false);
-      }, 50);
+      }
 
       if (!accounts.length) {
         list.innerHTML = '<div class="empty" style="padding: 40px; border-radius: 20px; border: 1px dashed var(--border);">Пока нет счетов. Нажми «Добавить счёт», чтобы создать первый.</div>';
@@ -1185,7 +1230,7 @@
 
           <div>
             <div class="account-balance-label">Текущий баланс</div>
-            <div class="account-balance-value" data-balance="${balance}">${money(balance)}</div>
+            <div class="account-balance-value" data-account-id="${escapeHtml(String(account.id))}" data-balance="${balance}">${money(balance)}</div>
             <div class="account-details">
               <span>${last4}</span>
             </div>
@@ -1199,15 +1244,19 @@
         </article>`;
       }).join("");
 
-      // Запускаем анимацию балансов внутри карточек тоже с задержкой
-      setTimeout(() => {
-        list.querySelectorAll(".account-balance-value").forEach(el => {
-          const target = Number(el.dataset.balance);
-          if (isFinite(target) && target > 0) {
-            animateSingleBalance(el, target);
-          }
-        });
-      }, 100);
+      list.querySelectorAll(".account-balance-value").forEach(el => {
+        const target = Number(el.dataset.balance);
+        const id = el.dataset.accountId;
+        if (!Number.isFinite(target)) return;
+        const previous = bankBalanceAnimationState.get(id);
+        const banksVisible = document.getElementById("view-banks")?.classList.contains("active");
+        if (banksVisible && (previous === undefined || previous !== target)) {
+          animateSingleBalance(el, target, previous);
+        } else {
+          el.textContent = money(target);
+        }
+        if (banksVisible) bankBalanceAnimationState.set(id, target);
+      });
 
       list.querySelectorAll("[data-bank-edit]").forEach(button => {
         button.addEventListener("click", () => {
@@ -1243,19 +1292,15 @@
     function animateBankNumbers(selector, target, isMoney) {
       const el = document.querySelector(selector);
       if (!el) return;
-      
-      // Принудительно сбрасываем на 0 перед стартом
-      el.textContent = isMoney ? "0 " + currentCurrency : "0";
-      
-      if (target === 0) return;
-      
-      const duration = 800;
+      const start = parseFloat(el.dataset.cur || "0") || 0;
+      if (start === target) return;
+      const duration = 1150;
       const startTime = performance.now();
       
       function tick(t) {
         const p = Math.min(1, (t - startTime) / duration);
         const easeOut = 1 - Math.pow(1 - p, 3);
-        const current = 0 + (target - 0) * easeOut;
+        const current = start + (target - start) * easeOut;
         
         if (isMoney) {
           el.textContent = new Intl.NumberFormat("ru-RU", { maximumFractionDigits: 0 }).format(Math.round(current)) + " " + currentCurrency;
@@ -1265,17 +1310,20 @@
         
         if (p < 1) {
           requestAnimationFrame(tick);
+        } else {
+          el.dataset.cur = String(target);
         }
       }
       requestAnimationFrame(tick);
     }
 
-    function animateSingleBalance(el, target) {
-      const start = 0;
-      const duration = 800;
+    function animateSingleBalance(el, target, previousValue) {
+      const start = Number.isFinite(previousValue) ? previousValue : 0;
+      const duration = 1250;
       const startTime = performance.now();
       const currency = currentCurrency;
-      
+      if (start === target) { el.textContent = money(target); return; }
+
       function tick(t) {
         const p = Math.min(1, (t - startTime) / duration);
         const easeOut = 1 - Math.pow(1 - p, 3);
@@ -1308,13 +1356,34 @@
       container.querySelector("[data-primary-change]")?.addEventListener("click", () => { openGoalDialog("primary"); });
     }
     
-    function totalExpenses() { return data.expenses.reduce((sum, item) => sum + Number(item.amount || 0), 0); }
+    function isSubscriptionExpense(item) {
+      return String(item?.name || "").startsWith("Подписка:") || String(item?.name || "").startsWith("Subscription:");
+    }
+
+    // Ежемесячные подписки учитываются с выбранного месяца до декабря,
+    // ежегодные — только один раз в указанном месяце.
+    function expenseAmountForPeriod(item, selected) {
+      const amount = Number(item.amount || 0);
+      if (!isSubscriptionExpense(item)) return amount;
+      const startMonth = Math.max(0, Math.min(11, Number(item.month ?? 0)));
+      const frequency = item.subscriptionFrequency || "monthly"; // совместимость со старыми записями
+      if (frequency === "yearly") return selected === "year" || Number(selected) === startMonth ? amount : 0;
+      if (selected === "year") return amount * (12 - startMonth);
+      return Number(selected) >= startMonth ? amount : 0;
+    }
+
+    function totalExpenses() { return data.expenses.reduce((sum, item) => sum + expenseAmountForPeriod(item, "year"), 0); }
 
     function renderExpenses() {
       const filterEl = $("#expenseMonthFilter");
       const selected = filterEl ? filterEl.value : "year";
-      const filteredExpenses = selected === "year" ? data.expenses : data.expenses.filter(item => Number(item.month) === Number(selected));
-      const total = filteredExpenses.reduce((sum, item) => sum + Number(item.amount || 0), 0);
+      const filteredExpenses = selected === "year"
+        ? data.expenses
+        : data.expenses.filter(item => isSubscriptionExpense(item)
+          ? (item.subscriptionFrequency === "yearly" ? Number(selected) === Number(item.month ?? 0) : Number(selected) >= Number(item.month ?? 0))
+          : Number(item.month) === Number(selected));
+      const amountForItem = item => expenseAmountForPeriod(item, selected);
+      const total = filteredExpenses.reduce((sum, item) => sum + amountForItem(item), 0);
       const filteredIncomes = selected === "year" ? data.incomes : data.incomes.filter(item => Number(item.month) === Number(selected));
       const totalInc = filteredIncomes.reduce((sum, item) => sum + Number(item.amount || 0), 0);
       $("#expenseTotal").textContent = money(total);
@@ -1339,14 +1408,18 @@
       const list = $("#expenseList");
       if (!filteredExpenses.length) { list.innerHTML = '<div class="empty">Расходов за этот период нет.</div>'; } else {
         list.innerHTML = filteredExpenses.map(item => {
-          const share = total ? Math.round(item.amount / total * 100) : 0;
-          return `<div class="list-item"><div class="item-info"><div class="item-name"><span class="dot" style="background:${item.color}"></span>${escapeHtml(item.name)}</div><div class="item-sub"><span>${share}% от всех трат</span><span class="amount">${money(item.amount)}</span></div><div class="track"><div class="fill" style="width:${share}%;background:${item.color}"></div></div></div><div class="item-actions"><button class="icon-button delete" data-delete-expense="${item.id}">×</button></div></div>`;
+          const itemAmount = amountForItem(item);
+          const share = total ? Math.round(itemAmount / total * 100) : 0;
+          return `<div class="list-item"><div class="item-info"><div class="item-name"><span class="dot" style="background:${item.color}"></span>${escapeHtml(item.name)}</div><div class="item-sub"><span>${share}% от всех трат</span><span class="amount">${money(itemAmount)}</span></div><div class="track"><div class="fill" style="width:${share}%;background:${item.color}"></div></div></div><div class="item-actions"><button class="icon-button" title="Изменить расход" data-edit-expense="${item.id}">✎</button><button class="icon-button delete" data-delete-expense="${item.id}">×</button></div></div>`;
         }).join("");
       }
-      $("#expenseLegend").innerHTML = filteredExpenses.map(item => `<div class="legend-row"><span class="dot" style="background:${item.color}"></span><span>${escapeHtml(item.name)}</span><span class="legend-value">${money(item.amount)}</span></div>`).join("") || '<div class="empty">Нет данных.</div>';
+      $("#expenseLegend").innerHTML = filteredExpenses.map(item => `<div class="legend-row"><span class="dot" style="background:${item.color}"></span><span>${escapeHtml(item.name)}</span><span class="legend-value">${money(amountForItem(item))}</span></div>`).join("") || '<div class="empty">Нет данных.</div>';
       const stops = []; let cursor = 0;
-      filteredExpenses.forEach(item => { const share = total ? item.amount / total * 100 : 0; stops.push(`${item.color} ${cursor}% ${cursor + share}%`); cursor += share; });
+      filteredExpenses.forEach(item => { const share = total ? amountForItem(item) / total * 100 : 0; stops.push(`${item.color} ${cursor}% ${cursor + share}%`); cursor += share; });
       $("#expenseDonut").style.background = stops.length ? `conic-gradient(${stops.join(",")})` : "#203328";
+      list.querySelectorAll("[data-edit-expense]").forEach(button => {
+        button.addEventListener("click", () => openExpenseDialog(Number(button.dataset.editExpense)));
+      });
       list.querySelectorAll("[data-delete-expense]").forEach(button => {
         button.addEventListener("click", () => { 
           showConfirm("Удалить расход?", "Вы уверены?", () => {
@@ -1358,7 +1431,23 @@
       renderExpenseChart();
     }
 
-    function openExpenseDialog() { $("#expenseForm").reset(); $("#expenseDialog").showModal(); }
+    let editingExpenseId = null;
+    let editingSubscriptionId = null;
+
+    function openExpenseDialog(id = null) {
+      editingExpenseId = id;
+      const form = $("#expenseForm");
+      form.reset();
+      const item = id == null ? null : data.expenses.find(entry => Number(entry.id) === Number(id));
+      $("#expenseDialogTitle").textContent = item ? "Изменить расход" : "Добавить расход";
+      if (item) {
+        $("#expenseName").value = item.name || "";
+        $("#expenseAmount").value = Number(item.amount || 0);
+        $("#expenseMonth").value = String(item.month ?? 0);
+        $("#expenseColor").value = item.color || "#ff596d";
+      }
+      $("#expenseDialog").showModal();
+    }
 
     function renderIncome() {
       const filterEl = $("#incomeMonthFilter");
@@ -1446,7 +1535,11 @@
       const monthlyTotals = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
       data.expenses.forEach(item => {
         const monthIndex = item.month !== undefined ? Number(item.month) : new Date().getMonth();
-        if (monthIndex >= 0 && monthIndex < 12) monthlyTotals[monthIndex] += Number(item.amount || 0);
+        if (isSubscriptionExpense(item)) {
+          for (let month = Math.max(0, monthIndex); month < 12; month++) monthlyTotals[month] += Number(item.amount || 0);
+        } else if (monthIndex >= 0 && monthIndex < 12) {
+          monthlyTotals[monthIndex] += Number(item.amount || 0);
+        }
       });
 
       const maxAmount = Math.max(...monthlyTotals, 1); 
@@ -1572,16 +1665,19 @@
       } else {
         list.innerHTML = data.subscriptions.map(sub => {
           const monthName = document.querySelector(`#subMonth option[value="${sub.month}"]`)?.textContent || '';
+          const frequency = sub.frequency || "monthly";
+          const frequencyLabel = frequency === "yearly" ? "1 раз ежегодно" : "Каждый месяц";
           return `
             <div class="list-item">
               <div class="item-info">
                 <div class="item-name">${escapeHtml(sub.name)}</div>
                 <div class="item-sub">
-                  <span>Списание ${sub.day}-го числа • ${monthName}</span>
-                  <span class="amount">${money(sub.amount)} / мес</span>
+                  <span>${frequencyLabel} • ${sub.day}-го числа • ${monthName}</span>
+                  <span class="amount">${money(sub.amount)} ${frequency === "yearly" ? "/ год" : "/ мес"}</span>
                 </div>
               </div>
               <div class="item-actions">
+                <button class="icon-button" title="Изменить подписку" data-sub-edit="${sub.id}">✎</button>
                 <button class="icon-button delete" title="Удалить" data-sub-delete="${sub.id}">×</button>
               </div>
             </div>
@@ -1589,19 +1685,43 @@
         }).join("");
       }
 
-      const totalMonth = data.subscriptions.reduce((sum, s) => sum + Number(s.amount), 0);
-      const totalYear = totalMonth * 12;
+      const totalYear = data.subscriptions.reduce((sum, sub) => {
+        const amount = Number(sub.amount || 0);
+        const startMonth = Math.max(0, Math.min(11, Number(sub.month ?? 0)));
+        return sum + (sub.frequency === "yearly" ? amount : amount * (12 - startMonth));
+      }, 0);
       $("#subsTotalYear").textContent = money(totalYear);
       $("#subsCount").textContent = data.subscriptions.length;
 
+      list.querySelectorAll("[data-sub-edit]").forEach(button => {
+        button.addEventListener("click", () => openSubscriptionDialog(Number(button.dataset.subEdit)));
+      });
       list.querySelectorAll("[data-sub-delete]").forEach(button => {
         button.addEventListener("click", () => {
-          showConfirm("Удалить подписку?", "Вы уверены?", () => {
-            data.subscriptions = data.subscriptions.filter(s => s.id !== Number(button.dataset.subDelete));
+          showConfirm("Удалить подписку?", "Подписка и связанный расход будут удалены.", () => {
+            const id = Number(button.dataset.subDelete);
+            const removedSub = data.subscriptions.find(sub => Number(sub.id) === id);
+            data.subscriptions = data.subscriptions.filter(sub => Number(sub.id) !== id);
+            data.expenses = data.expenses.filter(expense => Number(expense.subscriptionId) !== id && !(removedSub && String(expense.name || "") === `Подписка: ${removedSub.name}`));
             update();
           });
         });
       });
+    }
+
+    function openSubscriptionDialog(id = null) {
+      editingSubscriptionId = id;
+      $("#subForm").reset();
+      const sub = id == null ? null : data.subscriptions.find(entry => Number(entry.id) === Number(id));
+      $("#subDialogTitle").textContent = sub ? "Изменить подписку" : "Добавить подписку";
+      if (sub) {
+        $("#subName").value = sub.name || "";
+        $("#subAmount").value = Number(sub.amount || 0);
+        $("#subDay").value = Number(sub.day || 1);
+        $("#subMonth").value = String(sub.month ?? 0);
+        $("#subFrequency").value = sub.frequency || "monthly";
+      }
+      $("#subDialog").showModal();
     }
 
     function renderGoals() {
@@ -1671,7 +1791,7 @@
       $("#homeNetIncome").textContent = money(totalIncomeMonth - totalExpensesMonth);
     }
 
-    function update() { save(); renderIncome(); renderExpenses(); renderSavings(); renderDebts(); renderSubscriptions(); renderBanks(); renderGoals(); renderTasks(); renderHome(); animateStatNumbers(); }
+    function update() { save(); renderIncome(); renderExpenses(); renderSavings(); renderDebts(); renderSubscriptions(); renderBanks(); renderGoals(); renderTasks(); renderHome(); animateStatNumbers(); if (document.getElementById("view-home")?.classList.contains("active")) animateHomeCardsOnce(); }
 
     function animateChartDraw() {
       const line = $("#chartLine");
@@ -1687,26 +1807,42 @@
       if (area) { area.style.opacity = "0"; requestAnimationFrame(() => { area.style.opacity = "1"; }); }
     }
 
+    const statAnimationFrames = new WeakMap();
     function animateStatNumbers() {
+      const reducedMotion = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
       document.querySelectorAll(".view.active .stat-value").forEach(el => {
         const finalText = el.textContent.trim();
         if (finalText.includes("/")) { delete el.dataset.cur; return; }
-        const m = finalText.match(/^(.*?)(-?[\d\s ]+(?:[.,]\d+)?)([^\d]*)$/);
+        const m = finalText.match(/^(.*?)(-?[\d\s]+(?:[.,]\d+)?)([^\d]*)$/);
         if (!m) return;
-        const target = parseFloat(m[2].replace(/[\s ]/g, "").replace(",", "."));
-        if (!isFinite(target)) return;
+        const target = Number(m[2].replace(/\s/g, "").replace(",", "."));
+        if (!Number.isFinite(target)) return;
         const prefix = m[1], suffix = m[3];
-        const from = parseFloat(el.dataset.cur || "0") || 0;
-        const start = performance.now(), dur = 650;
-        if (from === target) return;
-        function tick(t) {
-          const p = Math.min(1, (t - start) / dur);
-          const e = 1 - Math.pow(1 - p, 3);
-          const v = from + (target - from) * e;
-          el.textContent = prefix + new Intl.NumberFormat("ru-RU", { maximumFractionDigits: Number.isInteger(target) ? 0 : 2 }).format(Math.round(v * 100) / 100) + suffix;
-          if (p < 1) requestAnimationFrame(tick); else el.dataset.cur = String(target);
+        const previousFrame = statAnimationFrames.get(el);
+        if (previousFrame) cancelAnimationFrame(previousFrame);
+        const cached = Number(el.dataset.cur);
+        const from = Number.isFinite(cached) ? cached : 0;
+        if (reducedMotion || Math.abs(from - target) < 0.005) {
+          el.textContent = finalText;
+          el.dataset.cur = String(target);
+          return;
         }
-        requestAnimationFrame(tick);
+        const start = performance.now(), duration = 1150;
+        const formatter = new Intl.NumberFormat("ru-RU", { maximumFractionDigits: Number.isInteger(target) ? 0 : 2 });
+        const tick = now => {
+          const progress = Math.min(1, (now - start) / duration);
+          const eased = 1 - Math.pow(1 - progress, 3);
+          const value = from + (target - from) * eased;
+          el.textContent = prefix + formatter.format(Math.round(value * 100) / 100) + suffix;
+          if (progress < 1) {
+            statAnimationFrames.set(el, requestAnimationFrame(tick));
+          } else {
+            el.textContent = finalText;
+            el.dataset.cur = String(target);
+            statAnimationFrames.delete(el);
+          }
+        };
+        statAnimationFrames.set(el, requestAnimationFrame(tick));
       });
     }
 
@@ -1786,8 +1922,16 @@
     $("#addIncomeButton").addEventListener("click", () => openIncomeDialog());
     $("#homeAddIncomeBtn").addEventListener("click", () => openIncomeDialog());
     $("#homeAddExpenseBtn").addEventListener("click", openExpenseDialog);
-    $("#incomeMonthFilter").addEventListener("change", () => { renderIncome(); });
-    $("#expenseMonthFilter").addEventListener("change", () => { renderExpenses(); });
+    $("#incomeMonthFilter").addEventListener("change", () => {
+      renderIncome();
+      animateSectionCards("income");
+      animateStatNumbers();
+    });
+    $("#expenseMonthFilter").addEventListener("change", () => {
+      renderExpenses();
+      animateSectionCards("expenses");
+      animateStatNumbers();
+    });
     $("#addExpenseButton").addEventListener("click", openExpenseDialog);
     $("#addSavingButton").addEventListener("click", () => openGoalDialog("saving"));
     $("#addGoalButton").addEventListener("click", () => openGoalDialog("goal"));
@@ -1817,9 +1961,20 @@
 
     $("#expenseForm").addEventListener("submit", event => {
       event.preventDefault();
-      const item = { month: Number($("#expenseMonth").value), id: Date.now(), name: $("#expenseName").value.trim(), amount: Number($("#expenseAmount").value), color: $("#expenseColor").value };
+      const item = { month: Number($("#expenseMonth").value), name: $("#expenseName").value.trim(), amount: Number($("#expenseAmount").value), color: $("#expenseColor").value };
       if (!item.name || item.amount < 0) { alert("Проверь название и сумму."); return; }
-      data.expenses.push(item); $("#expenseDialog").close(); update();
+      const existing = editingExpenseId == null ? null : data.expenses.find(entry => Number(entry.id) === Number(editingExpenseId));
+      if (existing) {
+        Object.assign(existing, item);
+        if (existing.subscriptionId) {
+          const linkedSub = data.subscriptions.find(sub => Number(sub.id) === Number(existing.subscriptionId));
+          if (linkedSub) { linkedSub.name = item.name.replace(/^(Подписка:|Subscription:)\s*/, ""); linkedSub.amount = item.amount; linkedSub.month = item.month; }
+        }
+      } else {
+        data.expenses.push({ id: Date.now(), ...item });
+      }
+      editingExpenseId = null;
+      $("#expenseDialog").close(); update();
     });
 
     $("#taskForm").addEventListener("submit", event => {
@@ -1837,28 +1992,40 @@
       data.debts.push(item); $("#debtDialog").close(); update();
     });
 
-    $("#addSubButton").addEventListener("click", () => { $("#subForm").reset(); $("#subDialog").showModal(); });
+    $("#addSubButton").addEventListener("click", () => openSubscriptionDialog());
     $("#subForm").addEventListener("submit", event => {
       event.preventDefault();
-      const subItem = { 
-        id: Date.now(), 
-        name: $("#subName").value.trim(), 
-        amount: Number($("#subAmount").value), 
-        day: Number($("#subDay").value), 
-        month: Number($("#subMonth").value) 
+      const subItem = {
+        name: $("#subName").value.trim(),
+        amount: Number($("#subAmount").value),
+        day: Number($("#subDay").value),
+        month: Number($("#subMonth").value),
+        frequency: $("#subFrequency").value === "yearly" ? "yearly" : "monthly"
       };
       if (!subItem.name || subItem.amount <= 0 || subItem.day < 1 || subItem.day > 31) { alert("Проверь название, сумму и день (1-31)."); return; }
-      
-      data.subscriptions.push(subItem); 
-      
-      data.expenses.push({
-        id: Date.now() + 1,
-        name: `Подписка: ${subItem.name}`,
-        amount: subItem.amount,
-        color: "#d064ca",
-        month: subItem.month
-      });
 
+      let existing = editingSubscriptionId == null ? null : data.subscriptions.find(sub => Number(sub.id) === Number(editingSubscriptionId));
+      if (existing) Object.assign(existing, subItem);
+      else { subItem.id = Date.now(); data.subscriptions.push(subItem); existing = subItem; }
+
+      // У каждой подписки ровно одна связанная запись расхода; периодичность
+      // определяет, в каких месяцах и сколько раз она учитывается.
+      let linkedExpense = data.expenses.find(expense => Number(expense.subscriptionId) === Number(existing.id));
+      if (!linkedExpense) {
+        linkedExpense = data.expenses.find(expense => !expense.subscriptionId && String(expense.name || "") === `Подписка: ${existing.name}` && Number(expense.month ?? 0) === Number(existing.month));
+      }
+      const expenseData = {
+        name: `Подписка: ${existing.name}`,
+        amount: existing.amount,
+        color: "#d064ca",
+        month: existing.month,
+        subscriptionId: existing.id,
+        subscriptionFrequency: existing.frequency
+      };
+      if (linkedExpense) Object.assign(linkedExpense, expenseData);
+      else data.expenses.push({ id: Date.now() + 1, ...expenseData });
+
+      editingSubscriptionId = null;
       $("#subDialog").close(); update();
     });
 
