@@ -15,34 +15,105 @@
   </script>
 
   <style>
-    /* --- ТЕМНАЯ ТЕМА (ПО УМОЛЧАНИЮ) --- */
+    /* --- БАЗОВЫЕ ПЕРЕМЕННЫЕ (ТЕМНАЯ ТЕМА) --- */
     :root {
       color-scheme: dark;
       --bg: #080c09;
-      --panel: #101812;
-      --panel-2: #142119;
-      --green: #48e184;
-      --green-2: #a0ffbd;
       --text: #e5efe8;
       --muted: #97a89b;
-      --border: #275f3a;
       --red: #ff6e7a;
       --shadow: 0 14px 35px #0006;
+      
+      /* Изумрудный по умолчанию */
+      --accent: #48e184;
+      --accent-hover: #1c482a;
+      
+      /* Дефолтные панели для изумрудного */
+      --panel: #101812;
+      --panel-2: #142119;
+      --border: #275f3a;
     }
 
     /* --- СВЕТЛАЯ ТЕМА --- */
     html[data-theme="light"] {
       color-scheme: light;
       --bg: #f2f8f4;
-      --panel: #ffffff;
-      --panel-2: #f8fbf9;
-      --green: #15803d;
-      --green-2: #166534;
       --text: #0f172a;
       --muted: #64748b;
-      --border: #e2e8f0;
       --red: #ef4444;
       --shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+      
+      --panel: #ffffff;
+      --panel-2: #f8fbf9;
+      --border: #e2e8f0;
+    }
+
+    /* --- ЦВЕТОВЫЕ ПАЛИТРЫ --- */
+    
+    /* Изумрудный */
+    html[data-accent="emerald"] { 
+      --accent: #48e184; 
+      --accent-hover: #1c482a; 
+      --panel: #101812;
+      --panel-2: #142119;
+      --border: #275f3a;
+    }
+    html[data-theme="light"][data-accent="emerald"] { 
+      --accent: #15803d; 
+      --accent-hover: #d1ebd9; 
+      --panel: #ffffff;
+      --panel-2: #f8fbf9;
+      --border: #e2e8f0;
+    }
+    
+    /* Синий */
+    html[data-accent="blue"] { 
+      --accent: #3b82f6; 
+      --accent-hover: #1e3a8a; 
+      --panel: #0d131f;
+      --panel-2: #131c2e;
+      --border: #1e3a8a;
+    }
+    html[data-theme="light"][data-accent="blue"] { 
+      --accent: #2563eb; 
+      --accent-hover: #dbeafe; 
+      --panel: #ffffff;
+      --panel-2: #f0f7ff;
+      --border: #bfdbfe;
+    }
+    
+    /* Фиолетовый */
+    html[data-accent="purple"] { 
+      --accent: #c084fc; 
+      --accent-hover: #4c1d95; 
+      --panel: #140f1a;
+      --panel-2: #1c1426;
+      --border: #4c1d95;
+    }
+    html[data-theme="light"][data-accent="purple"] { 
+      --accent: #9333ea; 
+      --accent-hover: #f3e8ff; 
+      --panel: #ffffff;
+      --panel-2: #faf5ff;
+      --border: #e9d5ff;
+    }
+    
+    /* Монохром (Черно-белый) */
+    html[data-accent="mono"] { 
+      --accent: #ffffff; 
+      --accent-hover: #333333; 
+      --panel: #0a0a0a;
+      --panel-2: #141414;
+      --border: #333333;
+      --bg: #000000;
+    }
+    html[data-theme="light"][data-accent="mono"] { 
+      --accent: #000000; 
+      --accent-hover: #e5e5e5; 
+      --panel: #ffffff;
+      --panel-2: #f5f5f5;
+      --border: #e5e5e5;
+      --bg: #ffffff;
     }
 
     * { box-sizing: border-box; }
@@ -51,13 +122,13 @@
       min-height: 100vh;
       margin: 0;
       color: var(--text);
-      background: radial-gradient(ellipse at 48% -10%, #193821 0, transparent 43%), var(--bg);
-      font-family: Arial, Helvetica, sans-serif;
+      background: radial-gradient(ellipse at 48% -10%, color-mix(in srgb, var(--accent) 10%, transparent) 0, transparent 43%), var(--bg);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
       transition: background 0.3s ease, color 0.3s ease;
     }
 
     html[data-theme="light"] body {
-      background: linear-gradient(135deg, #e6f4eb 0%, #f2f8f4 30%, #ffffff 100%);
+      background: linear-gradient(135deg, color-mix(in srgb, var(--accent) 5%, #f2f8f4) 0%, #f2f8f4 30%, #ffffff 100%);
       background-attachment: fixed;
     }
 
@@ -73,16 +144,16 @@
     }
 
     .topbar { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 24px; }
-    .brand { display: flex; align-items: center; gap: 11px; color: var(--green); font-size: 18px; font-weight: 800; font-style: italic; }
-    .brand-icon { display: grid; width: 38px; height: 38px; place-items: center; border: 1px solid var(--border); border-radius: 12px; background: var(--panel); box-shadow: var(--shadow); font-size: 20px; }
+    .brand { display: flex; align-items: center; gap: 11px; color: var(--accent); font-size: 18px; font-weight: 800; font-style: italic; }
+    .brand-icon { display: grid; width: 38px; height: 38px; place-items: center; border: 1px solid var(--border); border-radius: 12px; background: var(--panel); box-shadow: var(--shadow); font-size: 20px; color: var(--accent); }
     
     html[data-theme="light"] .brand-icon {
-      background: var(--green);
+      background: var(--accent);
       color: white;
       border: none;
     }
 
-    .mobile-menu-btn { display: none; background: none; border: none; color: var(--green); font-size: 28px; cursor: pointer; }
+    .mobile-menu-btn { display: none; background: none; border: none; color: var(--accent); font-size: 28px; cursor: pointer; }
 
     .layout { display: grid; grid-template-columns: 220px minmax(0, 1fr); gap: 20px; align-items: start; }
     
@@ -91,13 +162,13 @@
     html[data-theme="light"] .sidebar { border: none; }
 
     .nav-button { display: flex; width: 100%; align-items: center; gap: 12px; margin: 3px 0; padding: 12px; border: 1px solid transparent; border-radius: 11px; background: transparent; color: var(--muted); cursor: pointer; text-align: left; transition: 150ms ease; }
-    .nav-button:hover { background: var(--panel-2); color: var(--green-2); }
-    .nav-button.active { border-color: var(--green); background: var(--panel-2); color: var(--green); }
+    .nav-button:hover { background: var(--panel-2); color: var(--accent); }
+    .nav-button.active { border-color: var(--accent); background: var(--panel-2); color: var(--accent); }
     
     html[data-theme="light"] .nav-button.active { 
-      background: #e8f5ec; 
+      background: color-mix(in srgb, var(--accent) 10%, transparent); 
       border-color: transparent; 
-      color: var(--green); 
+      color: var(--accent); 
     }
     html[data-theme="light"] .nav-button:hover {
       background: #f1f5f9;
@@ -110,7 +181,8 @@
     .view { display: none; animation: appear 180ms ease; }
     .view.active { display: block; }
     @keyframes appear { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
-    .page-heading { margin: 0 0 6px; color: var(--green); font-size: clamp(26px, 4vw, 36px); font-style: italic; }
+    
+    .page-heading { margin: 0 0 6px; color: var(--accent); font-size: clamp(26px, 4vw, 36px); font-style: italic; }
     .page-subtitle { margin: 0 0 22px; color: var(--muted); font-size: 14px; }
     .grid { display: grid; gap: 16px; }
     .stats-grid { grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); margin-bottom: 16px; }
@@ -134,21 +206,20 @@
 
     .stat-label { margin: 0 0 10px; color: var(--muted); font-size: 13px; }
     
-    /* Исправлено для 1 строки */
     .stat-value { 
       margin: 0; 
-      color: var(--green); 
+      color: var(--accent); 
       font-size: clamp(20px, 2.5vw, 28px); 
       font-weight: 800; 
       white-space: nowrap; 
     }
     
-    .card-title { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin: 0 0 15px; color: var(--green); font-size: 17px; font-style: italic; }
+    .card-title { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin: 0 0 15px; color: var(--accent); font-size: 17px; font-style: italic; }
     
     .primary-goal { padding: 20px; border: 1px solid var(--border); border-radius: 15px; background: var(--panel-2); }
     html[data-theme="light"] .primary-goal { background: #f8fafc; border-color: #e2e8f0; }
 
-    .eyebrow { margin-bottom: 8px; color: var(--green); font-size: 11px; font-weight: 800; letter-spacing: 1.2px; text-transform: uppercase; }
+    .eyebrow { margin-bottom: 8px; color: var(--accent); font-size: 11px; font-weight: 800; letter-spacing: 1.2px; text-transform: uppercase; }
     .primary-goal h3 { margin: 0 0 16px; font-size: 22px; color: var(--text); }
     .progress-meta { display: flex; justify-content: space-between; gap: 10px; margin-bottom: 8px; color: var(--muted); font-size: 12px; }
     .progress-meta strong { color: var(--text); }
@@ -157,15 +228,15 @@
     html[data-theme="dark"] .track { background: #070b08; }
     html[data-theme="light"] .track { background: #e2e8f0; border: none; }
     
-    .fill { height: 100%; width: 0; border-radius: inherit; background: var(--green); transition: width 800ms cubic-bezier(.22,1,.36,1); }
-    .progress-percent { margin-top: 7px; color: var(--green); font-size: 12px; font-weight: 700; text-align: right; }
+    .fill { height: 100%; width: 0; border-radius: inherit; background: var(--accent); transition: width 800ms cubic-bezier(.22,1,.36,1); }
+    .progress-percent { margin-top: 7px; color: var(--accent); font-size: 12px; font-weight: 700; text-align: right; }
     
-    .button { display: inline-flex; min-height: 40px; align-items: center; justify-content: center; gap: 7px; padding: 9px 13px; border: 1px solid var(--green); border-radius: 10px; background: var(--panel-2); color: var(--green); font-size: 13px; font-weight: 700; cursor: pointer; transition: 150ms ease; }
+    .button { display: inline-flex; min-height: 40px; align-items: center; justify-content: center; gap: 7px; padding: 9px 13px; border: 1px solid var(--accent); border-radius: 10px; background: var(--panel-2); color: var(--accent); font-size: 13px; font-weight: 700; cursor: pointer; transition: 150ms ease; }
     
-    html[data-theme="light"] .button { background: #e8f5ec; border-color: transparent; color: var(--green); }
-    .button:hover { transform: translateY(-1px); background: var(--green); color: #fff; }
-    html[data-theme="dark"] .button:hover { background: #1c482a; color: var(--green); }
-    html[data-theme="light"] .button:hover { background: #d1ebd9; }
+    html[data-theme="light"] .button { background: color-mix(in srgb, var(--accent) 10%, transparent); border-color: transparent; color: var(--accent); }
+    .button:hover { transform: translateY(-1px); background: var(--accent); color: #fff; }
+    html[data-theme="dark"] .button:hover { background: var(--accent-hover); color: var(--accent); }
+    html[data-theme="light"] .button:hover { background: var(--accent-hover); }
     
     .button.secondary { border-color: var(--border); background: transparent; color: var(--text); }
     html[data-theme="light"] .button.secondary { background: #ffffff; border: 1px solid #e2e8f0; color: var(--text); }
@@ -201,69 +272,191 @@
     .item-sub .amount { color: var(--text); }
     .item-actions { display: flex; gap: 6px; }
     
-    .icon-button { display: grid; width: 34px; height: 34px; flex: 0 0 34px; place-items: center; border: 1px solid var(--border); border-radius: 9px; background: var(--panel); color: var(--green); cursor: pointer; transition: 0.2s; }
-    .icon-button:hover { border-color: var(--green); }
+    .icon-button { display: grid; width: 34px; height: 34px; flex: 0 0 34px; place-items: center; border: 1px solid var(--border); border-radius: 9px; background: var(--panel); color: var(--accent); cursor: pointer; transition: 0.2s; }
+    .icon-button:hover { border-color: var(--accent); }
     html[data-theme="light"] .icon-button:hover { background: #f8fafc; }
     .icon-button.delete { color: var(--red); }
     
     .empty { padding: 18px 12px; border: 1px dashed var(--border); border-radius: 12px; color: var(--muted); font-size: 13px; text-align: center; }
     .income-summary { margin-bottom: 16px; color: var(--muted); font-size: 13px; }
-    .income-summary strong { color: var(--green); font-size: 24px; }
+    .income-summary strong { color: var(--accent); font-size: 24px; }
     .income-item .item-name { display: flex; align-items: center; gap: 9px; }
-    .dot { width: 11px; height: 11px; flex: 0 0 11px; border-radius: 50%; background: var(--green); box-shadow: 0 0 10px currentColor; }
+    .dot { width: 11px; height: 11px; flex: 0 0 11px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 10px currentColor; }
     html[data-theme="light"] .dot { box-shadow: none; }
     
     /* --- ГРАФИКИ --- */
     .chart-wrap { width: 100%; overflow: hidden; }
     .chart { display: block; width: 100%; height: auto; min-height: 200px; }
     .chart .gridline { stroke: var(--border); stroke-width: 1; }
-    .chart .axis { stroke: var(--green); stroke-width: 2; }
-    .chart text { fill: var(--muted); font-family: Arial, sans-serif; font-size: 11px; font-weight: 700; }
+    .chart .axis { stroke: var(--accent); stroke-width: 2; }
+    .chart text { fill: var(--muted); font-family: inherit; font-size: 11px; font-weight: 700; }
     
-    .chart .line { 
-      fill: none; 
-      stroke-width: 3; 
-      stroke-linecap: round; 
-      stroke-linejoin: round; 
-    }
-    
-    .chart .area { 
-      opacity: 1; 
-    }
+    .chart .line { fill: none; stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
+    .chart .area { opacity: 1; }
 
-    .donut { display: grid; width: 170px; max-width: 100%; aspect-ratio: 1; margin: 6px auto 18px; place-items: center; border-radius: 50%; background: conic-gradient(var(--green) 0 100%); box-shadow: 0 0 26px var(--green); transition: background 1.5s ease-out; }
-    html[data-theme="light"] .donut { box-shadow: 0 0 26px rgba(21, 128, 61, 0.2); }
+    .donut { display: grid; width: 170px; max-width: 100%; aspect-ratio: 1; margin: 6px auto 18px; place-items: center; border-radius: 50%; background: conic-gradient(var(--accent) 0 100%); box-shadow: 0 0 26px var(--accent); transition: background 1.5s ease-out; }
+    html[data-theme="light"] .donut { box-shadow: 0 0 26px color-mix(in srgb, var(--accent) 20%, transparent); }
     .donut::before { content: ""; grid-area: 1 / 1; width: 72%; aspect-ratio: 1; border: 1px solid var(--border); border-radius: 50%; background: var(--panel); }
     html[data-theme="light"] .donut::before { border: none; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
     
-    .donut-center { z-index: 1; grid-area: 1 / 1; color: var(--green); font-size: 17px; font-weight: 800; text-align: center; }
+    .donut-center { z-index: 1; grid-area: 1 / 1; color: var(--accent); font-size: 17px; font-weight: 800; text-align: center; }
     .donut-center small { display: block; margin-top: 4px; color: var(--muted); font-size: 10px; font-weight: 400; }
     .legend { display: grid; gap: 10px; }
     .legend-row { display: flex; align-items: center; gap: 9px; color: var(--text); font-size: 13px; }
     .legend-row .legend-value { margin-left: auto; color: var(--muted); }
     .task-item { cursor: pointer; }
-    .task-item input { width: 18px; height: 18px; accent-color: var(--green); cursor: pointer; }
+    .task-item input { width: 18px; height: 18px; accent-color: var(--accent); cursor: pointer; }
     .task-item.done .task-text { color: var(--muted); text-decoration: line-through; }
     .task-text { flex: 1; overflow-wrap: anywhere; }
     .welcome-card { padding: clamp(24px, 6vw, 48px); text-align: center; }
-    .welcome-card h2 { margin: 0 0 10px; color: var(--green); font-size: clamp(28px, 5vw, 42px); font-style: italic; }
+    .welcome-card h2 { margin: 0 0 10px; color: var(--accent); font-size: clamp(28px, 5vw, 42px); font-style: italic; }
     .welcome-card p { max-width: 580px; margin: 0 auto 24px; color: var(--muted); line-height: 1.6; }
     .welcome-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; }
     
-    .modal { width: min(430px, calc(100% - 24px)); max-height: min(90vh, 720px); padding: 0; overflow: auto; border: 1px solid var(--green); border-radius: 16px; background: var(--panel); color: var(--text); box-shadow: 0 20px 70px #000b; }
+    .modal { width: min(430px, calc(100% - 24px)); max-height: min(90vh, 720px); padding: 0; overflow: auto; border: 1px solid var(--accent); border-radius: 16px; background: var(--panel); color: var(--text); box-shadow: 0 20px 70px #000b; }
     html[data-theme="light"] .modal { border: none; }
     .modal::backdrop { background: #000b; backdrop-filter: blur(4px); }
     html[data-theme="light"] .modal::backdrop { background: rgba(0,0,0,0.4); }
     .modal-inner { padding: 22px; }
-    .modal h2 { margin: 0 0 17px; color: var(--green); font-size: 20px; }
+    .modal h2 { margin: 0 0 17px; color: var(--accent); font-size: 20px; }
     .field { display: grid; gap: 7px; margin-bottom: 13px; color: var(--muted); font-size: 13px; }
     .field input, .field select { width: 100%; min-height: 42px; padding: 10px 12px; border: 1px solid var(--border); border-radius: 9px; outline: none; background: var(--panel-2); color: var(--text); }
     html[data-theme="light"] .field input, html[data-theme="light"] .field select { background: #f8fafc; border-color: #e2e8f0; }
-    .field input:focus, .field select:focus { border-color: var(--green); box-shadow: 0 0 0 3px rgba(72, 225, 132, 0.2); }
-    html[data-theme="light"] .field input:focus, html[data-theme="light"] .field select:focus { box-shadow: 0 0 0 3px rgba(21, 128, 61, 0.1); }
+    .field input:focus, .field select:focus { border-color: var(--accent); box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 20%, transparent); }
     .modal-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 18px; }
     
     .sidebar-overlay { display: none; position: fixed; inset: 0; background: #000b; z-index: 999; backdrop-filter: blur(2px); }
+
+    /* --- РАЗДЕЛ БАНКОВ --- */
+    .banks-hero {
+      position: relative; overflow: hidden; padding: 32px;
+      border: 1px solid var(--border); border-radius: 24px;
+      background: linear-gradient(135deg, color-mix(in srgb, var(--accent) 12%, var(--bg)) 0%, var(--bg) 100%);
+      box-shadow: var(--shadow); margin-bottom: 24px;
+      display: flex; justify-content: space-between; align-items: center; gap: 20px;
+    }
+    html[data-theme="light"] .banks-hero {
+      background: linear-gradient(135deg, color-mix(in srgb, var(--accent) 8%, #ffffff) 0%, #ffffff 100%);
+    }
+    .banks-hero-content { z-index: 2; max-width: 60%; }
+    .banks-hero .eyebrow { color: var(--accent); font-size: 12px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 12px; display: block; }
+    .banks-hero h1 { font-size: clamp(32px, 5vw, 42px); margin: 0 0 12px; color: var(--text); font-style: normal; font-weight: 800; }
+    .banks-hero p { color: var(--muted); font-size: 15px; margin: 0 0 24px; line-height: 1.5; max-width: 400px; }
+    
+    .hero-actions { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+    .hero-actions .button { background: var(--accent); color: #080c09; border: none; padding: 12px 20px; font-size: 15px; border-radius: 12px; box-shadow: 0 4px 15px color-mix(in srgb, var(--accent) 30%, transparent); }
+    .hero-actions .button:hover { opacity: 0.9; transform: translateY(-2px); }
+    .secure-badge { display: flex; align-items: center; gap: 8px; color: var(--muted); font-size: 13px; font-weight: 500; }
+    .secure-badge svg { color: var(--accent); width: 18px; height: 18px; }
+
+    .hero-card-visual {
+      position: relative; width: 220px; height: 140px; flex-shrink: 0;
+      background: linear-gradient(135deg, color-mix(in srgb, var(--accent) 80%, black) 0%, color-mix(in srgb, var(--accent) 30%, black) 100%);
+      border-radius: 16px; border: 1px solid rgba(255,255,255,0.1);
+      box-shadow: -15px 15px 30px rgba(0,0,0,0.4);
+      transform: perspective(1000px) rotateY(-15deg) rotateX(5deg);
+      display: flex; flex-direction: column; justify-content: space-between; padding: 20px;
+      z-index: 1;
+    }
+    .hero-card-visual::before { content: ""; position: absolute; inset: -30px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.05); z-index: -1; pointer-events: none; }
+    .hero-card-visual::after { content: ""; position: absolute; inset: -60px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.03); z-index: -1; pointer-events: none; }
+    .card-chip { width: 30px; height: 22px; background: linear-gradient(135deg, #e2e8f0, #94a3b8); border-radius: 4px; }
+    .card-logo { color: #fff; font-size: 10px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 4px; }
+    .card-number { color: rgba(255,255,255,0.7); font-size: 14px; letter-spacing: 2px; font-family: monospace; }
+
+    .banks-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 32px; }
+    .bank-stat-card {
+      background: var(--panel); border: 1px solid var(--border); border-radius: 16px; padding: 20px;
+      box-shadow: var(--shadow); display: flex; flex-direction: column; gap: 8px;
+    }
+    html[data-theme="light"] .bank-stat-card { border: none; }
+    .bank-stat-card span { color: var(--muted); font-size: 13px; }
+    .bank-stat-card strong { color: var(--accent); font-size: 32px; font-weight: 800; letter-spacing: -1px; line-height: 1; }
+    .bank-stat-card small { color: var(--muted); font-size: 11px; margin-top: 4px; }
+
+    .accounts-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 20px; }
+    .accounts-header h2 { margin: 0 0 4px; font-size: 24px; color: var(--text); }
+    .accounts-header p { margin: 0; color: var(--muted); font-size: 13px; }
+    .accounts-header .button { padding: 8px 16px; font-size: 13px; }
+
+    /* --- КАРТОЧКИ СЧЕТОВ (ПЛИТКИ) --- */
+    .bank-account-list { 
+      display: grid; 
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); 
+      gap: 16px; 
+    }
+    
+    .account-card {
+      background: linear-gradient(145deg, var(--panel) 0%, var(--panel-2) 100%);
+      border: 1px solid var(--border); border-radius: 20px; padding: 20px;
+      display: flex; flex-direction: column; gap: 16px;
+      box-shadow: var(--shadow); position: relative; overflow: hidden;
+    }
+    html[data-theme="light"] .account-card { border: none; }
+    .account-card-top { display: flex; justify-content: space-between; align-items: flex-start; }
+    .account-info { display: flex; align-items: center; gap: 12px; }
+    
+    .bank-mini-card {
+      width: 56px; height: 38px; border-radius: 6px; flex-shrink: 0;
+      position: relative; overflow: hidden;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+      display: flex; flex-direction: column; justify-content: space-between; padding: 5px;
+    }
+    .bank-mini-card::after {
+      content: ""; position: absolute; top: 0; left: -100%; width: 50%; height: 100%;
+      background: linear-gradient(to right, transparent, rgba(255,255,255,0.3), transparent);
+      transform: skewX(-25deg); animation: shine 3s infinite;
+    }
+    @keyframes shine { 0% { left: -100%; } 20% { left: 100%; } 100% { left: 100%; } }
+    
+    .mini-card-chip { width: 8px; height: 6px; background: #e2e8f0; border-radius: 1px; opacity: 0.8; }
+    .mini-card-logo { font-size: 7px; font-weight: 900; color: #fff; text-transform: uppercase; letter-spacing: 0.5px; position: absolute; bottom: 3px; right: 5px; text-shadow: 0 1px 2px rgba(0,0,0,0.3); }
+
+    .account-name { font-size: 16px; font-weight: 700; color: var(--text); margin-bottom: 2px; }
+    .account-bank { font-size: 12px; color: var(--muted); }
+    
+    .badge-manual { padding: 3px 8px; border-radius: 20px; background: color-mix(in srgb, var(--accent) 10%, transparent); color: var(--accent); font-size: 10px; font-weight: 700; display: flex; align-items: center; gap: 4px; border: 1px solid color-mix(in srgb, var(--accent) 20%, transparent); }
+    .badge-manual::before { content: ""; width: 5px; height: 5px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 6px var(--accent); }
+
+    .account-balance-label { color: var(--muted); font-size: 11px; margin-bottom: 2px; }
+    .account-balance-value { font-size: 24px; font-weight: 800; color: var(--text); letter-spacing: -1px; margin-bottom: 4px; }
+    .account-details { display: flex; align-items: center; justify-content: space-between; color: var(--muted); font-size: 12px; }
+    
+    .account-actions { 
+      display: grid; 
+      grid-template-columns: 1fr 1fr; 
+      gap: 8px; 
+      border-top: 1px solid var(--border); 
+      padding-top: 16px; 
+    }
+    .account-actions .button { border-radius: 10px; height: 36px; font-size: 12px; padding: 0 8px; }
+    .account-actions .button.danger { border: 1px solid rgba(255,110,122,0.3); background: rgba(255,110,122,0.05); }
+    .account-actions .button.danger:hover { background: var(--red); color: white; }
+
+    @keyframes fadeInUpBank {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .account-card { animation: fadeInUpBank 0.5s ease-out forwards; opacity: 0; }
+    .account-card:nth-child(1) { animation-delay: 0.1s; }
+    .account-card:nth-child(2) { animation-delay: 0.2s; }
+    .account-card:nth-child(3) { animation-delay: 0.3s; }
+    .account-card:nth-child(4) { animation-delay: 0.4s; }
+    .account-card:nth-child(5) { animation-delay: 0.5s; }
+    .account-card:nth-child(6) { animation-delay: 0.6s; }
+    
+    .banks-stats .bank-stat-card { animation: fadeInUpBank 0.4s ease-out forwards; opacity: 0; }
+    .banks-stats .bank-stat-card:nth-child(1) { animation-delay: 0.05s; }
+    .banks-stats .bank-stat-card:nth-child(2) { animation-delay: 0.1s; }
+    .banks-stats .bank-stat-card:nth-child(3) { animation-delay: 0.15s; }
+
+    @media (max-width: 900px) {
+      .banks-hero { flex-direction: column; align-items: flex-start; padding: 24px; }
+      .hero-card-visual { display: none; }
+      .banks-hero-content { max-width: 100%; }
+      .banks-stats { grid-template-columns: 1fr; }
+      .account-actions { grid-template-columns: 1fr; }
+    }
 
     @media (max-width: 760px) { 
       .app { padding: 15px; } 
@@ -350,6 +543,7 @@
         <button class="nav-button active" data-view="home"><span class="nav-icon">⌂</span><span class="nav-label">Главная</span></button>
         <button class="nav-button" data-view="income"><span class="nav-icon">↗</span><span class="nav-label">Доходы</span></button>
         <button class="nav-button" data-view="expenses"><span class="nav-icon">↙</span><span class="nav-label">Расходы</span></button>
+        <button class="nav-button" data-view="banks"><span class="nav-icon">▣</span><span class="nav-label">Банки</span></button>
         <button class="nav-button" data-view="savings"><span class="nav-icon">◉</span><span class="nav-label">Накопления</span></button>
         <button class="nav-button" data-view="debts"><span class="nav-icon">✉</span><span class="nav-label">Долги</span></button>
         <button class="nav-button" data-view="subscriptions"><span class="nav-icon">𖦹</span><span class="nav-label">Подписки</span></button>
@@ -408,7 +602,7 @@
           <h1 class="page-heading">Анализ доходов</h1><p class="page-subtitle">Источники дохода и их доля в общей сумме.</p>
           <div class="button-row" style="margin-bottom: 16px;"><label class="field" style="margin: 0; display: flex; align-items: center; gap: 10px;"><span style="font-size: 14px; color: var(--muted);">Показать за:</span><select id="incomeMonthFilter" style="width: auto; min-height: 36px; padding: 5px 10px;"><option value="year">За год</option><option value="0">Январь</option><option value="1">Февраль</option><option value="2">Март</option><option value="3">Апрель</option><option value="4">Май</option><option value="5">Июнь</option><option value="6">Июль</option><option value="7">Август</option><option value="8">Сентябрь</option><option value="9">Октябрь</option><option value="10">Ноябрь</option><option value="11">Декабрь</option></select></label></div>
           <div class="grid stats-grid"><article class="card"><p class="stat-label" id="incomeLabelTotal">Доход за год</p><p class="stat-value" id="incomeTotal">0 ₽</p></article><article class="card"><p class="stat-label" id="incomeLabelAverage">Средний доход за месяц</p><p class="stat-value" id="incomeAverage">0 ₽</p></article><article class="card"><p class="stat-label">Источников дохода</p><p class="stat-value" id="incomeCount">0</p></article><article class="card"><p class="stat-label">Чистый доход</p><p class="stat-value" id="incomeNet">0 ₽</p></article></div>
-          <div class="grid two-col"><article class="card"><h2 class="card-title">Источники дохода</h2><div class="income-summary"><span id="incomeLabelText"></span><br><strong id="incomeTotalLabel" style="color: var(--green); font-size: 24px;">0 ₽</strong></div><div class="list" id="incomeList"></div><div class="button-row"><button class="button" id="addIncomeButton">+ Добавить доход</button></div></article><article class="card"><h2 class="card-title">Распределение доходов</h2><div class="donut" id="incomeDonut"><div class="donut-center" id="donutTotal">0 $<small>за месяц</small></div></div><div class="legend" id="incomeLegend"></div></article></div>
+          <div class="grid two-col"><article class="card"><h2 class="card-title">Источники дохода</h2><div class="income-summary"><span id="incomeLabelText"></span><br><strong id="incomeTotalLabel" style="color: var(--accent); font-size: 24px;">0 ₽</strong></div><div class="list" id="incomeList"></div><div class="button-row"><button class="button" id="addIncomeButton">+ Добавить доход</button></div></article><article class="card"><h2 class="card-title">Распределение доходов</h2><div class="donut" id="incomeDonut"><div class="donut-center" id="donutTotal">0 $<small>за месяц</small></div></div><div class="legend" id="incomeLegend"></div></article></div>
           
           <article class="card" style="margin-top:16px">
             <h2 class="card-title">Динамика дохода за год</h2>
@@ -416,8 +610,8 @@
               <svg class="chart" viewBox="0 0 700 240" role="img" aria-label="График динамики накоплений">
                 <defs>
                   <linearGradient id="chartGradient" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stop-color="var(--green)" stop-opacity="0.3"/>
-                    <stop offset="100%" stop-color="var(--green)" stop-opacity="0"/>
+                    <stop offset="0%" stop-color="var(--accent)" stop-opacity="0.3"/>
+                    <stop offset="100%" stop-color="var(--accent)" stop-opacity="0"/>
                   </linearGradient>
                 </defs>
                 <line class="gridline" x1="45" y1="35" x2="680" y2="35"/>
@@ -433,7 +627,7 @@
                 <text x="488" y="218">сен</text>
                 <text x="598" y="218">ноя</text>
                 <path class="area" id="chartArea" fill="url(#chartGradient)"></path>
-                <path class="line" id="chartLine" style="stroke: var(--green);"></path>
+                <path class="line" id="chartLine" style="stroke: var(--accent);"></path>
               </svg>
             </div>
           </article>
@@ -444,7 +638,7 @@
           <h1 class="page-heading">Анализ расходов</h1><p class="page-subtitle">Куда уходят твои деньги.</p>
           <div class="button-row" style="margin-bottom: 16px;"><label class="field" style="margin: 0; display: flex; align-items: center; gap: 10px;"><span style="font-size: 14px; color: var(--muted);">Показать за:</span><select id="expenseMonthFilter" style="width: auto; min-height: 36px; padding: 5px 10px;"><option value="year">За год</option><option value="0">Январь</option><option value="1">Февраль</option><option value="2">Март</option><option value="3">Апрель</option><option value="4">Май</option><option value="5">Июнь</option><option value="6">Июль</option><option value="7">Август</option><option value="8">Сентябрь</option><option value="9">Октябрь</option><option value="10">Ноябрь</option><option value="11">Декабрь</option></select></label></div>
           <div class="grid stats-grid"><article class="card"><p class="stat-label" id="expenseLabelAverage">Средний расход за месяц</p><p class="stat-value" id="expenseAverageMonth">0 ₽</p></article><article class="card"><p class="stat-label" id="expenseLabelTotal">Расходы за год</p><p class="stat-value"id="expenseTotal" >0 ₽</p></article><article class="card"><p class="stat-label" id="expenseLabelNet">Чистый доход за год</p><p class="stat-value" id="expenseNetIncome">0 ₽</p></article></div>
-          <div class="grid two-col"><article class="card"><h2 class="card-title">Список расходов</h2><div class="income-summary"><span id="expenseLabelText"></span><br><strong id="expenseTotalLabel" style="color: var(--green); font-size: 24px;">0 ₽</strong></div><div class="list" id="expenseList"></div><div class="button-row"><button class="button" id="addExpenseButton">+ Добавить расход</button></div></article><article class="card"><h2 class="card-title">Структура расходов</h2><div class="donut" id="expenseDonut"><div class="donut-center" id="expenseDonutTotal">0 ₽<small>за месяц</small></div></div><div class="legend" id="expenseLegend"></div></article></div>
+          <div class="grid two-col"><article class="card"><h2 class="card-title">Список расходов</h2><div class="income-summary"><span id="expenseLabelText"></span><br><strong id="expenseTotalLabel" style="color: var(--accent); font-size: 24px;">0 ₽</strong></div><div class="list" id="expenseList"></div><div class="button-row"><button class="button" id="addExpenseButton">+ Добавить расход</button></div></article><article class="card"><h2 class="card-title">Структура расходов</h2><div class="donut" id="expenseDonut"><div class="donut-center" id="expenseDonutTotal">0 ₽<small>за месяц</small></div></div><div class="legend" id="expenseLegend"></div></article></div>
           
           <article class="card" style="margin-top:16px">
             <h2 class="card-title">Динамика расходов за год</h2>
@@ -475,6 +669,61 @@
           </article>
         </section>
 
+        <!-- Банки и счета -->
+        <section class="view" id="view-banks">
+          <div class="banks-hero">
+            <div class="banks-hero-content">
+              <span class="eyebrow">Финансы в одном месте</span>
+              <h1>Мои банки</h1>
+              <p>Собери счета разных банков на одной удобной панели и следи за общим балансом.</p>
+              <div class="hero-actions">
+                <button class="button" id="addBankAccountButton">+ Добавить счёт</button>
+                <div class="secure-badge">
+                  <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
+                  Данные хранятся в твоём профиле
+                </div>
+              </div>
+            </div>
+            <div class="hero-card-visual">
+              <div class="card-logo">Мои финансы<br>Мои счета</div>
+              <div style="display: flex; justify-content: space-between; align-items: flex-end;">
+                <div class="card-chip"></div>
+                <div class="card-number">•••• 9372</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="banks-stats">
+            <div class="bank-stat-card">
+              <span>Общий баланс счетов</span>
+              <strong id="banksTotal">0 ₽</strong>
+              <small>Сумма всех добавленных счетов</small>
+            </div>
+            <div class="bank-stat-card">
+              <span>Подключено счетов</span>
+              <strong id="banksAccountCount">0</strong>
+              <small>Банковские и наличные счета</small>
+            </div>
+            <div class="bank-stat-card">
+              <span>Банков</span>
+              <strong id="banksBankCount">0</strong>
+              <small>Уникальных организаций</small>
+            </div>
+          </div>
+
+          <div class="accounts-header">
+            <div>
+              <h2>Мои счета</h2>
+              <p>Добавляй счета вручную и обновляй баланс по мере необходимости.</p>
+            </div>
+            <button class="button secondary" id="addBankAccountButton2">+ Новый счёт</button>
+          </div>
+
+          <div class="bank-account-list" id="bankAccountsList">
+            <!-- Сюда рендерятся карточки -->
+          </div>
+        </section>
+
         <!-- Накопления -->
         <section class="view " id="view-savings">
           <h1 class="page-heading">Анализ накоплений</h1><p class="page-subtitle">Сколько уже отложено и как продвигаются цели.</p>
@@ -488,7 +737,7 @@
           <p class="page-subtitle">Контролируй свои обязательства и то, что должны тебе.</p>
           <div class="grid stats-grid">
             <article class="card"><p class="stat-label">Я должен</p><p class="stat-value" id="debtsIOwe" style="color: var(--red);">0 ₽</p></article>
-            <article class="card"><p class="stat-label">Мне должны</p><p class="stat-value" id="debtsOwedToMe" style="color: var(--green);">0 ₽</p></article>
+            <article class="card"><p class="stat-label">Мне должны</p><p class="stat-value" id="debtsOwedToMe" style="color: var(--accent);">0 ₽</p></article>
             <article class="card"><p class="stat-label">Общий баланс</p><p class="stat-value" id="debtsNet" style="color: var(--text);">0 ₽</p></article>
           </div>
           <article class="card"><h2 class="card-title"><span>Мои обязательства</span><button class="button" id="addDebtButton">+ Добавить долг</button></h2><div class="list" id="debtsList"></div></article>
@@ -499,8 +748,8 @@
           <h1 class="page-heading">Регулярные платежи</h1>
           <p class="page-subtitle">Подписки и обязательные траты, которые повторяются каждый месяц.</p>
           <div class="grid stats-grid">
-            <article class="card"><p class="stat-label">В месяц уходит</p><p class="stat-value" id="subsTotal" style="color: var(--red);">0 ₽</p></article>
-            <article class="card"><p class="stat-label">Активных подписок</p><p class="stat-value" id="subsCount" style="color: var(--green);">0</p></article>
+            <article class="card"><p class="stat-label">В год уходит</p><p class="stat-value" id="subsTotalYear" style="color: var(--red);">0 ₽</p></article>
+            <article class="card"><p class="stat-label">Активных подписок</p><p class="stat-value" id="subsCount" style="color: var(--accent);">0</p></article>
           </div>
           <article class="card"><h2 class="card-title"><span>Мои подписки</span><button class="button" id="addSubButton">+ Добавить</button></h2><div class="list" id="subsList"></div></article>
         </section>
@@ -521,13 +770,24 @@
         <!-- Оплата -->
         <section class="view " id="view-payment">
           <h1 class="page-heading">Оплата</h1><p class="page-subtitle">Выберите подходящий тариф.</p>
-          <div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));"><article class="card" style="text-align: center;"><h2 class="card-title" style="justify-content: center;">1 месяц</h2><p style="font-size: 32px; font-weight: 800; color: var(--green); margin: 10px 0;">590 ₽</p><p style="color: var(--muted); font-size: 13px; margin-bottom: 16px;">Оплата каждый месяц</p><button class="button" style="width: 100%;">Выбрать</button></article><article class="card" style="text-align: center; border-color: var(--green);"><h2 class="card-title" style="justify-content: center;">6 месяцев</h2><p style="font-size: 32px; font-weight: 800; color: var(--green); margin: 10px 0;">2590 ₽</p><p style="color: var(--muted); font-size: 13px; margin-bottom: 16px;">Выгоднее на 15%</p><button class="button" style="width: 100%;">Выбрать</button></article><article class="card" style="text-align: center;"><h2 class="card-title" style="justify-content: center;">1 год</h2><p style="font-size: 32px; font-weight: 800; color: var(--green); margin: 10px 0;">5990 ₽</p><p style="color: var(--muted); font-size: 13px; margin-bottom: 16px;">Выгоднее на 30%</p><button class="button" style="width: 100%;">Выбрать</button></article></div>
+          <div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));"><article class="card" style="text-align: center;"><h2 class="card-title" style="justify-content: center;">1 месяц</h2><p style="font-size: 32px; font-weight: 800; color: var(--accent); margin: 10px 0;">590 ₽</p><p style="color: var(--muted); font-size: 13px; margin-bottom: 16px;">Оплата каждый месяц</p><button class="button" style="width: 100%;">Выбрать</button></article><article class="card" style="text-align: center; border-color: var(--accent);"><h2 class="card-title" style="justify-content: center;">6 месяцев</h2><p style="font-size: 32px; font-weight: 800; color: var(--accent); margin: 10px 0;">2590 ₽</p><p style="color: var(--muted); font-size: 13px; margin-bottom: 16px;">Выгоднее на 15%</p><button class="button" style="width: 100%;">Выбрать</button></article><article class="card" style="text-align: center;"><h2 class="card-title" style="justify-content: center;">1 год</h2><p style="font-size: 32px; font-weight: 800; color: var(--accent); margin: 10px 0;">5990 ₽</p><p style="color: var(--muted); font-size: 13px; margin-bottom: 16px;">Выгоднее на 30%</p><button class="button" style="width: 100%;">Выбрать</button></article></div>
           <article class="card" style="margin-top: 16px;"><h2 class="card-title">Что входит в подписку</h2><ul style="color: var(--muted); line-height: 1.8; padding-left: 20px;"><li>Анализ доходов и накоплений</li><li>ИИ-ассистент для советов по финансам</li><li>Неограниченное количество целей и задач</li><li>Синхронизация между устройствами</li></ul></article>
         </section>
 
         <!-- Настройки -->
         <section class="view " id="view-settings">
           <h1 class="page-heading">Настройки</h1><p class="page-subtitle">Настрой приложение под себя.</p>
+          
+          <article class="card">
+            <h2 class="card-title">Акцентный цвет</h2>
+            <div class="button-row">
+              <button class="button" data-accent="emerald" style="color: #48e184; border-color: #48e184;">Изумрудный</button>
+              <button class="button" data-accent="blue" style="color: #3b82f6; border-color: #3b82f6;">Синий</button>
+              <button class="button" data-accent="purple" style="color: #c084fc; border-color: #c084fc;">Фиолетовый</button>
+              <button class="button" data-accent="mono" style="color: var(--text); border-color: var(--text);">Монохром</button>
+            </div>
+          </article>
+
           <article class="card"><h2 class="card-title">Валюта</h2><div class="button-row"><button class="button" data-currency="₽">₽ Рубль</button><button class="button secondary" data-currency="$">$ Доллар</button><button class="button secondary" data-currency="€">€ Евро</button></div></article>
           <article class="card" style="margin-top: 16px;"><h2 class="card-title">Тема</h2><div class="button-row"><button class="button" data-theme="dark">Тёмная</button><button class="button secondary" data-theme="light">Светлая</button></div></article>
           <article class="card" style="margin-top: 16px;"><h2 class="card-title">Язык</h2><div class="button-row"><button class="button" data-lang="ru">Русский</button><button class="button secondary" data-lang="en">English</button></div></article>
@@ -537,6 +797,42 @@
   </div>
     <div style="text-align: center; padding: 20px 0; font-size: 13px; color: var(--muted); border-top: 1px solid var(--border); margin-top: 20px;">Made by Kirill Kuvardin</div>
   
+  <!-- Добавление и редактирование банковского счёта -->
+  <dialog class="modal" id="bankAccountDialog">
+    <form class="modal-inner" id="bankAccountForm">
+      <h2 id="bankDialogTitle">Добавить счёт</h2>
+      <label class="field">Банк
+        <select id="bankProvider" required>
+          <option value="sber">Сбербанк</option>
+          <option value="tbank">Т-Банк</option>
+          <option value="alfa">Альфа-Банк</option>
+          <option value="vtb">ВТБ</option>
+          <option value="wb">ВБ Банк</option>
+          <option value="ozon">Озон Банк</option>
+          <option value="other">Другой банк</option>
+          <option value="cash">Наличные</option>
+        </select>
+      </label>
+      <label class="field">Название счёта<input id="bankAccountName" required maxlength="45" placeholder="Например, Основная карта"></label>
+      <label class="field">Тип счёта
+        <select id="bankAccountType">
+          <option value="card">Дебетовая карта</option>
+          <option value="credit">Кредитная карта</option>
+          <option value="savings">Накопительный счёт</option>
+          <option value="deposit">Вклад</option>
+          <option value="current">Текущий счёт</option>
+          <option value="cash">Наличные</option>
+        </select>
+      </label>
+      <label class="field">Текущий баланс<input id="bankAccountBalance" type="number" min="0" step="0.01" required placeholder="Например, 25000"></label>
+      <label class="field">Последние 4 цифры (необязательно)<input id="bankAccountLast4" inputmode="numeric" maxlength="4" pattern="[0-9]{0,4}" placeholder="1234"></label>
+      <div class="modal-actions">
+        <button class="button secondary" type="button" data-close>Отмена</button>
+        <button class="button" type="submit">Сохранить счёт</button>
+      </div>
+    </form>
+  </dialog>
+
   <!-- Диалоги -->
   <dialog class="modal" id="goalDialog"><form class="modal-inner" id="goalForm"><h2 id="goalDialogTitle">Добавить цель</h2><label class="field">Название<input id="goalName" required maxlength="60" placeholder="Например, отпуск"></label><label class="field">Уже накоплено<input id="goalCurrent" type="number" min="0" step="0.01" value="0" required></label><label class="field">Целевая сумма<input id="goalTarget" type="number" min="0.01" step="0.01" required placeholder="25000"></label><div class="modal-actions"><button class="button secondary" type="button" data-close>Отмена</button><button class="button" type="submit">Сохранить</button></div></form></dialog>
   <dialog class="modal" id="expenseDialog"><form class="modal-inner" id="expenseForm"><h2 id="expenseDialogTitle">Добавить расход</h2><label class="field">Название траты<input id="expenseName" required maxlength="50" placeholder="Например, Продукты"></label><label class="field">Сумма за месяц<input id="expenseAmount" type="number" min="0" step="0.01" required placeholder="5000"></label><label class="field">Месяц<select id="expenseMonth"><option value="0">Январь</option><option value="1">Февраль</option><option value="2">Март</option><option value="3">Апрель</option><option value="4">Май</option><option value="5">Июнь</option><option value="6">Июль</option><option value="7">Август</option><option value="8">Сентябрь</option><option value="9">Октябрь</option><option value="10">Ноябрь</option><option value="11">Декабрь</option></select></label><label class="field">Цвет на диаграмме<select id="expenseColor"><option value="#48e184">Зелёный</option><option value="#ff596d">Красный</option><option value="#e4db52">Жёлтый</option><option value="#d064ca">Фиолетовый</option><option value="#50b8ff">Голубой</option><option value="#ff9f43">Оранжевый</option><option value="#00d2d3">Бирюзовый</option><option value="#f368e0">Розовый</option><option value="#a29bfe">Лавандовый</option><option value="#cd6133">Коричневый</option><option value="#c8d6e5">Серый</option><option value="#1dd1a1">Изумрудный</option></select></label><div class="modal-actions"><button class="button secondary" type="button" data-close>Отмена</button><button class="button" type="submit">Сохранить</button></div></form></dialog>
@@ -554,12 +850,18 @@
     const KEY = "personal-finance-app-v1";
     let currentCurrency = localStorage.getItem('app_currency') || '₽';
     let currentLang = localStorage.getItem('app_lang') || 'ru';
+    let currentAccent = localStorage.getItem('app_accent') || 'emerald';
+    
+    // Применяем сохраненный акцент при загрузке
+    document.documentElement.setAttribute('data-accent', currentAccent);
+
     const defaultData = {
       incomes: [ { id: 1, name: "Бизнес", amount: 23000, color: "#48e184" }, { id: 2, name: "Фриланс", amount: 45000, color: "#ff596d" }, { id: 3, name: "Кафе", amount: 5000, color: "#e4db52" }, { id: 4, name: "Подработка", amount: 3000, color: "#d064ca" } ],
       expenses: [],
       savings: [ { id: 11, name: "Отпуск", current: 15000, target: 25000 }, { id: 12, name: "Машина", current: 60098, target: 90000 } ],
       debts: [], 
       subscriptions: [],
+      bankAccounts: [],
       primaryGoal: { name: "Купить новый телефон", current: 15000, target: 30000 },
       goals: [ { id: 21, name: "Начать ходить в зал", current: 70, target: 100, unit: "%" }, { id: 22, name: "Прочитать 10 книг", current: 4, target: 10, unit: "книг" } ],
       tasks: [ { id: 31, text: "Начать ходить в зал", done: false }, { id: 32, text: "Читать книги", done: false }, { id: 33, text: "Купить продукты", done: true } ]
@@ -578,6 +880,7 @@
         }
         if (!loadedData.debts) { loadedData.debts = []; }
         if (!loadedData.subscriptions) { loadedData.subscriptions = []; }
+        if (!Array.isArray(loadedData.bankAccounts)) { loadedData.bankAccounts = []; }
         return loadedData;
       } catch { return clone(defaultData); }
     }
@@ -587,7 +890,8 @@
     let editingIncomeId = null;
     let goalMode = "saving";
     let currentDebtId = null; 
-    let currentEditCallback = null; 
+    let currentEditCallback = null;
+    let editingBankAccountId = null; 
 
     // ПРИМЕНЕНИЕ СОХРАНЕННОЙ ТЕМЫ ПРИ ЗАГРУЗКЕ
     const savedTheme = localStorage.getItem('app_theme');
@@ -605,7 +909,12 @@
           authScreen.style.display = 'none';
           const { data: cloudData, error } = await window.supabase.from('user_data').select('data').eq('id', session.user.id).single();
           if (cloudData && cloudData.data) {
-              data = { ...clone(defaultData), ...cloudData.data };
+              const merged = clone(defaultData);
+              for (const key of Object.keys(cloudData.data)) {
+                  merged[key] = cloudData.data[key];
+              }
+              data = merged;
+              if (!Array.isArray(data.bankAccounts)) data.bankAccounts = [];
               update();
           } else {
               saveToCloud();
@@ -795,6 +1104,171 @@
       document.getElementById('sidebarOverlay').classList.toggle('open');
     };
 
+
+    const BANK_META = {
+      sber: { name: "Сбербанк", short: "СБ", color: "#21a038", gradient: "linear-gradient(135deg, #21a038 0%, #0f5c1e 100%)" },
+      tbank: { name: "Т-Банк", short: "Т", color: "#ffdd2d", text: "#171717", gradient: "linear-gradient(135deg, #ffdd2d 0%, #d4a800 100%)" },
+      alfa: { name: "Альфа-Банк", short: "А", color: "#ef3124", gradient: "linear-gradient(135deg, #ef3124 0%, #9e160b 100%)" },
+      vtb: { name: "ВТБ", short: "ВТБ", color: "#1688d4", gradient: "linear-gradient(135deg, #1688d4 0%, #0b4f7d 100%)" },
+      wb: { name: "ВБ Банк", short: "ВБ", color: "#481173", gradient: "linear-gradient(135deg, #481173 0%, #2c0a46 100%)" },
+      ozon: { name: "Озон Банк", short: "О", color: "#005bff", gradient: "linear-gradient(135deg, #005bff 0%, #003ba3 100%)" },
+      other: { name: "Другой банк", short: "Б", color: "#718096", gradient: "linear-gradient(135deg, #718096 0%, #3d4654 100%)" },
+      cash: { name: "Наличные", short: "₽", color: "#16a085", gradient: "linear-gradient(135deg, #16a085 0%, #0b5e4d 100%)" }
+    };
+    const BANK_TYPE_LABELS = {
+      card: "Дебетовая карта", credit: "Кредитная карта",
+      savings: "Накопительный счёт", deposit: "Вклад",
+      current: "Текущий счёт", cash: "Наличные"
+    };
+
+    function renderBanks() {
+      const list = document.getElementById("bankAccountsList");
+      if (!list) return;
+      const accounts = Array.isArray(data.bankAccounts) ? data.bankAccounts : [];
+      const total = accounts.reduce((sum, account) => sum + Math.max(0, Number(account.balance) || 0), 0);
+      const providers = new Set(accounts.map(account => account.provider));
+      
+      animateBankNumbers("#banksTotal", total, true);
+      animateBankNumbers("#banksAccountCount", accounts.length, false);
+      animateBankNumbers("#banksBankCount", providers.size, false);
+
+      if (!accounts.length) {
+        list.innerHTML = '<div class="empty" style="padding: 40px; border-radius: 20px; border: 1px dashed var(--border);">Пока нет счетов. Нажми «Добавить счёт», чтобы создать первый.</div>';
+        return;
+      }
+
+      list.innerHTML = accounts.map(account => {
+        const meta = BANK_META[account.provider] || BANK_META.other;
+        const last4 = account.last4 ? `•••• ${escapeHtml(account.last4)}` : "Номер не указан";
+        const balance = Math.max(0, Number(account.balance) || 0);
+        
+        const cardGradient = meta.gradient;
+
+        return `<article class="account-card">
+          <div class="account-card-top">
+            <div class="account-info">
+              <div class="bank-mini-card" style="background: ${cardGradient};">
+                <div class="mini-card-chip"></div>
+                <div class="mini-card-logo" style="color: ${meta.text || '#fff'}">${escapeHtml(meta.short)}</div>
+              </div>
+              <div>
+                <div class="account-name">${escapeHtml(account.name || meta.name)}</div>
+                <div class="account-bank">${escapeHtml(meta.name)} · ${escapeHtml(BANK_TYPE_LABELS[account.type] || "Счёт")}</div>
+              </div>
+            </div>
+            <div class="badge-manual">Вручную</div>
+          </div>
+
+          <div>
+            <div class="account-balance-label">Текущий баланс</div>
+            <div class="account-balance-value" data-balance="${balance}">${money(balance)}</div>
+            <div class="account-details">
+              <span>${last4}</span>
+            </div>
+          </div>
+
+          <div class="account-actions">
+            <button class="button secondary" type="button" data-bank-edit="${String(account.id)}">Изменить баланс</button>
+            <button class="button secondary" type="button" data-bank-edit-info="${String(account.id)}">Изменить счёт</button>
+            <button class="button danger" type="button" data-bank-delete="${String(account.id)}" style="grid-column: span 2;">Удалить</button>
+          </div>
+        </article>`;
+      }).join("");
+
+      list.querySelectorAll(".account-balance-value").forEach(el => {
+        const target = Number(el.dataset.balance);
+        if (isFinite(target)) {
+          animateSingleBalance(el, target);
+        }
+      });
+
+      list.querySelectorAll("[data-bank-edit]").forEach(button => {
+        button.addEventListener("click", () => {
+          const account = data.bankAccounts.find(a => String(a.id) === String(button.dataset.bankEdit));
+          if (account) {
+            document.getElementById('editAmountTitle').textContent = `Изменить баланс: ${account.name}`;
+            document.getElementById('editAmountForm').reset();
+            document.getElementById('editAmountInput').value = account.balance;
+            currentEditCallback = (amount) => {
+              account.balance = amount;
+              update();
+            };
+            document.getElementById('editAmountDialog').showModal();
+          }
+        });
+      });
+      
+      list.querySelectorAll("[data-bank-edit-info]").forEach(button => {
+        button.addEventListener("click", () => openBankAccountDialog(String(button.dataset.bankEditInfo)));
+      });
+
+      list.querySelectorAll("[data-bank-delete]").forEach(button => {
+        button.addEventListener("click", () => {
+          const id = String(button.dataset.bankDelete);
+          window.showConfirm("Удалить счёт?", "Счёт будет удалён из списка приложения.", () => {
+            data.bankAccounts = data.bankAccounts.filter(account => String(account.id) !== id);
+            update();
+          });
+        });
+      });
+    }
+
+    function animateBankNumbers(selector, target, isMoney) {
+      const el = document.querySelector(selector);
+      if (!el) return;
+      const start = parseFloat(el.dataset.cur || "0") || 0;
+      if (start === target) return;
+      const duration = 600;
+      const startTime = performance.now();
+      
+      function tick(t) {
+        const p = Math.min(1, (t - startTime) / duration);
+        const easeOut = 1 - Math.pow(1 - p, 3);
+        const current = start + (target - start) * easeOut;
+        
+        if (isMoney) {
+          el.textContent = new Intl.NumberFormat("ru-RU", { maximumFractionDigits: 0 }).format(Math.round(current)) + " " + currentCurrency;
+        } else {
+          el.textContent = Math.round(current).toString();
+        }
+        
+        if (p < 1) {
+          requestAnimationFrame(tick);
+        } else {
+          el.dataset.cur = String(target);
+        }
+      }
+      requestAnimationFrame(tick);
+    }
+
+    function animateSingleBalance(el, target) {
+      const start = 0;
+      const duration = 700;
+      const startTime = performance.now();
+      const currency = currentCurrency;
+      
+      function tick(t) {
+        const p = Math.min(1, (t - startTime) / duration);
+        const easeOut = 1 - Math.pow(1 - p, 3);
+        const current = start + (target - start) * easeOut;
+        el.textContent = new Intl.NumberFormat("ru-RU", { maximumFractionDigits: 0 }).format(Math.round(current)) + " " + currency;
+        if (p < 1) requestAnimationFrame(tick);
+      }
+      requestAnimationFrame(tick);
+    }
+
+    function openBankAccountDialog(id = null) {
+      editingBankAccountId = id ? String(id) : null; 
+      const account = id ? data.bankAccounts.find(item => String(item.id) === String(id)) : null;
+      $("#bankDialogTitle").textContent = account ? "Изменить счёт" : "Добавить счёт";
+      $("#bankProvider").value = account?.provider || "sber";
+      $("#bankAccountName").value = account?.name || "";
+      $("#bankAccountType").value = account?.type || "card";
+      $("#bankAccountBalance").value = account?.balance ?? "";
+      $("#bankAccountLast4").value = account?.last4 || "";
+      $("#bankAccountDialog").showModal();
+    }
+
     function renderPrimary(containerId, compact = false) {
       const container = document.getElementById(containerId);
       const goal = data.primaryGoal;
@@ -907,7 +1381,6 @@
       renderChart(total);
     }
 
-    // ИСПРАВЛЕНО: Теперь график плавный и с градиентом
     function renderChart(total) {
       const months = ["янв", "фев", "мар", "апр", "май", "июн", "июл", "авг", "сен", "окт", "ноя", "дек"];
       const monthlyTotals = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
@@ -925,7 +1398,6 @@
       const textElements = document.querySelectorAll(".chart text");
       textElements.forEach((text, index) => { if (index < 12) text.textContent = months[index]; });
       
-      // Строим сглаженный путь
       let d = `M ${points[0].x} ${points[0].y}`;
       for (let i = 0; i < points.length - 1; i++) {
         const p0 = points[i];
@@ -960,7 +1432,6 @@
         points.push({ x, y });
       }
       
-      // Сглаженный путь для расходов
       let d = `M ${points[0].x} ${points[0].y}`;
       for (let i = 0; i < points.length - 1; i++) {
         const p0 = points[i];
@@ -1015,7 +1486,7 @@
             <div class="list-item">
               <div class="item-info">
                 <div class="item-name">
-                  <span class="dot" style="background:${isOwe ? 'var(--red)' : 'var(--green)'}"></span>
+                  <span class="dot" style="background:${isOwe ? 'var(--red)' : 'var(--accent)'}"></span>
                   ${escapeHtml(debt.name)} 
                   <span style="font-size: 11px; color: var(--muted); font-weight: normal; margin-left: 5px;">
                     (${isOwe ? 'Я должен' : 'Мне должны'})
@@ -1023,9 +1494,9 @@
                 </div>
                 <div class="item-sub">
                   <span>Выплачено: ${money(debt.paid)} из ${money(debt.total)}</span>
-                  <span class="amount" style="color:${isOwe ? 'var(--red)' : 'var(--green)'}">Осталось: ${money(remaining)}</span>
+                  <span class="amount" style="color:${isOwe ? 'var(--red)' : 'var(--accent)'}">Осталось: ${money(remaining)}</span>
                 </div>
-                <div class="track"><div class="fill" style="width:${p}%; background:${isOwe ? 'var(--red)' : 'var(--green)'}"></div></div>
+                <div class="track"><div class="fill" style="width:${p}%; background:${isOwe ? 'var(--red)' : 'var(--accent)'}"></div></div>
               </div>
               <div class="item-actions">
                 <button class="icon-button" title="Погасить часть" data-debt-pay="${debt.id}">₽</button>
@@ -1089,8 +1560,9 @@
         }).join("");
       }
 
-      const total = data.subscriptions.reduce((sum, s) => sum + Number(s.amount), 0);
-      $("#subsTotal").textContent = money(total);
+      const totalMonth = data.subscriptions.reduce((sum, s) => sum + Number(s.amount), 0);
+      const totalYear = totalMonth * 12;
+      $("#subsTotalYear").textContent = money(totalYear);
       $("#subsCount").textContent = data.subscriptions.length;
 
       list.querySelectorAll("[data-sub-delete]").forEach(button => {
@@ -1170,9 +1642,8 @@
       $("#homeNetIncome").textContent = money(totalIncomeMonth - totalExpensesMonth);
     }
 
-    function update() { save(); renderIncome(); renderExpenses(); renderSavings(); renderDebts(); renderSubscriptions(); renderGoals(); renderTasks(); renderHome(); animateStatNumbers(); }
+    function update() { save(); renderIncome(); renderExpenses(); renderSavings(); renderDebts(); renderSubscriptions(); renderBanks(); renderGoals(); renderTasks(); renderHome(); animateStatNumbers(); }
 
-    // --- Анимации в стиле «pro dashboard» ---
     function animateChartDraw() {
       const line = $("#chartLine");
       if (line) {
@@ -1187,7 +1658,6 @@
       if (area) { area.style.opacity = "0"; requestAnimationFrame(() => { area.style.opacity = "1"; }); }
     }
 
-    // Плавный пересчёт цифр в стат-карточках (как в видео)
     function animateStatNumbers() {
       document.querySelectorAll(".view.active .stat-value").forEach(el => {
         const finalText = el.textContent.trim();
@@ -1256,6 +1726,34 @@
 
     document.querySelectorAll(".nav-button").forEach(button => { button.addEventListener("click", () => { if (button.dataset.view) { showView(button.dataset.view); animateStatNumbers(); } }); });
     document.querySelectorAll("[data-go]").forEach(button => { button.addEventListener("click", () => showView(button.dataset.go)); });
+    
+    $("#addBankAccountButton").addEventListener("click", () => openBankAccountDialog());
+    $("#addBankAccountButton2").addEventListener("click", () => openBankAccountDialog());
+
+    $("#bankAccountForm").addEventListener("submit", event => {
+      event.preventDefault();
+      const provider = $("#bankProvider").value;
+      const name = $("#bankAccountName").value.trim();
+      const type = $("#bankAccountType").value;
+      const balance = Number($("#bankAccountBalance").value);
+      const last4 = $("#bankAccountLast4").value.trim();
+      if (!BANK_META[provider] || !name || !Number.isFinite(balance) || balance < 0 || (last4 && !/^\d{4}$/.test(last4))) {
+        alert("Проверь банк, название, баланс и последние 4 цифры.");
+        return;
+      }
+      const item = { provider, name, type, balance, last4 };
+      const existing = editingBankAccountId ? data.bankAccounts.find(account => String(account.id) === String(editingBankAccountId)) : null;
+      
+      if (existing) {
+        Object.assign(existing, item);
+      } else {
+        data.bankAccounts.push({ id: String(Date.now()), ...item });
+      }
+      
+      $("#bankAccountDialog").close();
+      update();
+    });
+
     $("#addIncomeButton").addEventListener("click", () => openIncomeDialog());
     $("#homeAddIncomeBtn").addEventListener("click", () => openIncomeDialog());
     $("#homeAddExpenseBtn").addEventListener("click", openExpenseDialog);
@@ -1385,7 +1883,7 @@
         const text = chatInput.value.trim(); if (!text) return;
         const empty = chatMessages.querySelector('.empty'); if (empty) empty.remove();
         const userMessage = document.createElement('div'); userMessage.className = 'list-item';
-        userMessage.innerHTML = `<div class="item-info"><div class="item-name">Ты:</div><div class="item-sub"><span class="amount">${text}</span></div></div>`;
+        userMessage.innerHTML = `<div class="item-info"><div class="item-name">Ты:</div><div class="item-sub"><span class="amount">${escapeHtml(text)}</span></div></div>`;
         chatMessages.appendChild(userMessage); chatInput.value = ''; chatMessages.scrollTop = chatMessages.scrollHeight;
         try {
           const { data: aiResp, error: fnError } = await window.supabase.functions.invoke('ai-assistant', {
@@ -1394,7 +1892,7 @@
           if (fnError) throw new Error(fnError.message);
           const aiText = aiResp.reply;
           const aiMessage = document.createElement('div'); aiMessage.className = 'list-item';
-          aiMessage.innerHTML = `<div class="item-info"><div class="item-name">ИИ-ассистент:</div><div class="item-sub"><span class="amount">${aiText}</span></div></div>`;
+          aiMessage.innerHTML = `<div class="item-info"><div class="item-name">ИИ-ассистент:</div><div class="item-sub"><span class="amount">${escapeHtml(aiText)}</span></div></div>`;
           chatMessages.appendChild(aiMessage); chatMessages.scrollTop = chatMessages.scrollHeight;
         } catch (error) {
           console.error("Ошибка:", error);
@@ -1405,7 +1903,18 @@
       });
     }        
 
-    // Настройки (Тема, Валюта, Язык)
+    // Настройки (Тема, Акцент, Валюта, Язык)
+    document.querySelectorAll("[data-accent]").forEach(button => {
+      button.addEventListener("click", function() {
+        const accent = this.getAttribute("data-accent");
+        document.documentElement.setAttribute('data-accent', accent);
+        localStorage.setItem('app_accent', accent);
+        
+        document.querySelectorAll("[data-accent]").forEach(b => { b.classList.remove("active"); b.classList.add("secondary"); });
+        this.classList.remove("secondary"); this.classList.add("active");
+      });
+    });
+
     document.querySelectorAll("[data-theme]").forEach(button => {
       button.addEventListener("click", function() {
         const theme = this.getAttribute("data-theme"); 
@@ -1435,7 +1944,7 @@
     const translations = {
       ru: { "Главная": "Главная", "Доходы": "Доходы", "Накопления": "Накопления", "Задачи и цели": "Задачи и цели", "ИИ-ассистент": "ИИ-ассистент", "Оплата": "Оплата", "Вход и регистрация": "Вход и регистрация", "Настройки": "Настройки", "Добро пожаловать": "Добро пожаловать", "Анализ доходов": "Анализ доходов", "Анализ накоплений": "Анализ накоплений", "Добавить доход": "Добавить доход", "Добавить цель": "Добавить цель", "Войти": "Войти", "Создать аккаунт": "Создать аккаунт", "Тема": "Тема", "Валюта": "Валюта", "Язык": "Язык" },
       en: { "Следи за доходами, планируй накопления и отмечай выполненные задачи — всё в одном месте.": "Track your income, plan your savings, and check off completed tasks — all in one place.", "Мои накопления": "My Savings", "Задачи и цели": "Tasks & Goals", "Всего накоплено": "Total saved", "Доходы за месяц": "Monthly income", "Задачи выполнены": "Tasks completed", "Основная цель": "Main goal", "Накоплено": "Saved", "Цель": "Goal", "выполнено": "completed", "Изменить результат": "Edit result", "Изменить цель": "Edit goal", "Чистый доход": "Net income", "Источники дохода и их доля в общей сумме.": "Income sources and their share of the total.", "Доход за месяц": "Monthly income", "Средний доход за день": "Average daily income", "Источников дохода": "Income sources", "Общий доход": "Total income", "Источники дохода": "Income sources", "Распределение доходов": "Income distribution", "за месяц": "per month", "от общего дохода": "of total income", "Нет данных для диаграммы.": "No data for the chart.", "Динамика накоплений": "Savings dynamics", "Расходы": "Expenses", "Анализ расходов": "Expense Analysis", "Куда уходят твои деньги.": "Where your money goes.", "Расходы за месяц": "Monthly expenses", "Средний расход за день": "Average daily expense", "Категорий расходов": "Expense categories", "Список расходов": "Expense list", "Общий расход": "Total expense", "Структура расходов": "Expense structure", "+ Добавить расход": "+ Add expense", "Название траты": "Expense name", "Например, Продукты": "For example, Groceries", "Расходов пока нет. Добавь первую трату.": "No expenses yet. Add the first one.", "от всех трат": "of all expenses", "Общий расход: ": "Total expense: ", "Сколько уже отложено и как продвигаются цели.": "How much is saved and how goals are progressing.", "Целей накопления": "Savings goals", "Ближайшая цель": "Nearest goal", "Все выполнены": "All completed", "Целей накопления пока нет.": "No savings goals yet.", "Выбирай приоритеты и отмечай сделанное.": "Choose priorities and mark what's done.", "Другие цели": "Other goals", "Других целей пока нет.": "No other goals yet.", "Сделать основной": "Make main", "Задачи": "Tasks", "Задач пока нет. Добавь первую!": "No tasks yet. Add the first one!", "Задай вопрос — получи совет по финансам.": "Ask a question — get financial advice.", "Чат с ИИ": "AI Chat", "Напиши свой первый вопрос...": "Write your first question...", "Например: как накопить на машину?": "For example: how to save for a car?", "Отправить": "Send", "Выберите подходящий тариф.": "Choose a suitable plan.", "1 месяц": "1 month", "6 месяцев": "6 months", "1 год": "1 year", "Оплата каждый месяц": "Monthly payment", "Выгоднее на 15%": "15% more profitable", "Выгоднее на 30%": "30% more profitable", "Выбрать": "Select", "Что входит в подписку": "What's included in the subscription", "Анализ доходов и накоплений": "Income and savings analysis", "ИИ-ассистент для советов по финансам": "AI assistant for financial advice", "Неограниченное количество целей и задач": "Unlimited goals and tasks", "Синхронизация между устройствами": "Sync between devices", "Войдите в аккаунт или создайте новый.": "Log in to your account or create a new one.", "Вход": "Login", "Регистрация": "Registration", "Email": "Email", "Пароль": "Password", "Минимум 6 символов": "Minimum 6 characters", "Войти": "Log in", "Создать аккаунт": "Create account", "Настрой приложение под себя.": "Customize the app for yourself.", "Валюта": "Currency", "Тема": "Theme", "Язык": "Language", "₽ Рубль": "₽ Ruble", "$ Доллар": "$ Dollar", "€ Евро": "€ Euro", "Тёмная": "Dark", "Светлая": "Light", "Русский": "Russian", "English": "English", "Общий доход": "Total income", "Цена": "Price", "Накоплено": "Saved", "+ Добавить задачу": "+ Add task", "+ Добавить основную цель": "+ Add main goal", "Ближайшая цель": "Nearest goal", "+ Добавить доход": "+ Add income", "+ Добавить цель": "+ Add goal", "Главный приоритет": "Main priority", "Источники дохода": "Income sources", "Распределение доходов": "Income distribution", "Динамика накоплений": "Savings dynamics", "Задачи выполнены": "Tasks completed", "Ваш тариф": "Your plan", "Что входит в подписку": "What's included", "Чат с ИИ": "AI Chat", "Доллар": "Dollar", "Евро": "Euro", "Главная": "Home", "Доходы": "Income", "Накопления": "Savings", "Задачи и цели": "Goals & Tasks", "ИИ-ассистент": "AI Assistant", "Оплата": "Pricing", "Вход и регистрация": "Login & Sign Up", "Настройки": "Settings", "Добро пожаловать": "Welcome", "Анализ доходов": "Income Analysis", "Анализ накоплений": "Savings Analysis", "Добавить доход": "Add Income", "Добавить цель": "Add Goal", "Войти": "Log In", "Создать аккаунт": "Sign Up", "Январь": "January", "Февраль": "February", "Март": "March", "Апрель": "April", "Май": "May", "Июнь": "June", "Июль": "July", "Август": "August", "Сентябрь": "September", "Октябрь": "October", "Ноябрь": "November", "Декабрь": "December", "За год": "For the year", "Показать за:": "Show for:", "Чистый доход за месяц": "Net income for the month", "Чистый доход за год": "Net income for the year", "Долги": "Debts", "Выйти": "Log Out", "Долги и кредиты": "Debts & Credits", "Контролируй свои обязательства и то, что должны тебе.": "Track your obligations and what others owe you.", "Я должен": "I Owe", "Мне должны": "Owed to Me", "Общий баланс": "Net Balance", "Мои обязательства": "My Obligations", "+ Добавить долг": "+ Add Debt", "Долгов пока нет. Добавь первый!": "No debts yet. Add the first one!", "Погасить: ": "Pay off: ", "Выплачено: ": "Paid: ", " из ": " of ", "Осталось: ": "Remaining: ", "(Я должен)": "(I Owe)", "(Мне должны)": "(Owed to Me)", "Погасить долг": "Pay Off Debt", "Сумма к выплате": "Payment Amount", "Выплатить": "Pay", "Удалить долг?": "Delete debt?", "Вы уверены, что хотите удалить эту запись?": "Are you sure you want to delete this record?", "Удалить": "Delete", "Отмена": "Cancel", "Подтверждение": "Confirmation", "Вы уверены?": "Are you sure?", "Удалить расход?": "Delete expense?", "Удалить доход?": "Delete income?", "Удалить цель?": "Delete goal?", "Удалить задачу?": "Delete task?", "Изменить сумму": "Edit Amount", "Новое значение": "New Value", "Изменить: ": "Edit: ", "Основная цель пока не добавлена.": "Main goal not added yet.", "Добавить цель": "Add Goal", "Уже накоплено": "Already saved", "Целевая сумма": "Target amount", "Название": "Name", "Тип": "Type", "Общая сумма": "Total amount", "Уже выплачено": "Already paid", "Сохранить": "Save", "Добавить задачу": "Add Task", "Название задачи": "Task name", "Добавить": "Add", "Источник дохода": "Income source", "Сумма за месяц": "Amount per month", "Месяц": "Month", "Цвет на диаграмме": "Chart color", "Название траты": "Expense name", "Добавить долг": "Add Debt", "Зелёный": "Green", "Красный": "Red", "Жёлтый": "Yellow", "Фиолетовый": "Purple", "Голубой": "Light Blue", "Оранжевый": "Orange", "Бирюзовый": "Turquoise", "Розовый": "Pink", "Лавандовый": "Lavender", "Коричневый": "Brown", "Серый": "Grey", "Изумрудный": "Emerald",
-        "Подписки": "Subscriptions", "Регулярные платежи": "Regular Payments", "Подписки и обязательные траты, которые повторяются каждый месяц.": "Subscriptions and mandatory expenses that repeat every month.", "В месяц уходит": "Monthly total", "Активных подписок": "Active subscriptions", "Мои подписки": "My Subscriptions", "+ Добавить": "+ Add", "Подписок пока нет. Добавь первую!": "No subscriptions yet. Add the first one!", "Списание ": "Billing on ", "-го числа": "th", " / мес": " / mo", "Удалить подписку?": "Delete subscription?", "Добавить подписку": "Add Subscription", "Сумма в месяц": "Amount per month", "День списания": "Billing day", "За какой месяц": "For which month" }
+        "Банки": "Banks", "Мои банки": "My Banks", "Все счета и остатки в одном месте. Добавляй и обновляй балансы вручную.": "All your accounts and balances in one place. Add accounts and update balances manually.", "Общий баланс добавленных счетов": "Combined balance of added accounts", "＋ Добавить счёт": "＋ Add account", "🏦 Счетов: ": "🏦 Accounts: ", "▣ Банков: ": "▣ Banks: ", "Мои счета": "My Accounts", "Ручной учёт": "Manual tracking", "Текущий баланс": "Current balance", "Номер не указан": "Number not provided", "Изменить баланс": "Edit balance", "Изменить счёт": "Edit account", "Удалить счёт?": "Delete account?", "Счёт будет удалён из списка приложения.": "The account will be removed from the app.", "Добавить счёт": "Add account", "Изменить счёт": "Edit account", "Банк": "Bank", "Название счёта": "Account name", "Тип счёта": "Account type", "Текущий баланс": "Current balance", "Последние 4 цифры (необязательно)": "Last 4 digits (optional)", "Сохранить счёт": "Save account", "Дебетовая карта": "Debit card", "Кредитная карта": "Credit card", "Накопительный счёт": "Savings account", "Вклад": "Deposit", "Текущий счёт": "Current account", "Другой банк": "Other bank", "Сбербанк": "Sberbank", "Т-Банк": "T-Bank", "Альфа-Банк": "Alfa-Bank", "ВТБ": "VTB", "Наличные": "Cash", "Важно:": "Important:", "сейчас это безопасный ручной учёт. Приложение не подключается к банковским системам и не получает операции автоматически. Не вводи сюда пароль, PIN-код, CVV или полные данные карты.": "this is manual tracking only. The app does not connect to banking systems or import transactions automatically. Do not enter passwords, PINs, CVVs or full card details here.", "Подписки": "Subscriptions", "Регулярные платежи": "Regular Payments", "Подписки и обязательные траты, которые повторяются каждый месяц.": "Subscriptions and mandatory expenses that repeat every month.", "В месяц уходит": "Monthly total", "В год уходит": "Yearly total", "Активных подписок": "Active subscriptions", "Мои подписки": "My Subscriptions", "+ Добавить": "+ Add", "Подписок пока нет. Добавь первую!": "No subscriptions yet. Add the first one!", "Списание ": "Billing on ", "-го числа": "th", " / мес": " / mo", "Удалить подписку?": "Delete subscription?", "Добавить подписку": "Add Subscription", "Сумма в месяц": "Amount per month", "День списания": "Billing day", "За какой месяц": "For which month" }
     };
 
     document.querySelectorAll("[data-lang]").forEach(button => {
@@ -1467,7 +1976,6 @@
           savedCurrencyBtn.classList.remove("secondary"); savedCurrencyBtn.classList.add("active");
         }
         
-        // Подсвечиваем кнопку темы
         if (savedTheme === 'light') {
           document.querySelector('[data-theme="light"]').classList.add('active');
           document.querySelector('[data-theme="light"]').classList.remove('secondary');
@@ -1479,6 +1987,12 @@
         const savedLang = localStorage.getItem('app_lang') || 'ru';
         const langBtn = document.querySelector(`[data-lang="${savedLang}"]`);
         if (langBtn) { langBtn.click(); }
+
+        const savedAccentBtn = document.querySelector(`[data-accent="${currentAccent}"]`);
+        if (savedAccentBtn) {
+          document.querySelectorAll("[data-accent]").forEach(b => { b.classList.remove("active"); b.classList.add("secondary"); });
+          savedAccentBtn.classList.remove("secondary"); savedAccentBtn.classList.add("active");
+        }
     });
     if ('serviceWorker' in navigator) { navigator.serviceWorker.register('sw.js'); }
  </script>
