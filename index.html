@@ -473,7 +473,11 @@
     }
 
     @media (max-width: 760px) { 
-      .app { padding: 15px; } 
+      .app { padding: 12px 15px 24px; } 
+      .topbar { margin-bottom: 12px; }
+      /* На узком экране скрываем большой приветственный блок: он занимает первый экран и отодвигает финансовые карточки вниз. */
+      #view-home > .welcome-card { display: none !important; }
+      #view-home > .stats-grid { margin-top: 0 !important; }
       .layout { grid-template-columns: 1fr; } 
       .mobile-menu-btn { display: block; }
       .sidebar { position: fixed; top: 0; left: 0; bottom: 0; width: 260px; background: var(--panel); z-index: 1000; transform: translateX(-100%); border-radius: 0 17px 17px 0; border: none; border-right: 1px solid var(--border); padding-top: 20px; }
