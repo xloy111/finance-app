@@ -1096,6 +1096,27 @@
     function showView(name) {
       document.querySelectorAll(".view").forEach(view => { view.classList.toggle("active", view.id === `view-${name}`); });
       document.querySelectorAll(".nav-button").forEach(button => { button.classList.toggle("active", button.dataset.view === name); });
+      
+      // Если открыли Банки - принудительно запускаем анимацию цифр
+      if (name === 'banks') {
+        setTimeout(() => {
+          const accounts = Array.isArray(data.bankAccounts) ? data.bankAccounts : [];
+          const total = accounts.reduce((sum, account) => sum + Math.max(0, Number(account.balance) || 0), 0);
+          const providers = new Set(accounts.map(account => account.provider));
+          
+          animateBankNumbers("#banksTotal", total, true);
+          animateBankNumbers("#banksAccountCount", accounts.length, false);
+          animateBankNumbers("#banksBankCount", providers.size, false);
+          
+          document.querySelectorAll(".account-balance-value").forEach(el => {
+            const target = Number(el.dataset.balance);
+            if (isFinite(target) && target > 0) {
+              animateSingleBalance(el, target);
+            }
+          });
+        }, 100); // Небольшая задержка для мобильных
+      }
+      
       if (window.innerWidth <= 760) { toggleMenu(); }
     }
 
@@ -1128,9 +1149,12 @@
       const total = accounts.reduce((sum, account) => sum + Math.max(0, Number(account.balance) || 0), 0);
       const providers = new Set(accounts.map(account => account.provider));
       
-      animateBankNumbers("#banksTotal", total, true);
-      animateBankNumbers("#banksAccountCount", accounts.length, false);
-      animateBankNumbers("#banksBankCount", providers.size, false);
+      // Запускаем анимацию верхних цифр с задержкой для мобильных
+      setTimeout(() => {
+        animateBankNumbers("#banksTotal", total, true);
+        animateBankNumbers("#banksAccountCount", accounts.length, false);
+        animateBankNumbers("#banksBankCount", providers.size, false);
+      }, 50);
 
       if (!accounts.length) {
         list.innerHTML = '<div class="empty" style="padding: 40px; border-radius: 20px; border: 1px dashed var(--border);">Пока нет счетов. Нажми «Добавить счёт», чтобы создать первый.</div>';
@@ -1175,12 +1199,15 @@
         </article>`;
       }).join("");
 
-      list.querySelectorAll(".account-balance-value").forEach(el => {
-        const target = Number(el.dataset.balance);
-        if (isFinite(target)) {
-          animateSingleBalance(el, target);
-        }
-      });
+      // Запускаем анимацию балансов внутри карточек тоже с задержкой
+      setTimeout(() => {
+        list.querySelectorAll(".account-balance-value").forEach(el => {
+          const target = Number(el.dataset.balance);
+          if (isFinite(target) && target > 0) {
+            animateSingleBalance(el, target);
+          }
+        });
+      }, 100);
 
       list.querySelectorAll("[data-bank-edit]").forEach(button => {
         button.addEventListener("click", () => {
@@ -1216,15 +1243,19 @@
     function animateBankNumbers(selector, target, isMoney) {
       const el = document.querySelector(selector);
       if (!el) return;
-      const start = parseFloat(el.dataset.cur || "0") || 0;
-      if (start === target) return;
-      const duration = 600;
+      
+      // Принудительно сбрасываем на 0 перед стартом
+      el.textContent = isMoney ? "0 " + currentCurrency : "0";
+      
+      if (target === 0) return;
+      
+      const duration = 800;
       const startTime = performance.now();
       
       function tick(t) {
         const p = Math.min(1, (t - startTime) / duration);
         const easeOut = 1 - Math.pow(1 - p, 3);
-        const current = start + (target - start) * easeOut;
+        const current = 0 + (target - 0) * easeOut;
         
         if (isMoney) {
           el.textContent = new Intl.NumberFormat("ru-RU", { maximumFractionDigits: 0 }).format(Math.round(current)) + " " + currentCurrency;
@@ -1234,8 +1265,6 @@
         
         if (p < 1) {
           requestAnimationFrame(tick);
-        } else {
-          el.dataset.cur = String(target);
         }
       }
       requestAnimationFrame(tick);
@@ -1243,7 +1272,7 @@
 
     function animateSingleBalance(el, target) {
       const start = 0;
-      const duration = 700;
+      const duration = 800;
       const startTime = performance.now();
       const currency = currentCurrency;
       
