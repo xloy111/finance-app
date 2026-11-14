@@ -405,6 +405,16 @@
       border: 1px solid var(--border); border-radius: 20px; padding: 20px;
       display: flex; flex-direction: column; gap: 16px;
       box-shadow: var(--shadow); position: relative; overflow: hidden;
+      transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+    }
+    .account-card:hover,
+    .bank-stat-card:hover {
+      transform: translateY(-3px);
+      border-color: color-mix(in srgb, var(--accent) 65%, var(--border));
+      box-shadow: 0 12px 30px color-mix(in srgb, var(--accent) 22%, transparent), 0 8px 24px #0006;
+    }
+    @media (hover: none) {
+      .account-card:hover, .bank-stat-card:hover { transform: none; }
     }
     html[data-theme="light"] .account-card { border: none; }
     .account-card-top { display: flex; justify-content: space-between; align-items: flex-start; }
@@ -587,7 +597,7 @@
       .form-row, .input-row { grid-template-columns: 1fr !important; }
     }
 
-    /* Новый визуальный слой для рабочих разделов. Банки намеренно исключены. */
+    /* Единый визуальный слой для всех рабочих разделов. */
     .main > .view:not(#view-banks) .page-heading {
       font-style: normal; font-weight: 850; letter-spacing: -.04em;
       color: var(--text); text-shadow: 0 8px 28px color-mix(in srgb, var(--accent) 18%, transparent);
@@ -613,7 +623,36 @@
       outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 17%, transparent);
     }
     .main > .view:not(#view-banks) .stats-grid .card { position: relative; overflow: hidden; }
-    .main > .view:not(#view-banks) .stats-grid .card::before { content: ''; position: absolute; inset: 0 0 auto; height: 3px; background: linear-gradient(90deg, var(--accent), transparent); opacity: .8; }
+    /* Акцент карточек задаётся границей и тенью, без декоративных полос сверху. */
+    .main > .view:not(#view-banks) .stats-grid .card::before { content: none; }
+    #view-banks .card:hover { border-color: color-mix(in srgb, var(--accent) 48%, var(--border)); box-shadow: 0 16px 40px color-mix(in srgb, #000 32%, transparent); transform: translateY(-3px); }
+    /* Единая подсветка интерактивных карточек во всех разделах. */
+    .view .card, .view .bank-stat-card, .view .account-card {
+      transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+    }
+    /* Тот же hover-эффект, что у карточек подключённых счетов. */
+    .view .card:hover, .view .bank-stat-card:hover, .view .account-card:hover {
+      transform: translateY(-3px) !important;
+      border-color: color-mix(in srgb, var(--accent) 65%, var(--border)) !important;
+      box-shadow: 0 12px 30px color-mix(in srgb, var(--accent) 22%, transparent), 0 8px 24px #0006 !important;
+    }
+    @media (hover: none) {
+      .view .card:hover, .view .bank-stat-card:hover, .view .account-card:hover { transform: none; }
+    }
+    @media (max-width: 900px), (hover: none) and (pointer: coarse) {
+      #view-home > .welcome-card,
+      #view-home > .stats-grid,
+      #view-home > article.card {
+        display: block !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+        height: auto !important;
+        transform: none !important;
+        animation: none !important;
+      }
+      #view-home > .stats-grid { display: grid !important; }
+      #view-home #homeNetIncome, #view-home #homePrimary { display: block !important; visibility: visible !important; opacity: 1 !important; }
+    }
     @media (max-width: 760px) {
       .main > .view:not(#view-banks) .card { border-radius: 17px; }
       .main > .view:not(#view-banks) .page-heading::after { width: 24px; height: 3px; margin-left: 7px; }
@@ -905,8 +944,9 @@
         <!-- Оплата -->
         <section class="view " id="view-payment">
           <h1 class="page-heading">Оплата</h1><p class="page-subtitle">Выберите подходящий тариф.</p>
-          <div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));"><article class="card" style="text-align: center;"><h2 class="card-title" style="justify-content: center;">1 месяц</h2><p style="font-size: 32px; font-weight: 800; color: var(--accent); margin: 10px 0;">590 ₽</p><p style="color: var(--muted); font-size: 13px; margin-bottom: 16px;">Оплата каждый месяц</p><button class="button" style="width: 100%;">Выбрать</button></article><article class="card" style="text-align: center; border-color: var(--accent);"><h2 class="card-title" style="justify-content: center;">6 месяцев</h2><p style="font-size: 32px; font-weight: 800; color: var(--accent); margin: 10px 0;">2590 ₽</p><p style="color: var(--muted); font-size: 13px; margin-bottom: 16px;">Выгоднее на 15%</p><button class="button" style="width: 100%;">Выбрать</button></article><article class="card" style="text-align: center;"><h2 class="card-title" style="justify-content: center;">1 год</h2><p style="font-size: 32px; font-weight: 800; color: var(--accent); margin: 10px 0;">5990 ₽</p><p style="color: var(--muted); font-size: 13px; margin-bottom: 16px;">Выгоднее на 30%</p><button class="button" style="width: 100%;">Выбрать</button></article></div>
-          <article class="card" style="margin-top: 16px;"><h2 class="card-title">Что входит в подписку</h2><ul style="color: var(--muted); line-height: 1.8; padding-left: 20px;"><li>Анализ доходов и накоплений</li><li>ИИ-ассистент для советов по финансам</li><li>Неограниченное количество целей и задач</li><li>Синхронизация между устройствами</li></ul></article>
+          <div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));"><article class="card" style="text-align: center;"><h2 class="card-title" style="justify-content: center;">1 месяц</h2><p style="font-size: 32px; font-weight: 800; color: var(--accent); margin: 10px 0;">490 ₽</p><p style="color: var(--muted); font-size: 13px; margin-bottom: 8px;">Оплата каждый месяц</p><p style="color: var(--accent); font-size: 13px; margin-bottom: 16px;">Пробный период — 7 дней</p><button class="button" style="width: 100%;">Выбрать</button></article><article class="card" style="text-align: center; border-color: var(--accent);"><h2 class="card-title" style="justify-content: center;">6 месяцев</h2><p style="font-size: 32px; font-weight: 800; color: var(--accent); margin: 10px 0;">2490 ₽</p><p style="color: var(--muted); font-size: 13px; margin-bottom: 8px;">Выгоднее на 15%</p><p style="color: var(--accent); font-size: 13px; margin-bottom: 16px;">Пробный период — 7 дней</p><button class="button" style="width: 100%;">Выбрать</button></article><article class="card" style="text-align: center;"><h2 class="card-title" style="justify-content: center;">12 месяцев</h2><p style="font-size: 32px; font-weight: 800; color: var(--accent); margin: 10px 0;">4990 ₽</p><p style="color: var(--muted); font-size: 13px; margin-bottom: 8px;">Выгоднее на 30%</p><p style="color: var(--accent); font-size: 13px; margin-bottom: 16px;">Пробный период — 7 дней</p><button class="button" style="width: 100%;">Выбрать</button></article></div>
+          <article class="card" style="margin-top: 16px;"><h2 class="card-title">Что входит в подписку</h2><ul style="color: var(--muted); line-height: 1.8; padding-left: 20px;"><li>Анализ доходов, расходов и накоплений</li><li>ИИ-ассистент для персональных советов по финансам</li><li>Неограниченное количество целей, задач и счетов</li><li>Раздел банков и общий контроль балансов</li><li>Регулярные платежи и напоминания</li><li>Синхронизация данных между устройствами</li><li>Все будущие обновления приложения</li></ul></article>
+          <p class="trial-note" style="margin: 18px 0 0; color: var(--muted); text-align: center; font-size: 13px;">Пробный тариф 7 дней, после его окончания вам придёт уведомление, что нужно оплатить подписку.</p>
         </section>
 
         <!-- Настройки -->
