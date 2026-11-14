@@ -1309,7 +1309,12 @@
         renderBanks();
         banksFirstOpened = true;
       }
-      if (window.innerWidth <= 760) { toggleMenu(); }
+      if (window.innerWidth <= 760) { closeMobileMenu(); }
+    }
+
+    function closeMobileMenu() {
+      document.getElementById('sidebar')?.classList.remove('open');
+      document.getElementById('sidebarOverlay')?.classList.remove('open');
     }
 
     window.toggleMenu = function() {
