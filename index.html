@@ -515,7 +515,32 @@
       .view.active .card.section-wave-card { animation: none !important; opacity: 1; transform: none; will-change: auto; }
     }
 
-  </style>
+  
+    /* Надёжная мобильная раскладка: iOS Safari иногда использует широкий layout viewport,
+       поэтому одного max-width недостаточно. На touch-устройствах приветственный блок
+       полностью исключается из потока, чтобы не оставлять пустое место над карточками. */
+    @media (max-width: 900px), (hover: none) and (pointer: coarse) {
+      #view-home > .welcome-card {
+        display: none !important;
+        height: 0 !important;
+        min-height: 0 !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        border: 0 !important;
+      }
+      #view-home { margin: 0 !important; padding: 0 !important; }
+      #view-home > .stats-grid { margin-top: 0 !important; }
+      .layout { align-items: start !important; }
+      .main { align-self: start !important; min-height: 0 !important; }
+    }
+
+    /* iPhone/iPad Safari: не полагаемся на ширину layout viewport */
+    @supports (-webkit-touch-callout: none) {
+      #view-home > .welcome-card { display: none !important; height: 0 !important; margin: 0 !important; padding: 0 !important; }
+      #view-home > .stats-grid { margin-top: 0 !important; }
+      #view-home, #view-home > .stats-grid, .main { padding-top: 0 !important; }
+    }
+</style>
 <base target="_blank">
 </head>
 <body>
