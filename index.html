@@ -528,7 +528,9 @@
        Не скрываем welcome-card: ранее это правило удаляло приветствие и
        смещало визуальную структуру главной на сенсорных устройствах. */
     @media (max-width: 900px), (hover: none) and (pointer: coarse) {
-      #view-home { display: block; margin: 0 !important; padding: 0 !important; }
+      .main > .view { display: none; }
+      .main > .view.active { display: block; }
+      #view-home.active { display: block; margin: 0 !important; padding: 0 !important; }
       #view-home > .welcome-card,
       #view-home > article.card {
         display: block !important;
