@@ -475,8 +475,6 @@
     @media (max-width: 760px) { 
       .app { padding: 12px 15px 24px; } 
       .topbar { margin-bottom: 12px; }
-      /* На узком экране скрываем большой приветственный блок: он занимает первый экран и отодвигает финансовые карточки вниз. */
-      #view-home > .welcome-card { display: none !important; }
       #view-home > .stats-grid { margin-top: 0 !important; }
       .layout { grid-template-columns: 1fr; } 
       .mobile-menu-btn { display: block; }
@@ -516,29 +514,43 @@
     }
 
   
-    /* Надёжная мобильная раскладка: iOS Safari иногда использует широкий layout viewport,
-       поэтому одного max-width недостаточно. На touch-устройствах приветственный блок
-       полностью исключается из потока, чтобы не оставлять пустое место над карточками. */
+    /* Мобильная главная: показываем ВСЕ блоки главной страницы.
+       Не скрываем welcome-card: ранее это правило удаляло приветствие и
+       смещало визуальную структуру главной на сенсорных устройствах. */
     @media (max-width: 900px), (hover: none) and (pointer: coarse) {
-      #view-home > .welcome-card {
-        display: none !important;
-        height: 0 !important;
+      #view-home { display: block; margin: 0 !important; padding: 0 !important; }
+      #view-home > .welcome-card,
+      #view-home > article.card {
+        display: block !important;
+        visibility: visible !important;
+        height: auto !important;
         min-height: 0 !important;
-        margin: 0 !important;
-        padding: 0 !important;
-        border: 0 !important;
+        opacity: 1 !important;
+        transform: none;
       }
-      #view-home { margin: 0 !important; padding: 0 !important; }
+      #view-home > .stats-grid {
+        display: grid !important;
+        visibility: visible !important;
+        height: auto !important;
+        opacity: 1 !important;
+      }
+      #view-home > .welcome-card {
+        margin: 0 0 16px !important;
+        padding: 24px 18px !important;
+      }
       #view-home > .stats-grid { margin-top: 0 !important; }
+      #view-home > article.card { margin: 0 0 16px !important; }
+      #view-home #homeNetIncome,
+      #view-home #homePrimary { visibility: visible !important; }
       .layout { align-items: start !important; }
       .main { align-self: start !important; min-height: 0 !important; }
     }
 
-    /* iPhone/iPad Safari: не полагаемся на ширину layout viewport */
+    /* Safari iOS: не используем отдельные правила, скрывающие welcome-блок. */
     @supports (-webkit-touch-callout: none) {
-      #view-home > .welcome-card { display: none !important; height: 0 !important; margin: 0 !important; padding: 0 !important; }
+      #view-home > .welcome-card { display: block !important; height: auto !important; margin-bottom: 16px !important; padding: 24px 18px !important; }
       #view-home > .stats-grid { margin-top: 0 !important; }
-      #view-home, #view-home > .stats-grid, .main { padding-top: 0 !important; }
+      #view-home > article.card { display: block !important; visibility: visible !important; opacity: 1 !important; }
     }
 </style>
 <base target="_blank">
