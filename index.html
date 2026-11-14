@@ -552,6 +552,40 @@
       #view-home > .stats-grid { margin-top: 0 !important; }
       #view-home > article.card { display: block !important; visibility: visible !important; opacity: 1 !important; }
     }
+
+    /* Мобильная полировка: удобные зоны касания и защита от переполнения. */
+    @media (max-width: 760px) {
+      html, body { overflow-x: hidden; }
+      body { -webkit-tap-highlight-color: transparent; }
+      .app { width: 100%; padding: max(10px, env(safe-area-inset-top)) 12px calc(20px + env(safe-area-inset-bottom)); }
+      .topbar { min-height: 46px; gap: 8px; }
+      .brand { min-width: 0; gap: 8px; font-size: 16px; }
+      .brand-icon { width: 34px; height: 34px; border-radius: 10px; font-size: 18px; }
+      .mobile-menu-btn { width: 44px; height: 44px; flex: 0 0 44px; padding: 0; border-radius: 12px; background: var(--panel); border: 1px solid var(--border); line-height: 1; }
+      .mobile-menu-btn:active { background: var(--panel-2); transform: scale(.97); }
+      .page-heading { font-size: clamp(24px, 8vw, 32px); line-height: 1.1; }
+      .page-subtitle { margin-bottom: 16px; line-height: 1.45; }
+      .card { border-radius: 14px; padding: 16px; margin-bottom: 12px; }
+      .card:hover { transform: none; }
+      .card-title { gap: 8px; font-size: 16px; line-height: 1.25; }
+      .button, button, input, select, textarea { min-height: 44px; }
+      .button { padding: 11px 14px; }
+      .list-item { gap: 10px; padding: 12px 0; }
+      .table-wrap, .table-container { max-width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+      table { min-width: 560px; }
+      .sidebar { width: min(290px, 86vw); padding: max(18px, env(safe-area-inset-top)) 12px 20px; box-shadow: 12px 0 35px #0008; }
+      .nav-button { min-height: 48px; margin: 2px 0; }
+    }
+
+    @media (max-width: 420px) {
+      .stats-grid { gap: 10px; }
+      .stat-value { font-size: 22px; }
+      .primary-goal { padding: 15px; }
+      .primary-goal h3 { font-size: 19px; }
+      .accounts-header { align-items: stretch; flex-direction: column; gap: 12px; }
+      .accounts-header .button { width: 100%; }
+      .form-row, .input-row { grid-template-columns: 1fr !important; }
+    }
 </style>
 <base target="_blank">
 </head>
