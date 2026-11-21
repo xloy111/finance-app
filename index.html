@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content">
   <title>Личный финансовый помощник</title>
   <link rel="icon" type="image/svg+xml" href="icon.svg">
   <link rel="manifest" href="manifest.json">
@@ -590,7 +590,7 @@
 
     /* Мобильная полировка: удобные зоны касания и защита от переполнения. */
     @media (max-width: 760px) {
-      html, body { overflow-x: hidden; }
+      html, body { overflow-x: hidden; overflow-x: clip; }
       body { -webkit-tap-highlight-color: transparent; }
       .app { width: 100%; padding: max(10px, env(safe-area-inset-top)) 12px calc(20px + env(safe-area-inset-bottom)); }
       .topbar { min-height: 46px; gap: 8px; }
@@ -682,6 +682,55 @@
       .main > .view:not(#view-banks) .card { border-radius: 17px; }
       .main > .view:not(#view-banks) .page-heading::after { width: 24px; height: 3px; margin-left: 7px; }
     }
+
+    @media (max-width: 760px) {
+      html.mobile-menu-open, html.mobile-menu-open body { overflow: hidden; }
+      .app { padding-inline: max(12px, env(safe-area-inset-left)) max(12px, env(safe-area-inset-right)); }
+      .topbar { position: sticky; top: 0; z-index: 10; padding-block: max(5px, env(safe-area-inset-top)) 5px; background: var(--bg); }
+      .sidebar { visibility: hidden; padding-bottom: max(20px, env(safe-area-inset-bottom)); transition: transform .24s ease-out, visibility .24s; }
+      .sidebar.open { visibility: visible; }
+      .sidebar-overlay, .modal::backdrop { backdrop-filter: none; }
+      #auth-screen { justify-content: flex-start !important; overflow-y: auto; padding: max(12px, env(safe-area-inset-top)) max(12px, env(safe-area-inset-right)) max(12px, env(safe-area-inset-bottom)) max(12px, env(safe-area-inset-left)) !important; }
+      #auth-screen > div { flex-shrink: 0; margin-block: auto; padding: 20px !important; }
+      .stats-grid, .banks-stats, .account-actions { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+      .stats-grid > .card { margin-bottom: 0; }
+      .stats-grid > :last-child:nth-child(odd), .banks-stats > :last-child:nth-child(odd), .account-actions > :last-child:nth-child(odd) { grid-column: 1 / -1; }
+      .stat-value, .account-balance-value, .bank-stat-card strong { overflow-wrap: anywhere; }
+      .stat-value { font-size: clamp(19px, 5.2vw, 28px); }
+      .main > .view .list-item { padding: 10px; }
+      .item-sub, .card-title { flex-wrap: wrap; }
+      .item-actions { flex-direction: row; flex-wrap: wrap; justify-content: flex-end; max-width: 94px; }
+      .icon-button { width: 44px; height: 44px; flex-basis: 44px; }
+      .account-actions .button { height: auto; }
+      .current-account-switcher { grid-template-columns: 44px 1fr 44px; }
+      .current-account-switcher .button { min-height: 44px; }
+      input:not([type="checkbox"]), select, textarea { font-size: 16px; }
+      .chart-wrap { overflow-x: auto; overscroll-behavior-inline: contain; }
+      .chart { min-width: 540px; }
+      .chart text { font-size: 14px; }
+      .modal, #accountStatsDialog {
+        margin: auto auto 0;
+        width: min(560px, 100%);
+        max-width: 100%;
+        max-height: calc(100vh - 12px);
+        max-height: calc(100dvh - max(12px, env(safe-area-inset-top)));
+        border-radius: 18px 18px 0 0;
+        padding-bottom: env(safe-area-inset-bottom);
+        overscroll-behavior: contain;
+      }
+      .modal-inner { padding: 16px max(16px, env(safe-area-inset-right)) 16px max(16px, env(safe-area-inset-left)); }
+      .modal-actions > .button { flex: 1 1 110px; }
+      .view, .view.active .card, .view.active .card.section-wave-card,
+      .view.active .account-card, .banks-stats .bank-stat-card {
+        animation: none !important; opacity: 1 !important; transform: none; will-change: auto;
+      }
+      .view .card:hover, .view .bank-stat-card:hover, .view .account-card:hover { transform: none !important; }
+    }
+    @media (max-width: 360px) {
+      .main > .view .stats-grid .card, .bank-stat-card { padding: 12px; }
+      .account-stats-totals { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .account-stats-totals > :last-child { grid-column: 1 / -1; }
+    }
 </style>
 <base target="_blank">
 </head>
@@ -726,12 +775,12 @@
       </div>
 </div>
 
-  <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleMenu()"></div>
+  <div class="sidebar-overlay" id="sidebarOverlay" aria-hidden="true" onclick="closeMobileMenu(true)"></div>
 
   <div class="app">
     <header class="topbar">
       <div class="brand">
-        <button class="mobile-menu-btn" onclick="toggleMenu()">☰</button>
+        <button class="mobile-menu-btn" id="mobileMenuButton" type="button" aria-label="Меню" aria-expanded="false" aria-controls="sidebar" onclick="toggleMenu()">☰</button>
         <span class="brand-icon">✦</span>
         <span>МОИ ФИНАНСЫ</span>
       </div>
@@ -739,7 +788,7 @@
     
     <div class="layout">
       <nav class="sidebar" id="sidebar" aria-label="Разделы приложения">
-        <button class="nav-button active" data-view="home"><span class="nav-icon">⌂</span><span class="nav-label">Главная</span></button>
+        <button class="nav-button active" data-view="home" aria-current="page"><span class="nav-icon">⌂</span><span class="nav-label">Главная</span></button>
         <button class="nav-button" data-view="income"><span class="nav-icon">↗</span><span class="nav-label">Доходы</span></button>
         <button class="nav-button" data-view="expenses"><span class="nav-icon">↙</span><span class="nav-label">Расходы</span></button>
         <button class="nav-button" data-view="banks"><span class="nav-icon">▣</span><span class="nav-label">Банки</span></button>
@@ -763,7 +812,7 @@
         <button class="nav-button" onclick="signOut()"><span class="nav-icon">⬅</span><span class="nav-label">Выйти</span></button>
       </nav>
       
-      <main class="main">
+      <main class="main" id="appContent" tabindex="-1">
         <!-- Главная -->
         <section class="view active " id="view-home">
           <div class="welcome-card card">
@@ -815,8 +864,8 @@
           
           <article class="card" style="margin-top:16px">
             <h2 class="card-title">Динамика дохода за год</h2>
-            <div class="chart-wrap">
-              <svg class="chart" viewBox="0 0 700 240" role="img" aria-label="График динамики накоплений">
+            <div class="chart-wrap" tabindex="0">
+              <svg class="chart" viewBox="0 0 700 240" role="img" aria-label="График динамики доходов">
                 <defs>
                   <linearGradient id="chartGradient" x1="0" y1="0" x2="0" y2="1">
                     <stop offset="0%" stop-color="var(--accent)" stop-opacity="0.3"/>
@@ -852,7 +901,7 @@
           
           <article class="card" style="margin-top:16px">
             <h2 class="card-title">Динамика расходов за год</h2>
-            <div class="chart-wrap">
+            <div class="chart-wrap" tabindex="0">
               <svg class="chart" viewBox="0 0 700 240" role="img" aria-label="График динамики расходов">
                 <defs>
                   <linearGradient id="expenseChartGradient" x1="0" y1="0" x2="0" y2="1">
@@ -1317,12 +1366,19 @@
 
     function escapeHtml(value) { return String(value).replace(/[&<>"']/g, char => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#039;" })[char]); }
     
+    const moneyFormats = new Map();
+
     function money(value) {
       const num = Number(value) || 0;
-      if (!Number.isInteger(num)) {
-        return new Intl.NumberFormat(appLocale(), { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(num) + " " + currentCurrency;
+      const digits = Number.isInteger(num) ? 0 : 2;
+      const locale = appLocale();
+      const key = `${locale}/${digits}`;
+      if (!moneyFormats.has(key)) {
+        moneyFormats.set(key, new Intl.NumberFormat(locale, {
+          minimumFractionDigits: digits, maximumFractionDigits: digits
+        }));
       }
-      return new Intl.NumberFormat(appLocale(), { maximumFractionDigits: 0 }).format(num) + " " + currentCurrency;
+      return `${moneyFormats.get(key).format(num)} ${currentCurrency}`;
     }
 
     function percent(current, target) { if (!Number(target) || target <= 0) return 0; return Math.min(100, Math.round((Number(current) / Number(target)) * 100)); }
@@ -1366,28 +1422,61 @@
       });
     }
 
+    const mobileViewport = matchMedia("(max-width: 760px)");
+
     function showView(name) {
+      const previous = document.querySelector(".view.active");
       document.querySelectorAll(".view").forEach(view => { view.classList.toggle("active", view.id === `view-${name}`); });
-      document.querySelectorAll(".nav-button").forEach(button => { button.classList.toggle("active", button.dataset.view === name); });
-      if (name === "home") animateHomeCardsOnce();
-      animateSectionCards(name);
-      if (name === "banks") {
-        renderBanks();
-        banksFirstOpened = true;
+      document.querySelectorAll(".nav-button[data-view]").forEach(button => {
+        const active = button.dataset.view === name;
+        button.classList.toggle("active", active);
+        if (active) button.setAttribute("aria-current", "page");
+        else button.removeAttribute("aria-current");
+      });
+      renderViews[name]?.();
+      if (name === "banks") banksFirstOpened = true;
+      if (!mobileViewport.matches) {
+        if (name === "home") animateHomeCardsOnce();
+        animateSectionCards(name);
       }
-      if (window.innerWidth <= 760) { closeMobileMenu(); }
+      if (mobileViewport.matches) {
+        const menuWasOpen = $("#sidebar").classList.contains("open");
+        closeMobileMenu();
+        if (previous?.id !== `view-${name}`) window.scrollTo(0, 0);
+        if (menuWasOpen) $("#appContent").focus({ preventScroll: true });
+      }
     }
 
-    function closeMobileMenu() {
-      document.getElementById('sidebar')?.classList.remove('open');
-      document.getElementById('sidebarOverlay')?.classList.remove('open');
+    function setMobileMenu(open) {
+      const sidebar = $("#sidebar");
+      sidebar.classList.toggle("open", open);
+      sidebar.inert = mobileViewport.matches && !open;
+      $("#sidebarOverlay").classList.toggle("open", open);
+      $("#mobileMenuButton").setAttribute("aria-expanded", String(open));
+      $("#appContent").inert = open;
+      document.documentElement.classList.toggle("mobile-menu-open", open);
+      if (open) sidebar.querySelector(".nav-button.active")?.focus();
+    }
+
+    function closeMobileMenu(restoreFocus = false) {
+      setMobileMenu(false);
+      if (restoreFocus) $("#mobileMenuButton").focus({ preventScroll: true });
     }
 
     window.toggleMenu = function() {
-      document.getElementById('sidebar').classList.toggle('open');
-      document.getElementById('sidebarOverlay').classList.toggle('open');
+      if (!mobileViewport.matches) return;
+      if ($("#sidebar").classList.contains("open")) closeMobileMenu(true);
+      else setMobileMenu(true);
     };
 
+    mobileViewport.addEventListener?.("change", () => closeMobileMenu());
+    document.addEventListener("keydown", event => {
+      if (event.key === "Escape" && $("#sidebar").classList.contains("open") && !document.querySelector("dialog[open]")) {
+        event.preventDefault();
+        closeMobileMenu(true);
+      }
+    });
+    closeMobileMenu();
 
     const BANK_META = {
       sber: { name: "Сбербанк", short: "СБ", color: "#21a038", gradient: "linear-gradient(135deg, #21a038 0%, #0f5c1e 100%)" },
@@ -1640,7 +1729,7 @@
         if (!Number.isFinite(target)) return;
         const previous = bankBalanceAnimationState.get(id);
         const banksVisible = document.getElementById("view-banks")?.classList.contains("active");
-        if (banksVisible && (previous === undefined || previous !== target)) {
+        if (banksVisible && !mobileViewport.matches && (previous === undefined || previous !== target)) {
           animateSingleBalance(el, target, previous);
         } else {
           el.textContent = money(target);
@@ -1734,7 +1823,8 @@
       const animation = String(Number(el.dataset.bankAnimation || 0) + 1);
       el.dataset.bankAnimation = animation;
       const start = Number(el.dataset.bankCurrent || 0);
-      if (start === target) {
+      if (mobileViewport.matches || start === target) {
+        el.dataset.bankCurrent = String(target);
         el.textContent = isMoney ? money(target) : String(target);
         return;
       }
@@ -2010,6 +2100,15 @@
       if (mid1) mid1.textContent = formatAxis(scaleMax / 3);
       if (zero) zero.textContent = "0";
 
+      if (mobileViewport.matches || matchMedia("(prefers-reduced-motion: reduce)").matches) {
+        line.style.transition = "none";
+        line.style.strokeDasharray = "none";
+        line.style.strokeDashoffset = "0";
+        area.style.transition = "none";
+        area.style.opacity = "1";
+        return;
+      }
+
       // Animate only the stroke drawing; avoid restarting an unfinished animation loop.
       if (line._drawAnimation) line._drawAnimation.cancel();
       try {
@@ -2284,7 +2383,20 @@
 
     function update() { save(); renderApp(); }
 
-    function renderApp() { renderCurrentAccount(); renderIncome(); renderExpenses(); renderSavings(); renderDebts(); renderSubscriptions(); renderBanks(); renderGoals(); renderTasks(); renderHome(); animateStatNumbers(); if (document.getElementById("view-home")?.classList.contains("active")) animateHomeCardsOnce(); }
+    const renderViews = {
+      home: renderHome, income: renderIncome, expenses: renderExpenses, banks: renderBanks,
+      savings: renderSavings, debts: renderDebts, subscriptions: renderSubscriptions,
+      goals() { renderGoals(); renderTasks(); }
+    };
+
+    function renderApp(all = false) {
+      renderCurrentAccount();
+      const active = document.querySelector(".view.active")?.id.slice(5);
+      if (all) Object.values(renderViews).forEach(render => render());
+      else renderViews[active]?.();
+      animateStatNumbers();
+      if (active === "home" && !mobileViewport.matches) animateHomeCardsOnce();
+    }
 
     function animateChartDraw() {
       const line = $("#chartLine");
@@ -2302,7 +2414,7 @@
 
     const statAnimationFrames = new WeakMap();
     function animateStatNumbers() {
-      const reducedMotion = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
+      const reducedMotion = mobileViewport.matches || matchMedia("(prefers-reduced-motion: reduce)").matches;
       document.querySelectorAll(".view.active .stat-value").forEach(el => {
         const finalText = el.textContent.trim();
         if (finalText.includes("/")) { delete el.dataset.cur; return; }
@@ -2710,7 +2822,7 @@
       "Введите ваш Email, и мы отправим ссылку для сброса пароля.": "Enter your email address and we will send you a password reset link.",
       "Восстановление пароля": "Reset password",
       "Все будущие обновления приложения": "All future app updates",
-      "График динамики накоплений": "Savings history chart",
+      "График динамики доходов": "Income history chart",
       "График динамики расходов": "Expense history chart",
       "Данные хранятся в твоём профиле": "Your data is stored in your profile",
       "Динамика дохода за год": "Income over the year",
@@ -2838,6 +2950,7 @@
       "Введите число не меньше нуля.": "Enter a number that is zero or higher.",
       "Статистика счёта": "Account statistics",
       "Закрыть": "Close",
+      "Меню": "Menu",
       "Разница": "Net",
       "Нет операций за этот месяц.": "There are no transactions this month."
     };
@@ -2870,7 +2983,7 @@
       }
     }
 
-    function applyLanguage(language) {
+    function applyLanguage(language, refreshAll = true) {
       currentLang = language === "en" ? "en" : "ru";
       document.documentElement.lang = currentLang;
       localStorage.setItem("app_lang", currentLang);
@@ -2885,7 +2998,7 @@
       for (const element of document.querySelectorAll("[data-ui-label]")) {
         element.textContent = t(element.dataset.uiLabel);
       }
-      renderApp();
+      renderApp(refreshAll);
       if (statsAccountId !== null) {
         Array.from($("#accountStatsMonth").options).forEach((option, month) => { option.textContent = monthLabel(month); });
         renderAccountStats();
@@ -2912,7 +3025,7 @@
           document.querySelector('[data-theme="dark"]').classList.remove('secondary');
         }
 
-        applyLanguage(currentLang);
+        applyLanguage(currentLang, false);
 
         const savedAccentBtn = document.querySelector(`[data-accent="${currentAccent}"]`);
         if (savedAccentBtn) {
