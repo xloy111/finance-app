@@ -730,7 +730,7 @@
     }
     @media (max-width: 760px) and (prefers-reduced-motion: no-preference) {
       .main > .view.active .mobile-section-wave {
-        animation: sectionWaveIn .32s cubic-bezier(.2,.75,.25,1) both !important;
+        animation: sectionWaveIn .46s cubic-bezier(.22,.68,.28,1) both !important;
         animation-delay: var(--wave-delay, 0ms) !important;
       }
     }
@@ -1428,13 +1428,26 @@
       const selector = mobile ? ".card, .banks-hero, .bank-stat-card, .account-card" : ".card";
       const cards = [...view.querySelectorAll(selector)].slice(0, mobile ? 8 : undefined);
       const className = mobile ? "mobile-section-wave" : "section-wave-card";
+      const startWave = () => cards.forEach((card, index) => {
+        card.style.setProperty("--wave-delay", `${Math.min(index, 7) * 45}ms`);
+        card.classList.add(className);
+      });
+      if (mobile) {
+        const replay = cards.some(card => card.classList.contains(className));
+        startWave();
+        if (replay) {
+          for (const animation of view.getAnimations?.({ subtree: true }) ?? []) {
+            if (animation.animationName !== "sectionWaveIn") continue;
+            animation.currentTime = 0;
+            animation.play();
+          }
+        }
+        return;
+      }
+
       cards.forEach(card => card.classList.remove(className));
       requestAnimationFrame(() => requestAnimationFrame(() => {
-        if (!view.classList.contains("active")) return;
-        cards.forEach((card, index) => {
-          card.style.setProperty("--wave-delay", `${Math.min(index, 7) * (mobile ? 30 : 45)}ms`);
-          card.classList.add(className);
-        });
+        if (view.classList.contains("active")) startWave();
       }));
     }
 
