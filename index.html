@@ -319,6 +319,8 @@
     .chart .axis { stroke: var(--accent); stroke-width: 2; }
     .chart text { fill: var(--muted); font-family: inherit; font-size: 11px; font-weight: 700; }
     
+    .chart-y-label { text-anchor: end; dominant-baseline: middle; }
+
     .chart .line { fill: none; stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
     .chart .area { opacity: 1; }
 
@@ -554,8 +556,8 @@
       .main > .view { display: none; }
       .main > .view.active { display: block; }
       #view-home.active { display: block; margin: 0 !important; padding: 0 !important; }
-      #view-home > .welcome-card,
-      #view-home > article.card {
+      #view-home > .welcome-card:not(.mobile-section-wave),
+      #view-home > article.card:not(.mobile-section-wave) {
         display: block !important;
         visibility: visible !important;
         height: auto !important;
@@ -585,7 +587,7 @@
     @supports (-webkit-touch-callout: none) {
       #view-home > .welcome-card { display: block !important; height: auto !important; margin-bottom: 16px !important; padding: 24px 18px !important; }
       #view-home > .stats-grid { margin-top: 0 !important; }
-      #view-home > article.card { display: block !important; visibility: visible !important; opacity: 1 !important; }
+      #view-home > article.card:not(.mobile-section-wave) { display: block !important; visibility: visible !important; opacity: 1 !important; }
     }
 
     /* Мобильная полировка: удобные зоны касания и защита от переполнения. */
@@ -665,9 +667,9 @@
       .view .card:hover, .view .bank-stat-card:hover, .view .account-card:hover { transform: none; }
     }
     @media (max-width: 900px), (hover: none) and (pointer: coarse) {
-      #view-home > .welcome-card,
+      #view-home > .welcome-card:not(.mobile-section-wave),
       #view-home > .stats-grid,
-      #view-home > article.card {
+      #view-home > article.card:not(.mobile-section-wave) {
         display: block !important;
         visibility: visible !important;
         opacity: 1 !important;
@@ -720,11 +722,20 @@
       }
       .modal-inner { padding: 16px max(16px, env(safe-area-inset-right)) 16px max(16px, env(safe-area-inset-left)); }
       .modal-actions > .button { flex: 1 1 110px; }
-      .view, .view.active .card, .view.active .card.section-wave-card,
-      .view.active .account-card, .banks-stats .bank-stat-card {
+      .view, .view.active .card:not(.mobile-section-wave), .view.active .account-card:not(.mobile-section-wave),
+      .banks-stats .bank-stat-card:not(.mobile-section-wave) {
         animation: none !important; opacity: 1 !important; transform: none; will-change: auto;
       }
       .view .card:hover, .view .bank-stat-card:hover, .view .account-card:hover { transform: none !important; }
+    }
+    @media (max-width: 760px) and (prefers-reduced-motion: no-preference) {
+      .main > .view.active .mobile-section-wave {
+        animation: sectionWaveIn .32s cubic-bezier(.2,.75,.25,1) both !important;
+        animation-delay: var(--wave-delay, 0ms) !important;
+      }
+    }
+    @media (max-width: 760px) and (prefers-reduced-motion: reduce) {
+      .view.active .mobile-section-wave { animation: none !important; opacity: 1 !important; transform: none !important; }
     }
     @media (max-width: 360px) {
       .main > .view .stats-grid .card, .bank-stat-card { padding: 12px; }
@@ -872,13 +883,13 @@
                     <stop offset="100%" stop-color="var(--accent)" stop-opacity="0"/>
                   </linearGradient>
                 </defs>
-                <line class="gridline" x1="45" y1="35" x2="680" y2="35"/>
-                <line class="gridline" x1="45" y1="85" x2="680" y2="85"/>
-                <line class="gridline" x1="45" y1="135" x2="680" y2="135"/>
-                <line class="gridline" x1="45" y1="185" x2="680" y2="185"/>
-                <text class="chart-y-label" id="incomeY0" x="2" y="190">0</text><text class="chart-y-label" id="incomeY1" x="2" y="140">0</text><text class="chart-y-label" id="incomeY2" x="2" y="90">0</text><text class="chart-y-label" id="incomeY3" x="2" y="40">0</text>
-                <line class="axis" x1="45" y1="20" x2="45" y2="190"/>
-                <line class="axis" x1="45" y1="190" x2="680" y2="190"/>
+                <line class="gridline" x1="104" y1="32" x2="660" y2="32"/>
+                <line class="gridline" x1="104" y1="84.667" x2="660" y2="84.667"/>
+                <line class="gridline" x1="104" y1="137.333" x2="660" y2="137.333"/>
+                <line class="gridline" x1="104" y1="190" x2="660" y2="190"/>
+                <text class="chart-y-label" id="incomeY0" x="92" y="190">0</text><text class="chart-y-label" id="incomeY1" x="92" y="137.333">0</text><text class="chart-y-label" id="incomeY2" x="92" y="84.667">0</text><text class="chart-y-label" id="incomeY3" x="92" y="32">0</text>
+                <line class="axis" x1="104" y1="32" x2="104" y2="190"/>
+                <line class="axis" x1="104" y1="190" x2="660" y2="190"/>
                 <text x="48" y="218">янв</text>
                 <text x="158" y="218">мар</text>
                 <text x="268" y="218">май</text>
@@ -909,13 +920,13 @@
                     <stop offset="100%" stop-color="var(--red)" stop-opacity="0"/>
                   </linearGradient>
                 </defs>
-                <line class="gridline" x1="45" y1="35" x2="680" y2="35"/>
-                <line class="gridline" x1="45" y1="85" x2="680" y2="85"/>
-                <line class="gridline" x1="45" y1="135" x2="680" y2="135"/>
-                <line class="gridline" x1="45" y1="185" x2="680" y2="185"/>
-                <text class="chart-y-label" id="expenseY0" x="2" y="190">0</text><text class="chart-y-label" id="expenseY1" x="2" y="140">0</text><text class="chart-y-label" id="expenseY2" x="2" y="90">0</text><text class="chart-y-label" id="expenseY3" x="2" y="40">0</text>
-                <line class="axis" x1="45" y1="20" x2="45" y2="190" style="stroke: var(--red);"/>
-                <line class="axis" x1="45" y1="190" x2="680" y2="190" style="stroke: var(--red);"/>
+                <line class="gridline" x1="104" y1="32" x2="660" y2="32"/>
+                <line class="gridline" x1="104" y1="84.667" x2="660" y2="84.667"/>
+                <line class="gridline" x1="104" y1="137.333" x2="660" y2="137.333"/>
+                <line class="gridline" x1="104" y1="190" x2="660" y2="190"/>
+                <text class="chart-y-label" id="expenseY0" x="92" y="190">0</text><text class="chart-y-label" id="expenseY1" x="92" y="137.333">0</text><text class="chart-y-label" id="expenseY2" x="92" y="84.667">0</text><text class="chart-y-label" id="expenseY3" x="92" y="32">0</text>
+                <line class="axis" x1="104" y1="32" x2="104" y2="190" style="stroke: var(--red);"/>
+                <line class="axis" x1="104" y1="190" x2="660" y2="190" style="stroke: var(--red);"/>
                 <text x="48" y="218">янв</text>
                 <text x="158" y="218">мар</text>
                 <text x="268" y="218">май</text>
@@ -1190,6 +1201,7 @@
         setActiveAccount(localStorage.getItem(`${KEY}:account:${userId}`));
         app.style.display = "block";
         auth.style.display = "none";
+        if (mobileViewport.matches) animateSectionCards("home");
       } catch (error) {
         console.error("Ошибка загрузки данных:", error);
         document.getElementById("auth-message").textContent = t("Не удалось загрузить данные. Попробуй войти ещё раз.");
@@ -1408,18 +1420,22 @@
     }
 
     function animateSectionCards(name) {
-      if (!["income", "expenses", "subscriptions"].includes(name)) return;
+      const mobile = mobileViewport.matches;
+      if ((!mobile && !["income", "expenses", "subscriptions"].includes(name)) ||
+          matchMedia("(prefers-reduced-motion: reduce)").matches) return;
       const view = document.getElementById(`view-${name}`);
-      if (!view || window.matchMedia?.("(prefers-reduced-motion: reduce)").matches) return;
-      const cards = [...view.querySelectorAll(".card")];
-      // Перезапускаем волну без blur и тяжёлых эффектов, чтобы не тормозить интерфейс.
-      cards.forEach(card => card.classList.remove("section-wave-card"));
-      requestAnimationFrame(() => {
+      if (!view) return;
+      const selector = mobile ? ".card, .banks-hero, .bank-stat-card, .account-card" : ".card";
+      const cards = [...view.querySelectorAll(selector)].slice(0, mobile ? 8 : undefined);
+      const className = mobile ? "mobile-section-wave" : "section-wave-card";
+      cards.forEach(card => card.classList.remove(className));
+      requestAnimationFrame(() => requestAnimationFrame(() => {
+        if (!view.classList.contains("active")) return;
         cards.forEach((card, index) => {
-          card.style.setProperty("--wave-delay", `${Math.min(index, 7) * 45}ms`);
-          card.classList.add("section-wave-card");
+          card.style.setProperty("--wave-delay", `${Math.min(index, 7) * (mobile ? 30 : 45)}ms`);
+          card.classList.add(className);
         });
-      });
+      }));
     }
 
     const mobileViewport = matchMedia("(max-width: 760px)");
@@ -1433,12 +1449,12 @@
         if (active) button.setAttribute("aria-current", "page");
         else button.removeAttribute("aria-current");
       });
-      renderViews[name]?.();
+      const restartNumbers = mobileViewport.matches && previous?.id !== `view-${name}`;
+      renderViews[name]?.(restartNumbers);
       if (name === "banks") banksFirstOpened = true;
-      if (!mobileViewport.matches) {
-        if (name === "home") animateHomeCardsOnce();
-        animateSectionCards(name);
-      }
+      if (name === "home" && !mobileViewport.matches) animateHomeCardsOnce();
+      animateSectionCards(name);
+      animateStatNumbers(restartNumbers);
       if (mobileViewport.matches) {
         const menuWasOpen = $("#sidebar").classList.contains("open");
         closeMobileMenu();
@@ -1664,7 +1680,7 @@
         ${section("Расходы", expenses, amount, expenseName)}`;
     }
 
-    function renderBanks() {
+    function renderBanks(restartNumbers = false) {
       const list = document.getElementById("bankAccountsList");
       if (!list) return;
       const accounts = Array.isArray(rootData.bankAccounts) ? rootData.bankAccounts : [];
@@ -1673,9 +1689,9 @@
       
       const banksVisible = document.getElementById("view-banks")?.classList.contains("active");
       if (banksVisible) {
-        animateBankNumbers("#banksTotal", total, true);
-        animateBankNumbers("#banksAccountCount", accounts.length, false);
-        animateBankNumbers("#banksBankCount", providers.size, false);
+        animateBankNumbers("#banksTotal", total, true, restartNumbers);
+        animateBankNumbers("#banksAccountCount", accounts.length, false, restartNumbers);
+        animateBankNumbers("#banksBankCount", providers.size, false, restartNumbers);
       }
 
       if (!accounts.length) {
@@ -1727,9 +1743,9 @@
         const target = Number(el.dataset.balance);
         const id = el.dataset.accountId;
         if (!Number.isFinite(target)) return;
-        const previous = bankBalanceAnimationState.get(id);
+        const previous = restartNumbers ? undefined : bankBalanceAnimationState.get(id);
         const banksVisible = document.getElementById("view-banks")?.classList.contains("active");
-        if (banksVisible && !mobileViewport.matches && (previous === undefined || previous !== target)) {
+        if (banksVisible && !matchMedia("(prefers-reduced-motion: reduce)").matches && (previous === undefined || previous !== target)) {
           animateSingleBalance(el, target, previous);
         } else {
           el.textContent = money(target);
@@ -1817,22 +1833,22 @@
       });
     }
 
-    function animateBankNumbers(selector, target, isMoney) {
+    function animateBankNumbers(selector, target, isMoney, restartNumbers) {
       const el = document.querySelector(selector);
       if (!el) return;
       const animation = String(Number(el.dataset.bankAnimation || 0) + 1);
       el.dataset.bankAnimation = animation;
-      const start = Number(el.dataset.bankCurrent || 0);
-      if (mobileViewport.matches || start === target) {
+      const start = restartNumbers ? 0 : Number(el.dataset.bankCurrent || 0);
+      if (matchMedia("(prefers-reduced-motion: reduce)").matches || start === target) {
         el.dataset.bankCurrent = String(target);
         el.textContent = isMoney ? money(target) : String(target);
         return;
       }
-      const duration = 1150;
+      const duration = mobileViewport.matches ? 620 : 1150;
       const startTime = performance.now();
       
       function tick(t) {
-        if (el.dataset.bankAnimation !== animation) return;
+        if (el.dataset.bankAnimation !== animation || !$("#view-banks").classList.contains("active")) return;
         const p = Math.min(1, (t - startTime) / duration);
         const easeOut = 1 - Math.pow(1 - p, 3);
         const current = p === 1 ? target : start + (target - start) * easeOut;
@@ -1851,11 +1867,12 @@
 
     function animateSingleBalance(el, target, previousValue) {
       const start = Number.isFinite(previousValue) ? previousValue : 0;
-      const duration = 1250;
+      const duration = mobileViewport.matches ? 620 : 1250;
       const startTime = performance.now();
       if (start === target) { el.textContent = money(target); return; }
 
       function tick(t) {
+        if (!el.isConnected || !$("#view-banks").classList.contains("active")) return;
         const p = Math.min(1, (t - startTime) / duration);
         const easeOut = 1 - Math.pow(1 - p, 3);
         const current = start + (target - start) * easeOut;
@@ -1912,6 +1929,16 @@
 
     function totalExpenses() { return data.expenses.reduce((sum, item) => sum + expenseAmountForPeriod(item, "year"), 0); }
 
+    function donutTotalMarkup(total, period) {
+      const full = money(total);
+      if (full.length <= 14) return `${escapeHtml(full)}<small>${t(period)}</small>`;
+      const formatter = new Intl.NumberFormat(appLocale(), {
+        notation: Math.abs(total) >= 1e15 ? "scientific" : "compact",
+        maximumFractionDigits: 1
+      });
+      return `<span title="${escapeHtml(full)}">${formatter.format(total)} ${currentCurrency}</span><small>${t(period)}</small>`;
+    }
+
     function isExpenseInMonth(item, month) {
       if (!isSubscriptionExpense(item) || item.subscriptionFrequency === "yearly") return Number(item.month ?? 0) === month;
       return month >= Number(item.month ?? 0);
@@ -1945,7 +1972,7 @@
       const expenseLabelWord = isEnglish ? "Total expense: " : "Общий расход: ";
       $("#expenseLabelText").textContent = expenseLabelWord;
       $("#expenseTotalLabel").textContent = money(total);
-      $("#expenseDonutTotal").innerHTML = `${money(total)}<small>${t(selected === "year" ? "за год" : "за месяц")}</small>`;
+      $("#expenseDonutTotal").innerHTML = donutTotalMarkup(total, selected === "year" ? "за год" : "за месяц");
       const list = $("#expenseList");
       if (!filteredExpenses.length) { list.innerHTML = `<div class="empty">${t("Расходов за этот период нет.")}</div>`; } else {
         list.innerHTML = filteredExpenses.map(item => {
@@ -2016,7 +2043,7 @@
       const incomeLabelWord = isEnglish ? "Total income: " : "Общий доход: ";
       $("#incomeLabelText").textContent = incomeLabelWord;
       $("#incomeTotalLabel").textContent = money(total);
-      $("#donutTotal").innerHTML = `${money(total)}<small>${t(selected === "year" ? "за год" : "за месяц")}</small>`;
+      $("#donutTotal").innerHTML = donutTotalMarkup(total, selected === "year" ? "за год" : "за месяц");
       const list = $("#incomeList");
       if (!filteredIncomes.length) { list.innerHTML = `<div class="empty">${t("Доходов за этот период нет.")}</div>`; } else {
         list.innerHTML = filteredIncomes.map(item => {
@@ -2064,14 +2091,16 @@
       return totals;
     }
 
+    const chartPlot = { startX: 104, endX: 660, baseY: 190, topY: 32 };
+
     function drawFinancialChart({ lineId, areaId, yLabelPrefix, totals, color }) {
       const line = document.getElementById(lineId);
       const area = document.getElementById(areaId);
       if (!line || !area) return;
 
       const maxValue = Math.max(...totals, 0);
-      const scaleMax = maxValue > 0 ? maxValue * 1.15 : 1;
-      const startX = 55, endX = 660, baseY = 190, topY = 30;
+      const scaleMax = maxValue > 0 ? maxValue * 1.15 : 3;
+      const { startX, endX, baseY, topY } = chartPlot;
       const stepX = (endX - startX) / 11;
       const points = totals.map((value, index) => ({
         x: startX + index * stepX,
@@ -2093,8 +2122,9 @@
       const mid2 = document.getElementById(`${yLabelPrefix}2`);
       const mid1 = document.getElementById(`${yLabelPrefix}1`);
       const zero = document.getElementById(`${yLabelPrefix}0`);
-      const axisFormat = new Intl.NumberFormat(appLocale(), { notation: "compact", maximumFractionDigits: 1 });
-      const formatAxis = value => axisFormat.format(Math.round(value));
+      const axisFormat = new Intl.NumberFormat(appLocale(), { notation: "compact", maximumFractionDigits: scaleMax < 3 ? 2 : 1 });
+      const formatAxis = value => value >= 1e15
+        ? value.toExponential(1) : axisFormat.format(scaleMax < 3 ? value : Math.round(value));
       if (maxLabel) maxLabel.textContent = formatAxis(scaleMax);
       if (mid2) mid2.textContent = formatAxis(scaleMax * 2 / 3);
       if (mid1) mid1.textContent = formatAxis(scaleMax / 3);
@@ -2151,7 +2181,8 @@
     function ensureChartMonths(svg, months) {
       if (!svg) return;
       const existing = [...svg.querySelectorAll("text:not(.chart-y-label)")];
-      const startX = 55, stepX = 605 / 11;
+      const { startX, endX } = chartPlot;
+      const stepX = (endX - startX) / (months.length - 1);
       months.forEach((month, index) => {
         let label = existing[index];
         if (!label) {
@@ -2161,6 +2192,7 @@
         label.textContent = month;
         label.setAttribute("x", String(startX + stepX * index));
         label.setAttribute("y", "218");
+        label.setAttribute("text-anchor", "middle");
       });
     }
 
@@ -2412,43 +2444,53 @@
       if (area) { area.style.opacity = "0"; requestAnimationFrame(() => { area.style.opacity = "1"; }); }
     }
 
-    const statAnimationFrames = new WeakMap();
-    function animateStatNumbers() {
-      const reducedMotion = mobileViewport.matches || matchMedia("(prefers-reduced-motion: reduce)").matches;
-      document.querySelectorAll(".view.active .stat-value").forEach(el => {
-        const finalText = el.textContent.trim();
-        if (finalText.includes("/")) { delete el.dataset.cur; return; }
-        const m = finalText.match(/^(.*?)(-?[\d\s]+(?:[.,]\d+)?)([^\d]*)$/);
-        if (!m) return;
-        const target = Number(m[2].replace(/\s/g, "").replace(",", "."));
-        if (!Number.isFinite(target)) return;
-        const prefix = m[1], suffix = m[3];
-        const previousFrame = statAnimationFrames.get(el);
-        if (previousFrame) cancelAnimationFrame(previousFrame);
-        const cached = Number(el.dataset.cur);
-        const from = Number.isFinite(cached) ? cached : 0;
+    const shownStatValues = new WeakMap();
+    let statAnimationFrame = 0;
+
+    function animateStatNumbers(restart = false) {
+      cancelAnimationFrame(statAnimationFrame);
+      const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
+      const locale = appLocale();
+      const activeView = document.querySelector(".view.active");
+      if (!activeView) return;
+
+      const stats = [];
+      for (const element of activeView.querySelectorAll(".stat-value:not(#nearestGoal)")) {
+        const finalText = element.textContent.trim();
+        if (finalText.includes("/")) continue;
+        const match = finalText.match(/^(.*?)(-?\d(?:[\d.,\s]*\d)?)([^\d]*)$/);
+        if (!match) continue;
+
+        const [, prefix, rawNumber, suffix] = match;
+        const digits = rawNumber.replace(/\s/g, "");
+        const target = Number(locale === "en-US" ? digits.replace(/,/g, "") : digits.replace(",", "."));
+        if (!Number.isFinite(target)) continue;
+        const from = restart ? 0 : shownStatValues.get(element) ?? 0;
         if (reducedMotion || Math.abs(from - target) < 0.005) {
-          el.textContent = finalText;
-          el.dataset.cur = String(target);
-          return;
+          shownStatValues.set(element, target);
+          continue;
         }
-        const start = performance.now(), duration = 1150;
-        const formatter = new Intl.NumberFormat(appLocale(), { maximumFractionDigits: Number.isInteger(target) ? 0 : 2 });
-        const tick = now => {
-          const progress = Math.min(1, (now - start) / duration);
-          const eased = 1 - Math.pow(1 - progress, 3);
-          const value = from + (target - from) * eased;
-          el.textContent = prefix + formatter.format(Math.round(value * 100) / 100) + suffix;
-          if (progress < 1) {
-            statAnimationFrames.set(el, requestAnimationFrame(tick));
-          } else {
-            el.textContent = finalText;
-            el.dataset.cur = String(target);
-            statAnimationFrames.delete(el);
-          }
-        };
-        statAnimationFrames.set(el, requestAnimationFrame(tick));
-      });
+        const formatter = new Intl.NumberFormat(locale, { maximumFractionDigits: Number.isInteger(target) ? 0 : 2 });
+        element.textContent = prefix + formatter.format(from) + suffix;
+        stats.push({ element, finalText, prefix, suffix, from, target, formatter });
+      }
+      if (!stats.length) return;
+
+      const start = performance.now();
+      const duration = mobileViewport.matches ? 620 : 1150;
+      function tick(now) {
+        if (!activeView.classList.contains("active")) return;
+        const progress = Math.min(1, (now - start) / duration);
+        const eased = 1 - Math.pow(1 - progress, 3);
+        for (const { element, finalText, prefix, suffix, from, target, formatter } of stats) {
+          const value = progress === 1 ? target : from + (target - from) * eased;
+          const label = progress === 1 ? finalText : prefix + formatter.format(value) + suffix;
+          if (element.textContent !== label) element.textContent = label;
+          shownStatValues.set(element, value);
+        }
+        if (progress < 1) statAnimationFrame = requestAnimationFrame(tick);
+      }
+      statAnimationFrame = requestAnimationFrame(tick);
     }
 
     function updateAmount(typeOrCollection, id, trigger) {
@@ -2496,7 +2538,7 @@
       showActionDialog($("#incomeDialog"), trigger);
     }
 
-    document.querySelectorAll(".nav-button").forEach(button => { button.addEventListener("click", () => { if (button.dataset.view) { showView(button.dataset.view); animateStatNumbers(); } }); });
+    document.querySelectorAll(".nav-button[data-view]").forEach(button => { button.addEventListener("click", () => showView(button.dataset.view)); });
     document.querySelectorAll("[data-go]").forEach(button => { button.addEventListener("click", () => showView(button.dataset.go)); });
     
     $("#addCurrentAccount").addEventListener("click", event => {
