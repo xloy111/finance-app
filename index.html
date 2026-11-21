@@ -794,6 +794,7 @@
                 <line class="gridline" x1="45" y1="85" x2="680" y2="85"/>
                 <line class="gridline" x1="45" y1="135" x2="680" y2="135"/>
                 <line class="gridline" x1="45" y1="185" x2="680" y2="185"/>
+                <text class="chart-y-label" id="incomeY0" x="2" y="190">0</text><text class="chart-y-label" id="incomeY1" x="2" y="140">0</text><text class="chart-y-label" id="incomeY2" x="2" y="90">0</text><text class="chart-y-label" id="incomeY3" x="2" y="40">0</text>
                 <line class="axis" x1="45" y1="20" x2="45" y2="190"/>
                 <line class="axis" x1="45" y1="190" x2="680" y2="190"/>
                 <text x="48" y="218">янв</text>
@@ -830,6 +831,7 @@
                 <line class="gridline" x1="45" y1="85" x2="680" y2="85"/>
                 <line class="gridline" x1="45" y1="135" x2="680" y2="135"/>
                 <line class="gridline" x1="45" y1="185" x2="680" y2="185"/>
+                <text class="chart-y-label" id="expenseY0" x="2" y="190">0</text><text class="chart-y-label" id="expenseY1" x="2" y="140">0</text><text class="chart-y-label" id="expenseY2" x="2" y="90">0</text><text class="chart-y-label" id="expenseY3" x="2" y="40">0</text>
                 <line class="axis" x1="45" y1="20" x2="45" y2="190" style="stroke: var(--red);"/>
                 <line class="axis" x1="45" y1="190" x2="680" y2="190" style="stroke: var(--red);"/>
                 <text x="48" y="218">янв</text>
@@ -1650,82 +1652,120 @@
           });
         }); 
       });
-      renderChart(total);
+      renderChart();
     }
 
-    function renderChart(total) {
-      const months = ["янв", "фев", "мар", "апр", "май", "июн", "июл", "авг", "сен", "окт", "ноя", "дек"];
-      const monthlyTotals = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-      data.incomes.forEach(item => {
-        const monthIndex = item.month !== undefined ? Number(item.month) : new Date().getMonth();
-        monthlyTotals[monthIndex] += Number(item.amount || 0);
+    const CHART_MONTHS_RU = ["янв", "фев", "мар", "апр", "май", "июн", "июл", "авг", "сен", "окт", "ноя", "дек"];
+
+    function buildMonthlySeries(items, kind) {
+      const totals = Array(12).fill(0);
+      (Array.isArray(items) ? items : []).forEach(item => {
+        const month = Number.isInteger(Number(item.month)) ? Number(item.month) : new Date().getMonth();
+        if (month < 0 || month > 11) return;
+        const amount = Number(item.amount);
+        if (!Number.isFinite(amount) || amount <= 0) return;
+
+        if (kind === "expense" && isSubscriptionExpense(item)) {
+          const frequency = item.subscriptionFrequency || "monthly";
+          if (frequency === "yearly") totals[month] += amount;
+          else for (let m = month; m < 12; m++) totals[m] += amount;
+        } else {
+          totals[month] += amount;
+        }
       });
-      const maxAmount = Math.max(...monthlyTotals, 1); 
-      const points = []; const startX = 55; const endX = 660; const stepX = (endX - startX) / 11;
-      for (let i = 0; i < 12; i++) {
-        const x = startX + (i * stepX);
-        const y = 185 - (monthlyTotals[i] / maxAmount) * 155;
-        points.push({ x, y });
+      return totals;
+    }
+
+    function drawFinancialChart({ lineId, areaId, yLabelPrefix, totals, color }) {
+      const line = document.getElementById(lineId);
+      const area = document.getElementById(areaId);
+      if (!line || !area) return;
+
+      const maxValue = Math.max(...totals, 0);
+      const scaleMax = maxValue > 0 ? maxValue * 1.15 : 1;
+      const startX = 55, endX = 660, baseY = 190, topY = 30;
+      const stepX = (endX - startX) / 11;
+      const points = totals.map((value, index) => ({
+        x: startX + index * stepX,
+        y: baseY - (value / scaleMax) * (baseY - topY)
+      }));
+
+      let path = `M ${points[0].x} ${points[0].y}`;
+      for (let i = 1; i < points.length; i++) {
+        const previous = points[i - 1], current = points[i];
+        const dx = (current.x - previous.x) / 3;
+        path += ` C ${previous.x + dx} ${previous.y}, ${current.x - dx} ${current.y}, ${current.x} ${current.y}`;
       }
-      const textElements = document.querySelectorAll(".chart text");
-      textElements.forEach((text, index) => { if (index < 12) text.textContent = months[index]; });
-      
-      let d = `M ${points[0].x} ${points[0].y}`;
-      for (let i = 0; i < points.length - 1; i++) {
-        const p0 = points[i];
-        const p1 = points[i + 1];
-        const cp1x = p0.x + (p1.x - p0.x) / 3;
-        const cp1y = p0.y;
-        const cp2x = p0.x + 2 * (p1.x - p0.x) / 3;
-        const cp2y = p1.y;
-        d += ` C ${cp1x} ${cp1y}, ${cp2x} ${cp2y}, ${p1.x} ${p1.y}`;
+
+      line.setAttribute("d", path);
+      area.setAttribute("d", `${path} L ${endX} ${baseY} L ${startX} ${baseY} Z`);
+      line.style.stroke = color;
+
+      const maxLabel = document.getElementById(`${yLabelPrefix}3`);
+      const mid2 = document.getElementById(`${yLabelPrefix}2`);
+      const mid1 = document.getElementById(`${yLabelPrefix}1`);
+      const zero = document.getElementById(`${yLabelPrefix}0`);
+      const formatAxis = value => value >= 1000000
+        ? `${(value / 1000000).toFixed(1).replace(/\.0$/, "")}м`
+        : value >= 1000 ? `${Math.round(value / 1000)}к` : String(Math.round(value));
+      if (maxLabel) maxLabel.textContent = formatAxis(scaleMax);
+      if (mid2) mid2.textContent = formatAxis(scaleMax * 2 / 3);
+      if (mid1) mid1.textContent = formatAxis(scaleMax / 3);
+      if (zero) zero.textContent = "0";
+
+      // Animate only the stroke drawing; avoid restarting an unfinished animation loop.
+      if (line._drawAnimation) line._drawAnimation.cancel();
+      try {
+        const length = line.getTotalLength();
+        line.style.transition = "none";
+        line.style.strokeDasharray = String(length);
+        line.style.strokeDashoffset = String(length);
+        area.style.opacity = "0";
+        requestAnimationFrame(() => {
+          line.style.transition = "stroke-dashoffset 900ms cubic-bezier(.22,1,.36,1)";
+          line.style.strokeDashoffset = "0";
+          area.style.transition = "opacity 700ms ease";
+          area.style.opacity = "1";
+        });
+      } catch (_) {
+        line.style.strokeDasharray = "none";
+        line.style.strokeDashoffset = "0";
+        area.style.opacity = "1";
       }
-      
-      $("#chartLine").setAttribute("d", d);
-      $("#chartArea").setAttribute("d", `${d} L ${endX} 190 L ${startX} 190 Z`); animateChartDraw();
+    }
+
+    function renderChart() {
+      const svg = document.querySelector("#view-income .chart");
+      ensureChartMonths(svg, CHART_MONTHS_RU);
+      drawFinancialChart({
+        lineId: "chartLine", areaId: "chartArea", yLabelPrefix: "incomeY",
+        totals: buildMonthlySeries(data.incomes, "income"), color: "var(--accent)"
+      });
     }
 
     function renderExpenseChart() {
-      const monthlyTotals = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-      data.expenses.forEach(item => {
-        const monthIndex = item.month !== undefined ? Number(item.month) : new Date().getMonth();
-        if (isSubscriptionExpense(item)) {
-          for (let month = Math.max(0, monthIndex); month < 12; month++) monthlyTotals[month] += Number(item.amount || 0);
-        } else if (monthIndex >= 0 && monthIndex < 12) {
-          monthlyTotals[monthIndex] += Number(item.amount || 0);
-        }
+      const svg = document.querySelector("#view-expenses .chart");
+      ensureChartMonths(svg, CHART_MONTHS_RU);
+      drawFinancialChart({
+        lineId: "expenseChartLine", areaId: "expenseChartArea", yLabelPrefix: "expenseY",
+        totals: buildMonthlySeries(data.expenses, "expense"), color: "var(--red)"
       });
+    }
 
-      const maxAmount = Math.max(...monthlyTotals, 1); 
-      const points = []; 
-      const startX = 55; 
-      const endX = 660; 
-      const stepX = (endX - startX) / 11;
-      
-      for (let i = 0; i < 12; i++) {
-        const x = startX + (i * stepX);
-        const y = 185 - (monthlyTotals[i] / maxAmount) * 155;
-        points.push({ x, y });
-      }
-      
-      let d = `M ${points[0].x} ${points[0].y}`;
-      for (let i = 0; i < points.length - 1; i++) {
-        const p0 = points[i];
-        const p1 = points[i + 1];
-        const cp1x = p0.x + (p1.x - p0.x) / 3;
-        const cp1y = p0.y;
-        const cp2x = p0.x + 2 * (p1.x - p0.x) / 3;
-        const cp2y = p1.y;
-        d += ` C ${cp1x} ${cp1y}, ${cp2x} ${cp2y}, ${p1.x} ${p1.y}`;
-      }
-      
-      const lineEl = document.getElementById("expenseChartLine");
-      const areaEl = document.getElementById("expenseChartArea");
-      
-      if (lineEl && areaEl) {
-        lineEl.setAttribute("d", d);
-        areaEl.setAttribute("d", `${d} L ${endX} 190 L ${startX} 190 Z`);
-      }
+    function ensureChartMonths(svg, months) {
+      if (!svg) return;
+      const existing = [...svg.querySelectorAll("text:not(.chart-y-label)")];
+      const startX = 55, stepX = 605 / 11;
+      months.forEach((month, index) => {
+        let label = existing[index];
+        if (!label) {
+          label = document.createElementNS("http://www.w3.org/2000/svg", "text");
+          svg.appendChild(label);
+        }
+        label.textContent = month;
+        label.setAttribute("x", String(startX + stepX * index));
+        label.setAttribute("y", "218");
+      });
     }
 
     function renderSavings() {
