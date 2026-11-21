@@ -1449,12 +1449,11 @@
         if (active) button.setAttribute("aria-current", "page");
         else button.removeAttribute("aria-current");
       });
-      const restartNumbers = mobileViewport.matches && previous?.id !== `view-${name}`;
-      renderViews[name]?.(restartNumbers);
+      renderViews[name]?.();
       if (name === "banks") banksFirstOpened = true;
       if (name === "home" && !mobileViewport.matches) animateHomeCardsOnce();
       animateSectionCards(name);
-      animateStatNumbers(restartNumbers);
+      animateStatNumbers();
       if (mobileViewport.matches) {
         const menuWasOpen = $("#sidebar").classList.contains("open");
         closeMobileMenu();
@@ -1680,7 +1679,7 @@
         ${section("Расходы", expenses, amount, expenseName)}`;
     }
 
-    function renderBanks(restartNumbers = false) {
+    function renderBanks() {
       const list = document.getElementById("bankAccountsList");
       if (!list) return;
       const accounts = Array.isArray(rootData.bankAccounts) ? rootData.bankAccounts : [];
@@ -1689,9 +1688,9 @@
       
       const banksVisible = document.getElementById("view-banks")?.classList.contains("active");
       if (banksVisible) {
-        animateBankNumbers("#banksTotal", total, true, restartNumbers);
-        animateBankNumbers("#banksAccountCount", accounts.length, false, restartNumbers);
-        animateBankNumbers("#banksBankCount", providers.size, false, restartNumbers);
+        animateBankNumbers("#banksTotal", total, true);
+        animateBankNumbers("#banksAccountCount", accounts.length, false);
+        animateBankNumbers("#banksBankCount", providers.size, false);
       }
 
       if (!accounts.length) {
@@ -1743,7 +1742,7 @@
         const target = Number(el.dataset.balance);
         const id = el.dataset.accountId;
         if (!Number.isFinite(target)) return;
-        const previous = restartNumbers ? undefined : bankBalanceAnimationState.get(id);
+        const previous = bankBalanceAnimationState.get(id);
         const banksVisible = document.getElementById("view-banks")?.classList.contains("active");
         if (banksVisible && !matchMedia("(prefers-reduced-motion: reduce)").matches && (previous === undefined || previous !== target)) {
           animateSingleBalance(el, target, previous);
@@ -1833,13 +1832,16 @@
       });
     }
 
-    function animateBankNumbers(selector, target, isMoney, restartNumbers) {
+    function animateBankNumbers(selector, target, isMoney) {
       const el = document.querySelector(selector);
       if (!el) return;
       const animation = String(Number(el.dataset.bankAnimation || 0) + 1);
       el.dataset.bankAnimation = animation;
-      const start = restartNumbers ? 0 : Number(el.dataset.bankCurrent || 0);
-      if (matchMedia("(prefers-reduced-motion: reduce)").matches || start === target) {
+      const start = Number(el.dataset.bankCurrent || 0);
+      const previousTarget = el.dataset.bankTarget;
+      el.dataset.bankTarget = String(target);
+      if (matchMedia("(prefers-reduced-motion: reduce)").matches ||
+          previousTarget === el.dataset.bankTarget || start === target) {
         el.dataset.bankCurrent = String(target);
         el.textContent = isMoney ? money(target) : String(target);
         return;
@@ -2444,10 +2446,10 @@
       if (area) { area.style.opacity = "0"; requestAnimationFrame(() => { area.style.opacity = "1"; }); }
     }
 
-    const shownStatValues = new WeakMap();
+    const statValues = new WeakMap();
     let statAnimationFrame = 0;
 
-    function animateStatNumbers(restart = false) {
+    function animateStatNumbers() {
       cancelAnimationFrame(statAnimationFrame);
       const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
       const locale = appLocale();
@@ -2465,14 +2467,17 @@
         const digits = rawNumber.replace(/\s/g, "");
         const target = Number(locale === "en-US" ? digits.replace(/,/g, "") : digits.replace(",", "."));
         if (!Number.isFinite(target)) continue;
-        const from = restart ? 0 : shownStatValues.get(element) ?? 0;
-        if (reducedMotion || Math.abs(from - target) < 0.005) {
-          shownStatValues.set(element, target);
+        const previous = statValues.get(element);
+        const from = previous?.value ?? 0;
+        if (reducedMotion || previous?.target === target || Math.abs(from - target) < 0.005) {
+          statValues.set(element, { target, value: target });
           continue;
         }
+        const state = { target, value: from };
+        statValues.set(element, state);
         const formatter = new Intl.NumberFormat(locale, { maximumFractionDigits: Number.isInteger(target) ? 0 : 2 });
         element.textContent = prefix + formatter.format(from) + suffix;
-        stats.push({ element, finalText, prefix, suffix, from, target, formatter });
+        stats.push({ element, finalText, prefix, suffix, from, target, formatter, state });
       }
       if (!stats.length) return;
 
@@ -2482,11 +2487,11 @@
         if (!activeView.classList.contains("active")) return;
         const progress = Math.min(1, (now - start) / duration);
         const eased = 1 - Math.pow(1 - progress, 3);
-        for (const { element, finalText, prefix, suffix, from, target, formatter } of stats) {
+        for (const { element, finalText, prefix, suffix, from, target, formatter, state } of stats) {
           const value = progress === 1 ? target : from + (target - from) * eased;
           const label = progress === 1 ? finalText : prefix + formatter.format(value) + suffix;
           if (element.textContent !== label) element.textContent = label;
-          shownStatValues.set(element, value);
+          state.value = value;
         }
         if (progress < 1) statAnimationFrame = requestAnimationFrame(tick);
       }
