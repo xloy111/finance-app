@@ -65,6 +65,25 @@ footer{border-top:1px solid var(--line);padding:27px 0;color:#7f8a82;font-size:1
 @media(max-width:850px){.app-sections-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.cinematic-grid{grid-template-columns:1fr}.cinematic-scene{height:340px}}
 @media(max-width:560px){.app-sections-grid{grid-template-columns:1fr}.app-section-card{min-height:0}.cinematic-scene{height:315px}.cinematic-tile{width:160px;height:110px;padding:16px}.ct-a{left:0}.ct-b{right:0}.ct-c{left:20%}}
 @media(prefers-reduced-motion:reduce){.cinematic-tile{will-change:auto}.app-section-card:hover{transform:none!important}}
+
+/* Mobile Safari performance profile: remove costly continuously repainted layers. */
+@media (hover:none), (max-width:767px){
+ html{scroll-behavior:auto}
+ .bank-halo,.bank-orbit{animation:none!important;display:none!important}
+ .bank-float,.float,.card3d{backdrop-filter:none!important;-webkit-backdrop-filter:none!important}
+ .bank-float{background:#15231bea;box-shadow:0 8px 18px #0006}
+ .bank-card-3d{transition:none!important;will-change:auto}
+ .bank-card-front,.bank-card-back{box-shadow:0 12px 25px #0008!important;-webkit-backface-visibility:hidden;backface-visibility:hidden}
+ .cinematic-tile{transition:none!important;will-change:auto;box-shadow:0 12px 25px #0006}
+ .scene{will-change:auto}
+ .app-section-card{transition:border-color .2s!important;transform:none!important}
+ .app-section-card:hover{transform:none!important}
+ .story-orb{box-shadow:none}
+ .bank-view{touch-action:pan-y}
+}
+@media (prefers-reduced-motion:reduce){
+ *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;scroll-behavior:auto!important}
+}
 </style>
 </head>
 <body>
@@ -165,8 +184,8 @@ const io=new IntersectionObserver(entries=>entries.forEach(e=>{if(e.isIntersecti
   document.getElementById('bankDesc').textContent=d.desc;
   face.style.background=d.front;card.classList.remove('flipped');
  }));
- let down=false,sx=0,sy=0,rx=-7,ry=15,bx=rx,by=ry;
- const paint=()=>{if(!card.classList.contains('flipped'))card.style.transform=`rotateX(${rx}deg) rotateY(${ry}deg)`};
+ let down=false,sx=0,sy=0,rx=-7,ry=15,bx=rx,by=ry,frame=0;
+ const paint=()=>{if(frame)return;frame=requestAnimationFrame(()=>{frame=0;if(!card.classList.contains('flipped'))card.style.transform=`rotateX(${rx}deg) rotateY(${ry}deg)`})};
  stage.addEventListener('pointerdown',e=>{down=true;sx=e.clientX;sy=e.clientY;bx=rx;by=ry;stage.setPointerCapture(e.pointerId)});
  stage.addEventListener('pointermove',e=>{if(!down)return;ry=by+(e.clientX-sx)*.42;rx=bx-(e.clientY-sy)*.35;paint()});
  const stop=()=>{down=false};stage.addEventListener('pointerup',stop);stage.addEventListener('pointercancel',stop);
@@ -192,7 +211,7 @@ document.querySelectorAll('.plan-btn').forEach(button=>button.addEventListener('
  let ticking=false;
  function render(){
   ticking=false;
-  if(reduced.matches){tiles.forEach(t=>t.style.transform='none');return}
+  if(reduced.matches || window.matchMedia('(max-width: 767px), (hover: none)').matches){tiles.forEach(t=>t.style.transform='none');return}
   const r=section.getBoundingClientRect();
   const progress=Math.max(-1,Math.min(1,(window.innerHeight/2-(r.top+r.height/2))/window.innerHeight));
   tiles.forEach((t,i)=>{
@@ -202,7 +221,7 @@ document.querySelectorAll('.plan-btn').forEach(button=>button.addEventListener('
    t.style.transform=`translate3d(0,${y.toFixed(1)}px,${(i+1)*28}px) rotateY(${rot.toFixed(1)}deg) rotateX(${(progress*7).toFixed(1)}deg)`;
   });
  }
- function schedule(){if(!ticking){ticking=true;requestAnimationFrame(render)}}
+ function schedule(){if(window.matchMedia('(max-width: 767px), (hover: none)').matches)return;if(!ticking){ticking=true;requestAnimationFrame(render)}}
  window.addEventListener('scroll',schedule,{passive:true});
  window.addEventListener('resize',schedule,{passive:true});
  reduced.addEventListener?.('change',schedule);
