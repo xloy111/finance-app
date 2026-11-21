@@ -189,7 +189,7 @@
       .sidebar { max-height: calc(100dvh - 36px); overflow-y: auto; scrollbar-width: thin; }
     }
 
-    .nav-icon { width: 22px; font-size: 17px; text-align: center; }
+    .nav-icon { width: 22px; height: 22px; flex-shrink: 0; }
     
     .main { min-width: 0; }
     .view { display: none; animation: appear 180ms ease; }
@@ -799,15 +799,15 @@
     
     <div class="layout">
       <nav class="sidebar" id="sidebar" aria-label="Разделы приложения">
-        <button class="nav-button active" data-view="home" aria-current="page"><span class="nav-icon">⌂</span><span class="nav-label">Главная</span></button>
-        <button class="nav-button" data-view="income"><span class="nav-icon">↗</span><span class="nav-label">Доходы</span></button>
-        <button class="nav-button" data-view="expenses"><span class="nav-icon">↙</span><span class="nav-label">Расходы</span></button>
-        <button class="nav-button" data-view="banks"><span class="nav-icon">▣</span><span class="nav-label">Банки</span></button>
-        <button class="nav-button" data-view="savings"><span class="nav-icon">◉</span><span class="nav-label">Накопления</span></button>
-        <button class="nav-button" data-view="debts"><span class="nav-icon">✉</span><span class="nav-label">Долги</span></button>
-        <button class="nav-button" data-view="subscriptions"><span class="nav-icon">𖦹</span><span class="nav-label">Подписки</span></button>
-        <button class="nav-button" data-view="goals"><span class="nav-icon">✓</span><span class="nav-label">Задачи и цели</span></button>
-        <button class="nav-button" data-view="assistant"><span class="nav-icon">🖥</span><span class="nav-label">ИИ-ассистент</span></button>
+        <button class="nav-button active" data-view="home" aria-current="page"><svg class="nav-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M3 11 12 3l9 8M5 10v10h5v-6h4v6h5V10"/></svg><span class="nav-label">Главная</span></button>
+        <button class="nav-button" data-view="income"><svg class="nav-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M6 18 18 6M8 6h10v10"/></svg><span class="nav-label">Доходы</span></button>
+        <button class="nav-button" data-view="expenses"><svg class="nav-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M18 6 6 18M6 8v10h10"/></svg><span class="nav-label">Расходы</span></button>
+        <button class="nav-button" data-view="banks"><svg class="nav-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M3 9 12 4l9 5H3Zm2 11h14M7 9v7m5-7v7m5-7v7"/></svg><span class="nav-label">Банки</span></button>
+        <button class="nav-button" data-view="savings"><svg class="nav-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18Zm0-5a4 4 0 1 0 0-8 4 4 0 0 0 0 8Z"/></svg><span class="nav-label">Накопления</span></button>
+        <button class="nav-button" data-view="debts"><svg class="nav-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M4 6h16v12H4zM4 7l8 6 8-6"/></svg><span class="nav-label">Долги</span></button>
+        <button class="nav-button" data-view="subscriptions"><svg class="nav-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M4 11a8 8 0 0 1 14-4l2 2m0-5v5h-5m5 4a8 8 0 0 1-14 4l-2-2m0 5v-5h5"/></svg><span class="nav-label">Подписки</span></button>
+        <button class="nav-button" data-view="goals"><svg class="nav-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M5 12l4 4L19 6"/></svg><span class="nav-label">Задачи и цели</span></button>
+        <button class="nav-button" data-view="assistant"><svg class="nav-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M3 4h18v13H3zM8 21h8m-4-4v4"/></svg><span class="nav-label">ИИ-ассистент</span></button>
         <div class="current-account">
           <p class="current-account-label" id="currentAccountLabel" hidden>Текущий счёт</p>
           <div class="current-account-card" id="currentAccountCard" role="button" tabindex="0" aria-haspopup="dialog" data-account-stats-trigger aria-live="polite" hidden></div>
@@ -818,9 +818,9 @@
           </div>
           <button class="button secondary" id="addCurrentAccount" type="button">＋ Добавить счёт</button>
         </div>
-        <button class="nav-button" data-view="payment"><span class="nav-icon">▭</span><span class="nav-label">Оплата</span></button>
-        <button class="nav-button" data-view="settings"><span class="nav-icon">⚙</span><span class="nav-label">Настройки</span></button>
-        <button class="nav-button" onclick="signOut()"><span class="nav-icon">⬅</span><span class="nav-label">Выйти</span></button>
+        <button class="nav-button" data-view="payment"><svg class="nav-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M3 6h18v12H3zM3 10h18M6 15h4"/></svg><span class="nav-label">Оплата</span></button>
+        <button class="nav-button" data-view="settings"><svg class="nav-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M10 3h4l.6 2.5 2 .9 2.2-1.2 2 3.4-1.8 1.8v2.3l1.8 1.8-2 3.4-2.2-1.2-2 .9L14 21h-4l-.6-2.5-2-.9-2.2 1.2-2-3.4L5 13.6v-2.3L3.2 9.5l2-3.4 2.2 1.2 2-.9L10 3Z M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z"/></svg><span class="nav-label">Настройки</span></button>
+        <button class="nav-button" onclick="signOut()"><svg class="nav-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 5h7v14h-7m1-7H4m4-4-4 4 4 4"/></svg><span class="nav-label">Выйти</span></button>
       </nav>
       
       <main class="main" id="appContent" tabindex="-1">
