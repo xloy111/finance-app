@@ -1,0 +1,212 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#080b0a">
+<title>МОИ ФИНАНСЫ — деньги под контролем</title>
+<style>
+:root{--bg:#080b0a;--panel:#101613;--line:rgba(255,255,255,.1);--muted:#a1aaa4;--green:#48e184;--mint:#b7ffd1;--white:#f4f8f5}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--white);font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;overflow-x:hidden}
+body:before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.16;background-image:linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px);background-size:56px 56px;mask-image:linear-gradient(to bottom,#000,transparent 75%);z-index:-2}
+a{color:inherit;text-decoration:none}.wrap{width:min(1160px,calc(100% - 44px));margin:auto}
+nav{height:82px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--line);position:relative;z-index:10}
+.brand{display:flex;align-items:center;gap:12px;font-weight:900;letter-spacing:-.7px}.brand-mark{width:38px;height:38px;border-radius:13px;background:var(--green);color:#07100a;display:grid;place-items:center;font-size:22px;box-shadow:0 0 32px #48e18444}
+.navlinks{display:flex;gap:30px;color:#b7c0ba;font-size:14px}.navlinks a:hover{color:var(--green)}.nav-cta,.btn{border:1px solid #5de99366;background:#48e184;color:#07100a;padding:12px 19px;border-radius:13px;font-weight:800;display:inline-flex;align-items:center;gap:9px;transition:.25s;cursor:pointer}.nav-cta:hover,.btn:hover{transform:translateY(-3px);box-shadow:0 12px 34px #48e18435}.btn.secondary{background:#ffffff08;color:white;border-color:var(--line)}
+.hero{min-height:690px;display:grid;grid-template-columns:1.02fr .98fr;align-items:center;gap:30px;padding:70px 0 85px;position:relative}
+.eyebrow{display:inline-flex;align-items:center;gap:9px;color:var(--green);font-size:12px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase}.dot{width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 15px var(--green)}
+h1{font-size:clamp(48px,6.1vw,78px);line-height:.99;letter-spacing:-4.8px;margin:22px 0 24px;max-width:650px}h1 span{color:var(--green)}.lead{font-size:18px;line-height:1.65;color:#aeb8b1;max-width:540px}.hero-actions{display:flex;gap:13px;flex-wrap:wrap;margin-top:32px}.trust{display:flex;gap:20px;flex-wrap:wrap;margin-top:34px;color:#87928b;font-size:12px}.trust span{display:flex;align-items:center;gap:7px}.check{color:var(--green);font-weight:900}
+.stage{height:520px;display:grid;place-items:center;position:relative;perspective:1200px;touch-action:pan-y;cursor:grab}.stage:active{cursor:grabbing}.glow{position:absolute;width:380px;height:380px;border-radius:50%;background:#48e18420;filter:blur(70px);animation:pulse 5s ease-in-out infinite}
+.orbit{position:absolute;width:430px;height:430px;border:1px solid #8fffb51c;border-radius:50%;transform:rotateX(68deg) rotateZ(-20deg);animation:orbit 22s linear infinite}.orbit:before,.orbit:after{content:"";position:absolute;border:1px solid #8fffb51c;border-radius:50%;inset:35px}.orbit:after{inset:80px}
+.scene{width:340px;height:390px;position:relative;transform-style:preserve-3d;transition:transform .12s ease-out;will-change:transform}
+.coin{position:absolute;width:205px;height:205px;left:68px;top:70px;border-radius:50%;background:radial-gradient(circle at 32% 25%,#c9ffda,#48e184 38%,#137844 75%,#092d1b);box-shadow:inset -18px -22px 35px #001d11aa,inset 9px 8px 18px #ffffff88,0 35px 80px #48e1843b;transform:translateZ(55px);display:grid;place-items:center;color:#07371d;font-size:82px;font-weight:900;text-shadow:0 2px 0 #ffffff55}
+.card3d{position:absolute;width:270px;height:165px;left:36px;top:190px;border:1px solid #ffffff40;border-radius:22px;background:linear-gradient(135deg,#293c31dd,#0c1812ee 70%);backdrop-filter:blur(16px);box-shadow:0 28px 65px #0009,inset 0 1px #ffffff55;transform:translateZ(115px) rotate(-10deg);padding:20px;overflow:hidden}
+.card3d:before{content:"";position:absolute;width:180px;height:180px;border-radius:50%;background:#48e18425;right:-65px;top:-80px;filter:blur(3px)}.chip{width:34px;height:26px;border-radius:7px;background:linear-gradient(135deg,#e6d49a,#8c7944);margin:12px 0 20px}.cardrow{display:flex;justify-content:space-between;align-items:end;font-size:11px;color:#d3e2d7}.cardrow b{font-size:17px;color:white}
+.float{position:absolute;border:1px solid #ffffff20;background:#101b15dd;backdrop-filter:blur(15px);border-radius:17px;padding:14px 17px;box-shadow:0 18px 45px #0008;transform-style:preserve-3d}.float small{color:#91a098;font-size:11px}.float strong{display:block;font-size:21px;margin-top:5px;letter-spacing:-.7px}.float.one{left:-18px;top:95px;transform:translateZ(160px) rotate(-5deg)}.float.one strong{color:var(--green)}.float.two{right:-12px;bottom:82px;transform:translateZ(180px) rotate(5deg)}.float.three{right:5px;top:25px;padding:11px 14px;transform:translateZ(100px)}.spark{color:var(--green)}
+.scrollhint{position:absolute;bottom:18px;left:50%;transform:translateX(-50%);font-size:11px;color:#6f7a73;letter-spacing:1.5px}
+.section{padding:100px 0}.section-head{text-align:center;max-width:700px;margin:0 auto 48px}.section h2{font-size:clamp(34px,4vw,52px);letter-spacing:-2.5px;margin:15px 0}.section-head p{color:var(--muted);line-height:1.65}
+.features{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}.feature{border:1px solid var(--line);border-radius:23px;padding:27px;background:linear-gradient(145deg,#121a15,#0c110e);min-height:220px;transition:transform .3s,border-color .3s,box-shadow .3s}.feature:hover{transform:translateY(-7px);border-color:#48e18477;box-shadow:0 20px 50px #0005}.ico{width:46px;height:46px;border-radius:15px;background:#48e18418;color:var(--green);display:grid;place-items:center;font-size:23px}.feature h3{margin:22px 0 9px;font-size:19px}.feature p{color:#9ba79f;line-height:1.6;font-size:14px;margin:0}
+.showcase{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center}.showcase h2{font-size:clamp(36px,4.5vw,58px);letter-spacing:-3px;line-height:1.03}.showcase p{color:#a6b1a9;line-height:1.7}.points{display:grid;gap:17px;margin-top:28px}.point{display:flex;gap:13px;align-items:flex-start}.point .ico{flex:none;width:36px;height:36px;font-size:17px}.point b{display:block;margin-bottom:4px}.point span{font-size:13px;color:#9ba79f;line-height:1.5}
+.dashboard{border:1px solid #ffffff1c;border-radius:27px;background:linear-gradient(145deg,#17231b,#0b100d);padding:23px;box-shadow:0 35px 90px #0008;transform:rotateY(-9deg) rotateX(3deg);transition:transform .4s}.dashboard:hover{transform:rotateY(0) rotateX(0) translateY(-5px)}.dash-top{display:flex;justify-content:space-between;color:#b4c1b8;font-size:12px}.dash-balance{font-size:36px;font-weight:850;margin:22px 0 5px}.positive{color:var(--green);font-size:12px}.bars{height:140px;display:flex;align-items:end;gap:10px;margin-top:25px;border-bottom:1px solid #ffffff17;padding:0 5px}.bar{flex:1;border-radius:7px 7px 2px 2px;background:linear-gradient(#70f4a1,#247c49);height:var(--h);transform-origin:bottom;animation:grow 1.3s cubic-bezier(.2,.8,.2,1) both;animation-delay:var(--d)}.months{display:flex;justify-content:space-between;color:#78857c;font-size:10px;margin-top:10px}
+.cta{margin:40px auto 100px;border:1px solid #48e18444;border-radius:30px;padding:60px 25px;text-align:center;background:radial-gradient(ellipse at 50% 0%,#48e18420,transparent 65%),#0e1511}.cta h2{font-size:clamp(34px,4vw,52px);letter-spacing:-2.5px;margin:0 0 14px}.cta p{color:#a6b1a9;margin:0 auto 27px;max-width:520px;line-height:1.6}
+footer{border-top:1px solid var(--line);padding:27px 0;color:#7f8a82;font-size:12px;display:flex;justify-content:space-between;gap:15px}
+.reveal{opacity:0;transform:translateY(24px);transition:opacity .7s ease,transform .7s cubic-bezier(.2,.7,.2,1)}.reveal.visible{opacity:1;transform:translateY(0)}
+@keyframes orbit{to{transform:rotateX(68deg) rotateZ(340deg)}}@keyframes pulse{50%{opacity:.55;transform:scale(1.15)}}@keyframes grow{from{transform:scaleY(.05)}to{transform:scaleY(1)}}
+@media(max-width:850px){.hero{grid-template-columns:1fr;padding-top:65px;gap:0}.hero-copy{text-align:center}.lead{margin:auto}.hero-actions,.trust{justify-content:center}.stage{height:470px}.features{grid-template-columns:repeat(2,1fr)}.showcase{grid-template-columns:1fr;gap:35px}.dashboard{max-width:600px;width:100%;margin:auto}}
+@media(max-width:560px){.wrap{width:min(100% - 30px,1160px)}nav{height:70px}.navlinks{display:none}.nav-cta{padding:10px 13px;font-size:12px}.brand{font-size:13px}.brand-mark{width:34px;height:34px}h1{font-size:49px;letter-spacing:-3.3px}.lead{font-size:15px}.hero{padding:55px 0 65px;min-height:auto}.stage{height:390px;transform:scale(.88);margin:-5px -20px}.scene{transform:scale(.88)}.orbit{width:340px;height:340px}.features{grid-template-columns:1fr}.feature{min-height:0}.section{padding:70px 0}.section-head{margin-bottom:30px}.dashboard{padding:17px;transform:none}.dash-balance{font-size:30px}.cta{margin:15px auto 65px;padding:45px 20px}footer{flex-direction:column}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
+
+/* Extended landing slides + interactive 3D bank cards */
+.story-section{padding:35px 0 95px}.story-grid{display:grid;grid-template-columns:1.35fr 1fr 1fr;gap:15px}.story-panel{position:relative;overflow:hidden;border:1px solid var(--line);border-radius:25px;background:linear-gradient(145deg,#131d16,#0b100d);padding:28px;min-height:220px}.story-main{grid-row:span 2;min-height:455px;background:radial-gradient(circle at 80% 70%,#48e18420,transparent 45%),linear-gradient(145deg,#17241b,#0b100d)}.story-main h2{font-size:clamp(34px,4vw,51px);line-height:1.05;letter-spacing:-2.6px;margin:25px 0 15px}.story-main p,.story-small p{color:#a3afa6;line-height:1.65;max-width:390px}.story-link{display:inline-flex;gap:12px;color:var(--green);font-weight:800;margin-top:20px}.story-orb{position:absolute;right:25px;bottom:-45px;width:190px;height:190px;border-radius:50%;display:grid;place-items:center;font-size:85px;font-weight:900;color:#0a3019;background:radial-gradient(circle at 30% 25%,#d0ffe0,#4ae889 48%,#126337);box-shadow:0 20px 70px #48e1842c,inset -15px -18px 25px #00381788;transform:rotate(-18deg)}.story-number{font-size:12px;color:var(--green);letter-spacing:2px}.story-small h3{font-size:24px;margin:32px 0 8px}.story-line{height:3px;width:45px;border-radius:5px;background:var(--green);margin-top:24px}
+.bank-section{background:linear-gradient(180deg,transparent,#0b110d 45%,transparent)}.bank-layout{display:grid;grid-template-columns:.8fr 1.2fr;gap:40px;align-items:center}.bank-copy{border:1px solid var(--line);border-radius:25px;padding:25px;background:#101813}.bank-tabs{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:28px}.bank-tab{border:1px solid var(--line);background:#ffffff08;color:#aeb9b1;padding:9px 13px;border-radius:11px;font:inherit;font-size:12px;cursor:pointer;transition:.2s}.bank-tab:hover,.bank-tab.active{background:#48e184;color:#07100a;border-color:#48e184}.bank-detail h3{font-size:30px;margin:12px 0}.bank-detail p{color:#a2aea5;line-height:1.65;font-size:14px}.bank-meta{display:flex;justify-content:space-between;gap:10px;padding:14px 0;border-bottom:1px solid var(--line);font-size:12px}.bank-meta span{color:#849188}.bank-meta b{text-align:right}.bank-note{font-size:11px!important;color:#77857b!important;margin-top:18px}.bank-view{height:440px;position:relative;display:grid;place-items:center;perspective:1200px;touch-action:pan-y;cursor:grab}.bank-view:active{cursor:grabbing}.bank-halo{position:absolute;width:310px;height:310px;border-radius:50%;background:#48e18426;filter:blur(65px);animation:pulse 5s ease-in-out infinite}.bank-orbit{position:absolute;width:390px;height:250px;border:1px solid #83ffae25;border-radius:50%;transform:rotate(-24deg);animation:orbitBank 18s linear infinite}.bank-card-3d{width:min(390px,82vw);height:245px;position:relative;transform-style:preserve-3d;transition:transform .13s ease-out;will-change:transform}.bank-card-front,.bank-card-back{position:absolute;inset:0;border-radius:23px;overflow:hidden;backface-visibility:hidden;border:1px solid #ffffff55;box-shadow:0 35px 85px #000a,inset 0 1px #ffffff70;padding:25px;display:flex;flex-direction:column;justify-content:space-between}.bank-card-front{background:linear-gradient(130deg,#39a96c,#12633c 55%,#082d1b)}.bank-card-front:after{content:"";position:absolute;width:260px;height:260px;border:1px solid #ffffff25;border-radius:50%;right:-100px;top:-130px;box-shadow:0 0 0 25px #ffffff08,0 0 0 55px #ffffff06}.bank-card-back{transform:rotateY(180deg);background:linear-gradient(140deg,#26352c,#0b120e)}.bank-card-3d.flipped{transform:rotateY(180deg)!important}.bank-card-top,.bank-card-bottom{display:flex;justify-content:space-between;align-items:center;position:relative;z-index:1}.bank-card-top b{font-size:22px;letter-spacing:1px}.bank-contactless{font-size:22px;transform:rotate(90deg);opacity:.8}.bank-chip{width:44px;height:34px;border-radius:8px;background:linear-gradient(135deg,#f2df9e,#9b8347);box-shadow:inset 0 0 0 1px #fff8;position:relative;z-index:1}.bank-card-number{font-size:19px;letter-spacing:2px;text-shadow:0 2px 4px #0003;position:relative;z-index:1}.bank-card-bottom{font-size:9px;letter-spacing:1px;line-height:1.6}.bank-card-bottom b{font-size:12px}.bank-network{font-size:35px}.magnetic{height:45px;background:#090d0b;margin:10px -25px 20px}.signature{height:40px;background:#e2e4d9;color:#252b25;border-radius:5px;padding:9px;display:flex;justify-content:space-between}.bank-card-back small{font-size:9px;color:#a7b2aa;letter-spacing:1px}.bank-float{position:absolute;border:1px solid #ffffff22;background:#101a14df;backdrop-filter:blur(13px);padding:13px 16px;border-radius:15px;box-shadow:0 15px 40px #0007}.bank-float small{display:block;color:#9aa69e;font-size:10px}.bank-float b{display:block;font-size:20px;margin-top:4px}.bank-float i{font-style:normal;color:#8d9b91;font-size:11px}.bank-float-a{left:0;top:50px;transform:translateZ(90px)}.bank-float-b{right:0;bottom:55px;transform:translateZ(100px)}.bank-hint{position:absolute;bottom:0;font-size:10px;color:#758178;letter-spacing:1.5px}
+@keyframes orbitBank{to{transform:rotate(336deg)}}
+@media(max-width:850px){.story-grid{grid-template-columns:1fr 1fr}.story-main{grid-column:span 2;grid-row:auto;min-height:360px}.bank-layout{grid-template-columns:1fr;gap:15px}.bank-view{height:390px;order:-1}.bank-copy{order:1}}
+@media(max-width:560px){.story-section{padding:15px 0 65px}.story-grid{grid-template-columns:1fr}.story-main{grid-column:auto;min-height:370px}.story-small{min-height:175px}.bank-view{height:330px}.bank-card-3d{height:205px;width:min(340px,84vw)}.bank-card-front,.bank-card-back{padding:20px}.bank-card-number{font-size:15px}.bank-float-a{left:-3px;top:28px}.bank-float-b{right:-3px;bottom:38px}.bank-orbit{width:300px;height:200px}.bank-copy{padding:20px}}
+
+
+.themes-grid{display:grid;grid-template-columns:1fr 1fr;gap:35px;align-items:center;max-width:900px;margin:auto}.theme-buttons{display:grid;gap:12px}.theme-pick{border:1px solid #ffffff20;border-radius:16px;padding:19px 22px;text-align:left;background:#111a14;color:white;font:700 16px system-ui;cursor:pointer;transition:.25s}.theme-pick:hover,.theme-pick.active{border-color:#48e184;transform:translateX(5px);background:#172b1e}.theme-help{color:#87958a;font-size:13px}.phone-demo{--accent:#48e184;position:relative;margin:auto;width:285px;min-height:465px;border:7px solid #2a332d;border-radius:38px;background:radial-gradient(circle at 90% 0%,color-mix(in srgb,var(--accent) 25%,transparent),transparent 45%),#0d1510;padding:28px 18px 20px;box-shadow:0 40px 90px #0009}.phone-top{display:flex;justify-content:space-between;font-weight:900;font-size:12px}.phone-top span,.phone-demo em{color:var(--accent);font-style:normal}.phone-demo>p{color:#9aa89c;margin-top:30px;font-size:12px}.phone-demo h3{font-size:25px;line-height:1.1}.phone-balance{padding:20px;border:1px solid #ffffff20;background:linear-gradient(130deg,color-mix(in srgb,var(--accent) 18%,#111a14),#101713);border-radius:18px;display:grid;gap:9px}.phone-balance small{color:#a2afa5;font-size:10px}.phone-balance strong{font-size:27px}.phone-balance span{color:var(--accent);font-size:12px}.phone-stats{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}.phone-stats>div{background:#ffffff09;border-radius:12px;padding:13px;font-size:11px;color:#aab5ad}.phone-stats b{display:block;color:white;margin-top:7px}.phone-bottom{text-align:center;color:var(--accent);margin-top:30px;font-size:20px}.plans-section{background:linear-gradient(180deg,transparent,#0d1710,transparent)}.plans-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}.plan{border:1px solid #ffffff1b;border-radius:24px;background:#101813;padding:30px;display:flex;flex-direction:column;min-height:290px;transition:.25s}.plan:hover{transform:translateY(-8px)}.plan.featured{border-color:#48e184;box-shadow:0 10px 50px #48e18412}.plan small{color:#48e184;letter-spacing:1.5px}.plan h3{font-size:35px;margin:25px 0 10px}.plan p{color:#a4b0a7;line-height:1.6}.plan-btn{margin-top:auto;padding:14px;border-radius:12px;background:#48e184;color:#07120a;border:0;font-weight:900;cursor:pointer}.plan-btn:hover{filter:brightness(1.1)}.payment-note{margin:25px auto 0;text-align:center;color:#a5b1a8;font-size:13px}.plan-result{text-align:center;color:#48e184;min-height:20px;font-size:13px}@media(max-width:800px){.themes-grid{grid-template-columns:1fr}.plans-grid{grid-template-columns:1fr}.plan{min-height:240px}}@media(max-width:560px){.phone-demo{width:270px}.theme-pick{padding:16px}}
+
+/* Additional slides, bank tabs and depth-based scroll */
+.bank-tabs{gap:8px}.bank-tab{white-space:nowrap}
+.app-tour{background:radial-gradient(ellipse at 50% 20%,#2a6b4222,transparent 55%)}
+.app-sections-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;perspective:1100px}
+.app-section-card{background:linear-gradient(145deg,#172219,#0b100d);border:1px solid #ffffff17;border-radius:24px;padding:24px;min-height:225px;transform-style:preserve-3d;transition:border-color .3s,box-shadow .3s,transform .65s cubic-bezier(.2,.7,.2,1),opacity .65s!important}
+.app-section-card:hover{border-color:#48e18480;box-shadow:0 25px 60px #0007;transform:translateY(-9px) rotateX(3deg) rotateY(-3deg)!important}
+.app-section-icon{font-size:25px;color:var(--green);background:#48e18418;width:48px;height:48px;border-radius:15px;display:grid;place-items:center;margin-bottom:20px}
+.app-section-card small{font-size:10px;color:var(--green);letter-spacing:1.5px;text-transform:uppercase}
+.app-section-card h3{font-size:21px;margin:8px 0}.app-section-card p{color:#9ba89e;line-height:1.6;font-size:13px;margin:0}
+.cinematic-section{overflow:hidden;background:linear-gradient(180deg,transparent,#101b13,transparent)}
+.cinematic-grid{display:grid;grid-template-columns:1fr 1fr;gap:50px;align-items:center}
+.cinematic-grid h2{font-size:clamp(37px,5vw,60px);letter-spacing:-3px;line-height:1.04}
+.cinematic-grid p{color:#a5b1a8;line-height:1.7;margin-bottom:28px}
+.cinematic-scene{height:430px;position:relative;perspective:1100px;transform-style:preserve-3d}
+.cinematic-ring{position:absolute;width:310px;height:310px;left:50%;top:50%;transform:translate(-50%,-50%) rotateX(65deg);border-radius:50%;border:1px solid #48e18455;box-shadow:0 0 80px #48e18416}
+.cinematic-tile{position:absolute;width:190px;height:125px;border:1px solid #ffffff40;border-radius:22px;background:linear-gradient(135deg,#254633,#101c15);box-shadow:0 25px 55px #0008;display:flex;flex-direction:column;justify-content:space-between;padding:22px;color:var(--green);font-size:30px;will-change:transform;transition:transform .18s ease-out}
+.cinematic-tile b{color:white;font-size:17px}.ct-a{top:55px;left:13%}.ct-b{top:150px;right:4%;background:linear-gradient(135deg,#233e61,#101725)}.ct-c{bottom:30px;left:25%;background:linear-gradient(135deg,#4b2c61,#1b1023)}
+@media(max-width:850px){.app-sections-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.cinematic-grid{grid-template-columns:1fr}.cinematic-scene{height:340px}}
+@media(max-width:560px){.app-sections-grid{grid-template-columns:1fr}.app-section-card{min-height:0}.cinematic-scene{height:315px}.cinematic-tile{width:160px;height:110px;padding:16px}.ct-a{left:0}.ct-b{right:0}.ct-c{left:20%}}
+@media(prefers-reduced-motion:reduce){.cinematic-tile{will-change:auto}.app-section-card:hover{transform:none!important}}
+</style>
+</head>
+<body>
+<nav class="wrap"><a class="brand" href="#"><span class="brand-mark">✦</span> МОИ ФИНАНСЫ</a><div class="navlinks"><a href="#sections">Разделы</a><a href="#banks">Банки</a><a href="#themes">Темы</a><a href="#plans">Тарифы</a></div><a class="nav-cta" href="#start">Попробовать <span>↗</span></a></nav>
+<main>
+<section class="hero wrap">
+ <div class="hero-copy reveal"><div class="eyebrow"><i class="dot"></i> Личный финансовый помощник</div><h1>Деньги любят<br><span>порядок.</span></h1><p class="lead">МОИ ФИНАНСЫ — понятное пространство, где доходы, расходы, счета и цели собраны в одном месте. Меньше хаоса — больше контроля над каждым решением.</p><div class="hero-actions"><a class="btn" href="#start">Открыть приложение <span>↗</span></a><a class="btn secondary" href="#features">Узнать больше ↓</a></div><div class="trust"><span><b class="check">✓</b> Доходы и расходы</span><span><b class="check">✓</b> Счета и подписки</span><span><b class="check">✓</b> Финансовые цели</span></div></div>
+ <div class="stage" id="stage" aria-label="Интерактивная 3D-сцена. Перетаскивайте мышью или пальцем, чтобы вращать"><div class="glow"></div><div class="orbit"></div><div class="scene" id="scene"><div class="coin">₽</div><div class="card3d"><div style="display:flex;justify-content:space-between;font-size:11px;color:#d8e8dd"><b>МОИ ФИНАНСЫ</b><span>✦</span></div><div class="chip"></div><div class="cardrow"><span>МОЙ БАЛАНС<br><b>•••• 2048</b></span><span style="font-size:20px">◉</span></div></div><div class="float one"><small>Свободный остаток</small><strong>+ 84 250 ₽</strong></div><div class="float two"><small>Накопления</small><strong>32 800 ₽</strong></div><div class="float three"><span class="spark">↗</span> <b>+12,8%</b><small> за месяц</small></div></div></div><div class="scrollhint">ПРОКРУТИТЕ ВНИЗ · EXPLORE</div>
+</section>
+<section class="section wrap" id="features"><div class="section-head reveal"><div class="eyebrow"><i class="dot"></i> Всё важное — рядом</div><h2>Финансы без лишней сложности</h2><p>Основные инструменты для повседневного управления деньгами — в одном аккуратном интерфейсе.</p></div><div class="features">
+ <article class="feature reveal"><div class="ico">↗</div><h3>Доходы</h3><p>Добавляйте поступления, распределяйте их по месяцам и следите за динамикой.</p></article>
+ <article class="feature reveal"><div class="ico">↘</div><h3>Расходы</h3><p>Фиксируйте траты, редактируйте записи и понимайте, на что уходит бюджет.</p></article>
+ <article class="feature reveal"><div class="ico">▣</div><h3>Счета и банки</h3><p>Собирайте балансы счетов в одном месте и наблюдайте за общей картиной.</p></article>
+ <article class="feature reveal"><div class="ico">◷</div><h3>Подписки</h3><p>Учитывайте регулярные платежи и их периодичность — ежемесячную или ежегодную.</p></article>
+ <article class="feature reveal"><div class="ico">◎</div><h3>Цели и накопления</h3><p>Задавайте финансовые ориентиры и отслеживайте движение к ним.</p></article>
+ <article class="feature reveal"><div class="ico">✧</div><h3>Умная сводка</h3><p>Получайте обзор финансовых данных и быстрее замечайте важные изменения.</p></article>
+</div></section>
+
+<section class="story-section"><div class="wrap story-grid">
+ <article class="story-panel story-main reveal"><div class="eyebrow"><i class="dot"></i> Твой финансовый ритм</div><h2>От каждой операции<br>к большой цели.</h2><p>Записывай движение денег, замечай закономерности и постепенно выстраивай понятную систему.</p><a class="story-link" href="#control">Посмотреть аналитику <span>↗</span></a><div class="story-orb">₽</div></article>
+ <article class="story-panel story-small reveal"><div class="story-number">01</div><h3>Записывай</h3><p>Доходы и расходы без хаоса в заметках.</p><div class="story-line"></div></article>
+ <article class="story-panel story-small reveal"><div class="story-number">02</div><h3>Сравнивай</h3><p>Смотри динамику по месяцам и категориям.</p><div class="story-line"></div></article>
+ <article class="story-panel story-small reveal"><div class="story-number">03</div><h3>Планируй</h3><p>Двигайся к накоплениям и личным целям.</p><div class="story-line"></div></article>
+</div></section>
+
+
+<section class="section bank-section" id="banks"><div class="wrap">
+ <div class="section-head reveal"><div class="eyebrow"><i class="dot"></i> Все счета в одном месте</div><h2>Твои банки —<br><span style="color:var(--green)">одна картина.</span></h2><p>Отдельный обзор банковских счетов и карт. Переключай карты и вращай 3D-модель, чтобы рассмотреть её со всех сторон.</p></div>
+ <div class="bank-layout">
+  <div class="bank-copy reveal"><div class="bank-tabs" role="tablist" aria-label="Выбор карты">
+   <button class="bank-tab active" data-bank="sber">Сбер</button><button class="bank-tab" data-bank="tbank">Т-Банк</button><button class="bank-tab" data-bank="alfa">Альфа</button><button class="bank-tab" data-bank="vtb">ВТБ</button><button class="bank-tab" data-bank="ozon">Ozon Банк</button><button class="bank-tab" data-bank="wb">WB Банк</button>
+  </div><div class="bank-detail"><div class="eyebrow"><i class="dot"></i> Демо-карта</div><h3 id="bankName">Сбербанк</h3><p id="bankDesc">Спокойный зелёный стиль и быстрый обзор основного счёта.</p><div class="bank-meta"><span>ТИП СЧЁТА</span><b id="bankType">Основная карта</b></div><div class="bank-meta"><span>ОТОБРАЖЕНИЕ</span><b>Демонстрационный макет</b></div><p class="bank-note">Это визуальная демонстрация интерфейса. Карты не подключены к банкам и не содержат настоящих платёжных данных.</p></div></div>
+  <div class="bank-view reveal" id="bankStage" aria-label="Интерактивная 3D банковская карта. Перетаскивайте мышью или пальцем для вращения.">
+   <div class="bank-halo"></div><div class="bank-orbit"></div>
+   <div class="bank-card-3d" id="bankCard">
+    <div class="bank-card-front" id="bankFace">
+     <div class="bank-card-top"><b id="bankBrand">СБЕР</b><span class="bank-contactless">)))</span></div>
+     <div class="bank-chip"></div><div class="bank-card-number">•••• &nbsp; •••• &nbsp; •••• &nbsp; <span id="bankDigits">2048</span></div>
+     <div class="bank-card-bottom"><span>МОИ ФИНАНСЫ<br><b>DEMO ACCOUNT</b></span><span class="bank-network">◉</span></div>
+    </div>
+    <div class="bank-card-back"><div class="magnetic"></div><div class="signature"><span>DEMO</span><b>•••</b></div><small>ДЕМОНСТРАЦИОННАЯ КАРТА · НЕ ДЛЯ ОПЛАТЫ</small></div>
+   </div>
+   <div class="bank-float bank-float-a"><small>Карты в галерее</small><b>06 <i>банков</i></b></div>
+   <div class="bank-float bank-float-b"><small>Один обзор</small><b>100% <i>наглядно</i></b></div>
+   <div class="bank-hint">ПЕРЕТАСКИВАЙ КАРТУ · 3D VIEW</div>
+  </div>
+ </div>
+</div></section>
+
+<section class="section wrap" id="control"><div class="showcase"><div class="reveal"><div class="eyebrow"><i class="dot"></i> Картина целиком</div><h2>Понимайте свои деньги с первого взгляда</h2><p>Смотрите на движение средств по месяцам, сравнивайте поступления и траты, замечайте тенденции и планируйте следующий шаг увереннее.</p><div class="points"><div class="point"><div class="ico">⌁</div><div><b>Наглядная аналитика</b><span>Графики доходов и расходов помогают увидеть динамику.</span></div></div><div class="point"><div class="ico">◷</div><div><b>Помесячный контроль</b><span>Переключайтесь между месяцами и изучайте историю.</span></div></div><div class="point"><div class="ico">✓</div><div><b>Ваши данные — под рукой</b><span>Удобная структура для ежедневного учёта и планирования.</span></div></div></div></div>
+ <div class="dashboard reveal"><div class="dash-top"><b>ФИНАНСОВАЯ СВОДКА</b><span>● Этот год</span></div><div style="color:#9aa99f;font-size:12px;margin-top:25px">Баланс за период</div><div class="dash-balance">128 450 ₽</div><div class="positive">↗ +8,4% к прошлому периоду</div><div class="bars"><i class="bar" style="--h:35%;--d:.05s"></i><i class="bar" style="--h:54%;--d:.12s"></i><i class="bar" style="--h:43%;--d:.19s"></i><i class="bar" style="--h:69%;--d:.26s"></i><i class="bar" style="--h:58%;--d:.33s"></i><i class="bar" style="--h:82%;--d:.4s"></i><i class="bar" style="--h:73%;--d:.47s"></i><i class="bar" style="--h:95%;--d:.54s"></i></div><div class="months"><span>ЯНВ</span><span>МАР</span><span>МАЙ</span><span>ИЮЛ</span><span>СЕН</span><span>НОЯ</span><span>ДЕК</span></div><div style="display:flex;gap:18px;margin-top:24px;font-size:11px;color:#a5b0a8"><span><i style="display:inline-block;width:7px;height:7px;border-radius:50%;background:#48e184;margin-right:6px"></i>Доходы</span><span><i style="display:inline-block;width:7px;height:7px;border-radius:50%;background:#7e8e83;margin-right:6px"></i>Расходы</span></div></div></div></section>
+
+
+<section class="section app-tour" id="sections"><div class="wrap"><div class="section-head reveal">
+<div class="eyebrow"><i class="dot"></i> ЭКСКУРСИЯ ПО ПРИЛОЖЕНИЮ</div><h2>Все разделы.<br><span style="color:var(--green)">Один финансовый центр.</span></h2>
+<p>От ежедневных операций до целей, подписок и настроек. Ниже — возможности разделов на основе структуры приложения.</p>
+</div><div class="app-sections-grid"><article class="app-section-card reveal"><div class="app-section-icon">⌂</div><small>Сводка</small><h3>Главная</h3><p>Общий обзор: приветствие, чистый доход, быстрые действия и основная финансовая цель.</p></article><article class="app-section-card reveal"><div class="app-section-icon">↗</div><small>Поступления</small><h3>Доходы</h3><p>Источники дохода, распределение и динамика поступлений по месяцам.</p></article><article class="app-section-card reveal"><div class="app-section-icon">↘</div><small>Траты</small><h3>Расходы</h3><p>Список расходов, структура по категориям и график динамики за год.</p></article><article class="app-section-card reveal"><div class="app-section-icon">▣</div><small>Счета</small><h3>Банки</h3><p>Ручной учёт банковских счетов и обзор остатков в одном разделе.</p></article><article class="app-section-card reveal"><div class="app-section-icon">◈</div><small>Резервы</small><h3>Накопления</h3><p>Отдельный раздел для анализа накопленных средств.</p></article><article class="app-section-card reveal"><div class="app-section-icon">⇄</div><small>Обязательства</small><h3>Долги и кредиты</h3><p>Учёт долгов и кредитов, контроль сумм и погашений.</p></article><article class="app-section-card reveal"><div class="app-section-icon">◷</div><small>Платежи</small><h3>Подписки</h3><p>Регулярные платежи с ежемесячной или ежегодной периодичностью.</p></article><article class="app-section-card reveal"><div class="app-section-icon">◎</div><small>Планы</small><h3>Задачи и цели</h3><p>Основная цель, дополнительные цели и список финансовых задач.</p></article><article class="app-section-card reveal"><div class="app-section-icon">✧</div><small>Помощник</small><h3>ИИ-ассистент</h3><p>Раздел ассистента, сводка недели и советы по финансовой картине.</p></article><article class="app-section-card reveal"><div class="app-section-icon">◇</div><small>Доступ</small><h3>Оплата</h3><p>Экран выбора срока подписки: один, шесть или двенадцать месяцев.</p></article><article class="app-section-card reveal"><div class="app-section-icon">⚙</div><small>Под себя</small><h3>Настройки</h3><p>Акцентный цвет, валюта, тема интерфейса и язык.</p></article></div></div></section>
+<section class="section cinematic-section" id="experience"><div class="wrap cinematic-grid">
+<div class="reveal"><div class="eyebrow"><i class="dot"></i> 3D SCROLL EXPERIENCE</div><h2>Каждый экран —<br><span style="color:var(--green)">новое измерение.</span></h2><p>Прокручивай страницу: карточки мягко смещаются в перспективе, слои движутся с разной скоростью, а разделы появляются плавно. Эффекты автоматически упрощаются при настройке уменьшения анимации.</p><a class="btn secondary" href="#banks">Покрутить 3D-карты ↗</a></div>
+<div class="cinematic-scene reveal" aria-hidden="true"><div class="cinematic-ring"></div><div class="cinematic-tile ct-a">↗<b>Доходы</b></div><div class="cinematic-tile ct-b">▣<b>Банки</b></div><div class="cinematic-tile ct-c">◎<b>Цели</b></div></div>
+</div></section>
+<section class="section wrap" id="themes"><div class="section-head reveal"><div class="eyebrow">✦ ПЕРСОНАЛИЗАЦИЯ</div><h2>Твой стиль. Твои финансы.</h2><p>Выбери оформление и посмотри, как меняется интерфейс приложения.</p></div>
+<div class="themes-grid"><div class="theme-buttons reveal"><button class="theme-pick active" data-color="#48e184" data-name="Изумрудная">🟢 Изумрудная</button><button class="theme-pick" data-color="#60a5fa" data-name="Синяя">🔵 Синяя</button><button class="theme-pick" data-color="#b084ff" data-name="Фиолетовая">🟣 Фиолетовая</button><button class="theme-pick" data-color="#e5e7eb" data-name="Монохромная">⚪ Монохромная</button><p class="theme-help">Нажми на тему, чтобы изменить предпросмотр.</p></div>
+<div class="phone-demo reveal" id="phoneDemo"><div class="phone-top">МОИ ФИНАНСЫ <span>✦</span></div><p>Добро пожаловать!</p><h3>Твои финансы<br><em>под контролем</em></h3><div class="phone-balance"><small>ЧИСТЫЙ ДОХОД</small><strong>128 450 ₽</strong><span>↗ +12,8% за месяц</span></div><div class="phone-stats"><div>Доходы<b>65 000 ₽</b></div><div>Расходы<b>27 800 ₽</b></div></div><div class="phone-bottom">⌂ &nbsp;&nbsp;&nbsp; ▥ &nbsp;&nbsp;&nbsp; ◎ &nbsp;&nbsp;&nbsp; ⚙</div></div></div></section>
+<section class="section wrap" id="workflow"><div class="section-head reveal"><div class="eyebrow">✦ ПРОСТОЙ ПРОЦЕСС</div><h2>От первой записи до большой цели</h2><p>Три шага к более понятной финансовой картине.</p></div><div class="features"><article class="feature reveal"><div class="ico">01</div><h3>Добавляй операции</h3><p>Записывай доходы, расходы и регулярные платежи.</p></article><article class="feature reveal"><div class="ico">02</div><h3>Смотри динамику</h3><p>Следи за изменениями по месяцам и категориям.</p></article><article class="feature reveal"><div class="ico">03</div><h3>Двигайся к цели</h3><p>Контролируй накопления и планируй следующие шаги.</p></article></div></section>
+<section class="section plans-section" id="plans"><div class="wrap"><div class="section-head reveal"><div class="eyebrow">✦ ПОДПИСКА</div><h2>Выбери свой формат</h2><p>Демонстрация вариантов подписки. Оплата пока не подключена.</p></div><div class="plans-grid"><article class="plan reveal"><small>НАЧАЛО</small><h3>1 месяц</h3><p>Попробуй расширенные возможности приложения.</p><button class="plan-btn" data-plan="1 месяц">Выбрать →</button></article><article class="plan featured reveal"><small>ПОПУЛЯРНЫЙ ВАРИАНТ</small><h3>6 месяцев</h3><p>Веди учёт и отслеживай изменения полгода.</p><button class="plan-btn" data-plan="6 месяцев">Выбрать →</button></article><article class="plan reveal"><small>НАДОЛГО</small><h3>12 месяцев</h3><p>Годовой доступ для долгосрочного планирования.</p><button class="plan-btn" data-plan="12 месяцев">Выбрать →</button></article></div><div class="payment-note reveal">🔒 Платёжный сервис ещё не подключён. Цены появятся после утверждения тарифов.</div><p class="plan-result" id="planResult" aria-live="polite"></p></div></section>
+<section class="cta wrap reveal" id="start"><div class="eyebrow"><i class="dot"></i> Начните с простого</div><h2>Пусть у денег будет план.</h2><p>Откройте «МОИ ФИНАНСЫ» и соберите личную финансовую картину в одном месте.</p><a class="btn" href="index.html">Перейти в приложение <span>↗</span></a></section>
+</main>
+<footer class="wrap"><span>© 2026 МОИ ФИНАНСЫ</span><span>Ваши финансы. Ваш контроль.</span></footer>
+<script>
+const stage=document.getElementById('stage'),scene=document.getElementById('scene');let down=false,sx=0,sy=0,rx=0,ry=0,baseX=0,baseY=0;
+function move(x,y){const r=stage.getBoundingClientRect();const nx=(x-r.left)/r.width-.5,ny=(y-r.top)/r.height-.5;scene.style.transform=`rotateX(${(-ny*18+rx).toFixed(2)}deg) rotateY(${(nx*25+ry).toFixed(2)}deg)`;}
+stage.addEventListener('pointerdown',e=>{down=true;sx=e.clientX;sy=e.clientY;baseX=rx;baseY=ry;stage.setPointerCapture(e.pointerId)});
+stage.addEventListener('pointermove',e=>{if(!down){move(e.clientX,e.clientY);return}ry=baseY+(e.clientX-sx)*.22;rx=baseX-(e.clientY-sy)*.18;scene.style.transform=`rotateX(${rx}deg) rotateY(${ry}deg)`});
+stage.addEventListener('pointerup',()=>down=false);stage.addEventListener('pointercancel',()=>down=false);stage.addEventListener('pointerleave',()=>{if(!down)scene.style.transform=`rotateX(${rx}deg) rotateY(${ry}deg)`});
+const io=new IntersectionObserver(entries=>entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');io.unobserve(e.target)}}),{threshold:.12});document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+
+// Bank card selector and pointer-driven 3D rotation
+(()=>{
+ const stage=document.getElementById('bankStage'),card=document.getElementById('bankCard');
+ if(!stage||!card)return;
+ const data={
+  sber:{name:'Сбербанк',brand:'СБЕР',digits:'2048',type:'Основная карта',desc:'Спокойный зелёный стиль и быстрый обзор основного счёта.',front:'linear-gradient(130deg,#39a96c,#12633c 55%,#082d1b)'},
+  tbank:{name:'Т-Банк',brand:'Т-БАНК',digits:'0912',type:'Дебетовая карта',desc:'Контрастный графитовый дизайн с ярким жёлтым акцентом.',front:'linear-gradient(130deg,#34383c,#171b1e 58%,#090b0d)'},
+  alfa:{name:'Альфа-Банк',brand:'АЛЬФА',digits:'7721',type:'Основная карта',desc:'Глубокий красный градиент и выразительная геометрия.',front:'linear-gradient(130deg,#f05252,#a51e2d 58%,#4a1019)'},
+  vtb:{name:'ВТБ',brand:'ВТБ',digits:'4406',type:'Основная карта',desc:'Сдержанный синий дизайн с мягкими световыми переливами.',front:'linear-gradient(130deg,#4d8fe8,#174d9b 58%,#0b2551)'},
+  ozon:{name:'Ozon Банк',brand:'OZON',digits:'6032',type:'Демо-карта',desc:'Яркая синяя 3D-карта в стиле Ozon Банка. Это концепт, а не официальная банковская карта.',front:'linear-gradient(130deg,#30a9ff,#1353c8 58%,#081e6d)'},
+  wb:{name:'WB Банк',brand:'WB',digits:'8519',type:'Демо-карта',desc:'Фиолетовая 3D-карта в стиле WB Банка. Это концепт, а не официальная банковская карта.',front:'linear-gradient(130deg,#d95cff,#8424c5 58%,#35105f)'}
+ };
+ const face=document.getElementById('bankFace');
+ document.querySelectorAll('.bank-tab').forEach(btn=>btn.addEventListener('click',()=>{
+  const d=data[btn.dataset.bank];if(!d)return;
+  document.querySelectorAll('.bank-tab').forEach(b=>b.classList.toggle('active',b===btn));
+  document.getElementById('bankName').textContent=d.name;
+  document.getElementById('bankBrand').textContent=d.brand;
+  document.getElementById('bankDigits').textContent=d.digits;
+  document.getElementById('bankType').textContent=d.type;
+  document.getElementById('bankDesc').textContent=d.desc;
+  face.style.background=d.front;card.classList.remove('flipped');
+ }));
+ let down=false,sx=0,sy=0,rx=-7,ry=15,bx=rx,by=ry;
+ const paint=()=>{if(!card.classList.contains('flipped'))card.style.transform=`rotateX(${rx}deg) rotateY(${ry}deg)`};
+ stage.addEventListener('pointerdown',e=>{down=true;sx=e.clientX;sy=e.clientY;bx=rx;by=ry;stage.setPointerCapture(e.pointerId)});
+ stage.addEventListener('pointermove',e=>{if(!down)return;ry=by+(e.clientX-sx)*.42;rx=bx-(e.clientY-sy)*.35;paint()});
+ const stop=()=>{down=false};stage.addEventListener('pointerup',stop);stage.addEventListener('pointercancel',stop);
+ stage.addEventListener('dblclick',()=>{card.classList.toggle('flipped');if(!card.classList.contains('flipped'))paint()});
+})();
+
+
+document.querySelectorAll('.theme-pick').forEach(button=>button.addEventListener('click',()=>{
+ document.querySelectorAll('.theme-pick').forEach(x=>x.classList.toggle('active',x===button));
+ document.getElementById('phoneDemo').style.setProperty('--accent',button.dataset.color);
+}));
+document.querySelectorAll('.plan-btn').forEach(button=>button.addEventListener('click',()=>{
+ document.querySelectorAll('.plan-btn').forEach(x=>x.textContent=x===button?'Выбрано ✓':'Выбрать →');
+ document.getElementById('planResult').textContent='Выбран период: '+button.dataset.plan+'. Оплата пока не подключена.';
+}));
+
+// Scroll-linked depth effect, throttled with requestAnimationFrame.
+(()=>{
+ const reduced=window.matchMedia('(prefers-reduced-motion: reduce)');
+ const tiles=[...document.querySelectorAll('.cinematic-tile')];
+ const section=document.getElementById('experience');
+ if(!section||!tiles.length)return;
+ let ticking=false;
+ function render(){
+  ticking=false;
+  if(reduced.matches){tiles.forEach(t=>t.style.transform='none');return}
+  const r=section.getBoundingClientRect();
+  const progress=Math.max(-1,Math.min(1,(window.innerHeight/2-(r.top+r.height/2))/window.innerHeight));
+  tiles.forEach((t,i)=>{
+   const dir=i%2===0?1:-1;
+   const y=progress*(24+i*12)*dir;
+   const rot=progress*(10+i*4)*dir;
+   t.style.transform=`translate3d(0,${y.toFixed(1)}px,${(i+1)*28}px) rotateY(${rot.toFixed(1)}deg) rotateX(${(progress*7).toFixed(1)}deg)`;
+  });
+ }
+ function schedule(){if(!ticking){ticking=true;requestAnimationFrame(render)}}
+ window.addEventListener('scroll',schedule,{passive:true});
+ window.addEventListener('resize',schedule,{passive:true});
+ reduced.addEventListener?.('change',schedule);
+ schedule();
+})();
+</script>
+</body></html>
