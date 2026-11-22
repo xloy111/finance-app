@@ -1037,7 +1037,7 @@
         <!-- ИИ-ассистент -->
         <section class="view " id="view-assistant">
           <h1 class="page-heading">ИИ-ассистент</h1><p class="page-subtitle">Задай вопрос — получи совет по финансам.</p>
-          <article class="card" style="margin-bottom:16px;"><h2 class="card-title">Сводка недели</h2><div id="digestContent"><div class="empty">ИИ сформирует сводку в начале каждой недели — за неделю, месяц и год, плюс советы.</div></div></article>
+          <article class="card" style="margin-bottom:16px;"><h2 class="card-title" style="gap:10px;flex-wrap:wrap"><span>Финансовая сводка</span><button class="button secondary" type="button" id="refreshDigestButton" style="margin-left:auto;font-size:12px">Обновить анализ ИИ</button></h2><div id="digestContent"><div class="empty">ИИ автоматически подготовит три персональных совета на неделю.</div></div></article>
           <article class="card"><div class="button-row" style="margin-bottom:12px;align-items:center;gap:8px;flex-wrap:wrap"><select id="chatConversations" aria-label="История диалогов" style="flex:1;min-width:160px;min-height:42px;padding:9px;background:var(--panel-2);color:var(--text);border:1px solid var(--border);border-radius:9px"></select><button class="button secondary" id="newChatButton" type="button">+ Новый чат</button><button class="button secondary" id="deleteChatButton" type="button">Удалить чат</button></div><div id="chatStatus" role="status" style="font-size:12px;color:var(--muted);margin-bottom:8px"></div><div class="list" id="chatMessages" style="min-height: 200px; margin-bottom: 16px;"><div class="empty">Напиши свой первый вопрос...</div></div><div class="button-row"><input type="text" id="chatInput" placeholder="Например: как накопить на машину?" style="flex:1; min-height:42px; padding:10px 12px; border:1px solid var(--border); border-radius:9px; background:var(--panel-2); color:var(--text);"><span id="chatDailyLimit" title="Лимит: 15 запросов к ИИ за сутки. Фактический остаток контролируется сервером." style="display:inline-flex;align-items:center;gap:5px;white-space:nowrap;color:var(--accent);font-size:12px;font-weight:700;padding:9px 10px;border:1px solid var(--border);border-radius:9px;background:var(--panel-2)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><span>15 запросов/день</span></span><button class="button" id="sendChatButton">Отправить</button></div></article>
         </section>
 
@@ -1136,8 +1136,8 @@
 
   <!-- Диалоги -->
   <dialog class="modal" id="goalDialog"><form class="modal-inner" id="goalForm"><h2 id="goalDialogTitle">Добавить цель</h2><label class="field">Название<input id="goalName" required maxlength="60" placeholder="Например, отпуск"></label><label class="field">Уже накоплено<input id="goalCurrent" type="number" min="0" step="0.01" value="0" required></label><label class="field">Целевая сумма<input id="goalTarget" type="number" min="0.01" step="0.01" required placeholder="25000"></label><div class="modal-actions"><button class="button secondary" type="button" data-close>Отмена</button><button class="button" type="submit">Сохранить</button></div></form></dialog>
-  <dialog class="modal" id="expenseDialog"><form class="modal-inner" id="expenseForm"><h2 id="expenseDialogTitle">Добавить расход</h2><label class="field">Название траты<input id="expenseName" required maxlength="50" placeholder="Например, Продукты"></label><label class="field">Сумма за месяц<input id="expenseAmount" type="number" min="0" step="0.01" required placeholder="5000"></label><label class="field">Месяц<select id="expenseMonth"><option value="0">Январь</option><option value="1">Февраль</option><option value="2">Март</option><option value="3">Апрель</option><option value="4">Май</option><option value="5">Июнь</option><option value="6">Июль</option><option value="7">Август</option><option value="8">Сентябрь</option><option value="9">Октябрь</option><option value="10">Ноябрь</option><option value="11">Декабрь</option></select></label><label class="field">Цвет на диаграмме<select id="expenseColor"><option value="#48e184">Зелёный</option><option value="#ff596d">Красный</option><option value="#e4db52">Жёлтый</option><option value="#d064ca">Фиолетовый</option><option value="#50b8ff">Голубой</option><option value="#ff9f43">Оранжевый</option><option value="#00d2d3">Бирюзовый</option><option value="#f368e0">Розовый</option><option value="#a29bfe">Лавандовый</option><option value="#cd6133">Коричневый</option><option value="#c8d6e5">Серый</option><option value="#1dd1a1">Изумрудный</option></select></label><div class="modal-actions"><button class="button secondary" type="button" data-close>Отмена</button><button class="button" type="submit">Сохранить</button></div></form></dialog>
-  <dialog class="modal" id="incomeDialog"><form class="modal-inner" id="incomeForm"><h2 id="incomeDialogTitle">Добавить доход</h2><label class="field">Источник дохода<input id="incomeName" required maxlength="50" placeholder="Например, фриланс"></label><label class="field">Сумма за месяц<input id="incomeAmount" type="number" min="0" step="0.01" required placeholder="5000"></label><label class="field">Месяц<select id="incomeMonth"><option value="0">Январь</option><option value="1">Февраль</option><option value="2">Март</option><option value="3">Апрель</option><option value="4">Май</option><option value="5">Июнь</option><option value="6">Июль</option><option value="7">Август</option><option value="8">Сентябрь</option><option value="9">Октябрь</option><option value="10">Ноябрь</option><option value="11">Декабрь</option></select></label><label class="field">Цвет на диаграмме<select id="incomeColor"><option value="#48e184">Зелёный</option><option value="#ff596d">Красный</option><option value="#e4db52">Жёлтый</option><option value="#d064ca">Фиолетовый</option><option value="#50b8ff">Голубой</option><option value="#ff9f43">Оранжевый</option><option value="#00d2d3">Бирюзовый</option><option value="#f368e0">Розовый</option><option value="#a29bfe">Лавандовый</option><option value="#cd6133">Коричневый</option><option value="#c8d6e5">Серый</option><option value="#1dd1a1">Изумрудный</option></select></label><div class="modal-actions"><button class="button secondary" type="button" data-close>Отмена</button><button class="button" type="submit">Сохранить</button></div></form></dialog>
+  <dialog class="modal" id="expenseDialog"><form class="modal-inner" id="expenseForm"><h2 id="expenseDialogTitle">Добавить расход</h2><label class="field">Название траты<input id="expenseName" required maxlength="50" placeholder="Например, Продукты"></label><label class="field">Сумма за месяц<input id="expenseAmount" type="number" min="0" step="0.01" required placeholder="5000"></label><label class="field">Дата операции (день, месяц, год)<input id="expenseDate" type="date" required style="width:100%;min-width:0;box-sizing:border-box;max-width:100%;color-scheme:dark"></label><label class="field">Цвет на диаграмме<select id="expenseColor"><option value="#48e184">Зелёный</option><option value="#ff596d">Красный</option><option value="#e4db52">Жёлтый</option><option value="#d064ca">Фиолетовый</option><option value="#50b8ff">Голубой</option><option value="#ff9f43">Оранжевый</option><option value="#00d2d3">Бирюзовый</option><option value="#f368e0">Розовый</option><option value="#a29bfe">Лавандовый</option><option value="#cd6133">Коричневый</option><option value="#c8d6e5">Серый</option><option value="#1dd1a1">Изумрудный</option></select></label><div class="modal-actions"><button class="button secondary" type="button" data-close>Отмена</button><button class="button" type="submit">Сохранить</button></div></form></dialog>
+  <dialog class="modal" id="incomeDialog"><form class="modal-inner" id="incomeForm"><h2 id="incomeDialogTitle">Добавить доход</h2><label class="field">Источник дохода<input id="incomeName" required maxlength="50" placeholder="Например, фриланс"></label><label class="field">Сумма за месяц<input id="incomeAmount" type="number" min="0" step="0.01" required placeholder="5000"></label><label class="field">Дата операции (день, месяц, год)<input id="incomeDate" type="date" required style="width:100%;min-width:0;box-sizing:border-box;max-width:100%;color-scheme:dark"></label><label class="field">Цвет на диаграмме<select id="incomeColor"><option value="#48e184">Зелёный</option><option value="#ff596d">Красный</option><option value="#e4db52">Жёлтый</option><option value="#d064ca">Фиолетовый</option><option value="#50b8ff">Голубой</option><option value="#ff9f43">Оранжевый</option><option value="#00d2d3">Бирюзовый</option><option value="#f368e0">Розовый</option><option value="#a29bfe">Лавандовый</option><option value="#cd6133">Коричневый</option><option value="#c8d6e5">Серый</option><option value="#1dd1a1">Изумрудный</option></select></label><div class="modal-actions"><button class="button secondary" type="button" data-close>Отмена</button><button class="button" type="submit">Сохранить</button></div></form></dialog>
   <dialog class="modal" id="taskDialog"><form class="modal-inner" id="taskForm"><h2>Добавить задачу</h2><label class="field">Название задачи<input id="taskName" required maxlength="100" placeholder="Например, начать ходить в зал"></label><div class="modal-actions"><button class="button secondary" type="button" data-close>Отмена</button><button class="button" type="submit">Добавить</button></div></form></dialog>
   <dialog class="modal" id="debtDialog"><form class="modal-inner" id="debtForm"><h2 id="debtDialogTitle">Добавить долг</h2><label class="field">Название<input id="debtName" required maxlength="50" placeholder="Например: Кредит / Друг Вася"></label><label class="field">Тип<select id="debtType"><option value="owe">Я должен</option><option value="owed">Мне должны</option></select></label><label class="field">Общая сумма<input id="debtTotal" type="number" min="0.01" step="0.01" required placeholder="50000"></label><label class="field">Уже выплачено<input id="debtPaid" type="number" min="0" step="0.01" value="0" required></label><div class="modal-actions"><button class="button secondary" type="button" data-close>Отмена</button><button class="button" type="submit">Сохранить</button></div></form></dialog>
   <dialog class="modal" id="payDebtDialog"><form class="modal-inner" id="payDebtForm"><h2 id="payDebtTitle">Погасить долг</h2><label class="field">Сумма к выплате<input id="payDebtAmount" type="number" min="0.01" step="0.01" required placeholder="500"></label><div class="modal-actions"><button class="button secondary" type="button" data-close>Отмена</button><button class="button" type="submit">Выплатить</button></div></form></dialog>
@@ -1228,63 +1228,98 @@
       }
     }
 
-    // --- Еженедельная ИИ-сводка ---
+    // --- Сводка: точная арифметика на клиенте + необязательные советы от ИИ ---
     let digestContent = null;
     let digestLoading = false;
-    function renderDigest(content) {
-      digestContent = content;
-      const box = document.getElementById('digestContent');
-      if (!box) return;
-      if (digestLoading) {
-        box.innerHTML = `<div class="empty">${t("ИИ формирует сводку... обычно пара секунд ⏳")}</div>`;
-        return;
-      }
-      if (!content) { box.innerHTML = `<div class="empty">${t("Сводка пока недоступна.")}</div>`; return; }
-      if (content.raw) { box.innerHTML = `<div class="empty">${escapeHtml(content.raw)}</div>`; return; }
-      // SVG-иконки наследуют выбранный акцент приложения, в отличие от цветных emoji.
-      const digestIcon = (kind) => {
-        const paths = kind === 'bulb'
-          ? '<path d="M9 18h6m-5 4h4m-5.5-7.5a6 6 0 1 1 7 0c-.9.7-1.5 1.7-1.5 3h-4c0-1.3-.6-2.3-1.5-3Z"/>'
-          : kind === 'month'
-          ? '<rect x="3" y="4" width="18" height="17" rx="2"/><path d="M8 2v4m8-4v4M3 10h18M8 14h3m-3 4h3m4-4h2"/>'
-          : kind === 'year'
-          ? '<rect x="3" y="4" width="18" height="17" rx="2"/><path d="M8 2v4m8-4v4M3 10h18m-12 4 2 2 4-4"/>'
-          : '<rect x="3" y="4" width="18" height="17" rx="2"/><path d="M8 2v4m8-4v4M3 10h18m-13 4h2m4 0h2m-8 4h2"/>';
-        return `<svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="color:var(--accent);flex:none;vertical-align:middle">${paths}</svg>`;
-      };
-      const row = (icon, title, text) => `<div class="list-item"><div class="item-info"><div class="item-name" style="display:flex;align-items:center;gap:9px">${digestIcon(icon)} <span>${escapeHtml(title)}</span></div><div class="item-sub"><span class="amount">${escapeHtml(text || '—')}</span></div></div></div>`;
-      const tips = Array.isArray(content.advice) && content.advice.length
-        ? `<h2 class="card-title" style="margin-top:14px;">${t("Советы")}</h2><div class="legend">${content.advice.map(a => `<div class="legend-row" style="display:flex;align-items:flex-start;gap:9px">${digestIcon('bulb')} <span>${escapeHtml(a)}</span></div>`).join('')}</div>`
-        : '';
-      box.innerHTML = row('week', t("За неделю"), content.week) + row('month', t("За месяц"), content.month) + row('year', t("За год"), content.year) + tips;
+    let digestAdvice = [];
+    let digestNotice = '';
+    let digestRequestSerial = 0;
+    function financialDigestSnapshot() {
+      const today = new Date();
+      const end = localISODate(today);
+      const startWeek = localISODate(new Date(today.getFullYear(), today.getMonth(), today.getDate() - 6));
+      const startMonth = `${end.slice(0,7)}-01`;
+      const startYear = `${end.slice(0,4)}-01-01`;
+      const periods = [
+        { key:'week', title:'За 7 дней', start:startWeek },
+        { key:'month', title:'За месяц', start:startMonth },
+        { key:'year', title:'За год', start:startYear }
+      ];
+      const undated = [...data.incomes, ...data.expenses].filter(x => !x.date).length;
+      const validDate = x => typeof x.date === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(x.date);
+      const sum = (items, start) => items.filter(x => validDate(x) && x.date >= start && x.date <= end && !isSubscriptionExpense(x)).reduce((a,x) => a + (Number(x.amount) || 0),0);
+      const stats = periods.map(p => {
+        const income = data.incomes.filter(x => validDate(x) && x.date >= p.start && x.date <= end).reduce((a,x)=>a+(Number(x.amount)||0),0);
+        const expenses = sum(data.expenses,p.start);
+        return { ...p, income, expenses, balance:income-expenses };
+      });
+      const monthly = stats[1];
+      const top = new Map();
+      data.expenses.filter(x => validDate(x) && x.date >= startMonth && x.date <= end && !isSubscriptionExpense(x)).forEach(x=>top.set(x.name || 'Прочее',(top.get(x.name || 'Прочее')||0)+(Number(x.amount)||0)));
+      const topExpenses = [...top].sort((a,b)=>b[1]-a[1]).slice(0,3).map(([name,amount])=>({name,amount}));
+      return { stats, topExpenses, undated, end, month:monthly };
     }
-
-    async function maybeGenerateDigest(revision) {
+    function renderDigest() {
+      const box = document.getElementById('digestContent');
+      if (!box || !data) return;
+      const snapshot = financialDigestSnapshot();
+      const icon = kind => kind === 'bulb'
+        ? '<path d="M9 18h6m-5 4h4m-5.5-7.5a6 6 0 1 1 7 0c-.9.7-1.5 1.7-1.5 3h-4c0-1.3-.6-2.3-1.5-3Z"/>'
+        : '<rect x="3" y="4" width="18" height="17" rx="2"/><path d="M8 2v4m8-4v4M3 10h18"/>';
+      const svg = kind => `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="color:var(--accent);flex:none">${icon(kind)}</svg>`;
+      const rows = snapshot.stats.map(p => `<div class="list-item" style="display:block"><div class="item-name" style="display:flex;gap:9px;align-items:center;margin-bottom:7px">${svg('calendar')}<strong>${escapeHtml(p.title)}</strong></div><div class="item-sub" style="line-height:1.8">Доходы: <strong>${escapeHtml(money(p.income))}</strong> · Расходы: <strong>${escapeHtml(money(p.expenses))}</strong><div>Разница: <strong style="color:${p.balance < 0 ? 'var(--danger, #ff596d)' : 'var(--accent)'}">${escapeHtml(money(p.balance))}</strong></div></div></div>`).join('');
+      const top = snapshot.topExpenses.length ? `<div class="item-sub" style="margin-top:10px">Крупнейшие расходы месяца: ${snapshot.topExpenses.map(x=>`${escapeHtml(x.name)} — ${escapeHtml(money(x.amount))}`).join('; ')}</div>` : '';
+      const warning = snapshot.undated ? `<div class="item-sub" style="margin-top:10px">Внимание: ${snapshot.undated} записей без точной даты не включены в расчёты. Для корректной сводки укажи даты операций.</div>` : '';
+      const subs = data.expenses.some(isSubscriptionExpense) ? '<div class="item-sub" style="margin-top:7px">Регулярные подписки не включены в фактические расходы: для них нет подтверждённых дат списания.</div>' : '';
+      const advice = digestAdvice.length ? `<h2 class="card-title" style="margin-top:15px">Советы ИИ</h2><div class="legend">${digestAdvice.map(a=>`<div class="legend-row" style="display:flex;align-items:flex-start;gap:9px">${svg('bulb')}<span>${escapeHtml(a)}</span></div>`).join('')}</div>` : '';
+      box.innerHTML = rows + top + warning + subs + advice + `<div class="item-sub" role="status" style="margin-top:12px">${escapeHtml(digestLoading ? 'ИИ анализирует данные...' : digestNotice || 'Итоги рассчитаны по датированным операциям. Три совета ИИ обновляются раз в 7 дней или вручную.')}</div>`;
+      const button = document.getElementById('refreshDigestButton');
+      if (button) button.disabled = digestLoading || data !== rootData;
+    }
+    async function maybeGenerateDigest(revision, force = false) {
+      if (data !== rootData || !userId) return;
+      const request = ++digestRequestSerial;
+      digestLoading = true;
+      digestNotice = '';
+      renderDigest();
       try {
         await saveQueue;
-        if (revision !== assistantRevision) return;
+        if (revision !== assistantRevision || request !== digestRequestSerial) return;
         const { data: { session } } = await window.supabase.auth.getSession();
-        if (!session) return;
-        const { data: row } = await window.supabase.from('digests').select('content, created_at').eq('user_id', session.user.id).order('created_at', { ascending: false }).limit(1).maybeSingle();
-        if (revision !== assistantRevision) return;
-        const weekAgo = Math.max(Date.now() - 7 * 24 * 3600 * 1000, rootData.legacyAccountCreatedAt || 0);
-        if (row && new Date(row.created_at).getTime() > weekAgo) { renderDigest(row.content); return; }
-        digestLoading = true;
-        renderDigest(null);
-        const { data: aiResp, error: fnError } = await window.supabase.functions.invoke('ai-assistant', { body: { mode: 'digest', language: currentLang } });
-        if (fnError) throw new Error(fnError.message);
-        if (revision === assistantRevision) {
-          digestLoading = false;
-          renderDigest(aiResp.digest);
+        if (!session) throw new Error('Требуется вход в аккаунт');
+        if (!force) {
+          const { data: cached, error: cacheError } = await window.supabase.from('digests').select('digest,updated_at').eq('user_id',session.user.id).maybeSingle();
+          if (!cacheError && cached && new Date(cached.updated_at).getTime() > Date.now()-7*86400000 && Array.isArray(cached.digest?.advice) && cached.digest.advice.length === 3) {
+            digestAdvice = cached.digest.advice.slice(0,3).map(String);
+            digestLoading = false;
+            digestNotice = 'Советы ИИ из последней сохранённой сводки. Для актуализации нажми «Обновить анализ ИИ». При этом финансовые итоги всегда пересчитываются.';
+            renderDigest();
+            return;
+          }
         }
-      } catch (e) {
-        if (revision === assistantRevision) {
-          digestLoading = false;
-          renderDigest(null);
-        }
-        console.error("Ошибка сводки:", e);
+        const snapshot = financialDigestSnapshot();
+        const { data: response, error } = await window.supabase.functions.invoke('ai-assistant', {
+          body: { mode:'digest', language:currentLang, force, summary: {
+            periods:snapshot.stats.map(p=>({period:p.key,income:p.income,expenses:p.expenses,difference:p.balance})),
+            topExpenses:snapshot.topExpenses, undatedEntries:snapshot.undated,
+            note:'Use only these dated transaction totals. Subscription charges without dates are excluded. Return short grounded advice.'
+          }}
+        });
+        if (error) throw error;
+        if (revision !== assistantRevision || request !== digestRequestSerial) return;
+        const tips = response?.digest?.advice;
+        if (!Array.isArray(tips) || tips.length !== 3) throw new Error('Сервер не вернул рекомендации в digest.advice');
+        digestAdvice = tips.slice(0,3).map(String);
+        digestNotice = 'Советы получены от ИИ. Числовые итоги рассчитаны по операциям приложения.';
+      } catch(e) {
+        if (revision !== assistantRevision || request !== digestRequestSerial) return;
+        digestNotice = 'Не удалось получить советы ИИ. Итоги операций доступны выше. ' + (e?.message || '');
+        console.error('Ошибка ИИ-сводки',e);
+      } finally {
+        if (revision === assistantRevision && request === digestRequestSerial) { digestLoading = false; renderDigest(); }
       }
     }
+    document.getElementById('refreshDigestButton').addEventListener('click',()=>maybeGenerateDigest(assistantRevision,true));
 
     let authMode = 'login';
 
@@ -2093,7 +2128,7 @@
         list.innerHTML = filteredExpenses.map(item => {
           const itemAmount = amountForItem(item);
           const share = total ? Math.round(itemAmount / total * 100) : 0;
-          return `<div class="list-item"><div class="item-info"><div class="item-name"><span class="dot" style="background:${item.color}"></span>${escapeHtml(expenseName(item))}</div><div class="item-sub"><span>${share}% ${t("от всех трат")}</span><span class="amount">${money(itemAmount)}</span></div><div class="track"><div class="fill" style="width:${share}%;background:${item.color}"></div></div></div><div class="item-actions"><button class="icon-button" title="${t("Изменить расход")}" data-edit-expense="${item.id}">✎</button><button class="icon-button delete" data-delete-expense="${item.id}">×</button></div></div>`;
+          return `<div class="list-item"><div class="item-info"><div class="item-name"><span class="dot" style="background:${item.color}"></span>${escapeHtml(expenseName(item))}</div><div class="item-sub"><span>${transactionDateLabel(item)} · ${share}% ${t("от всех трат")}</span><span class="amount">${money(itemAmount)}</span></div><div class="track"><div class="fill" style="width:${share}%;background:${item.color}"></div></div></div><div class="item-actions"><button class="icon-button" title="${t("Изменить расход")}" data-edit-expense="${item.id}">✎</button><button class="icon-button delete" data-delete-expense="${item.id}">×</button></div></div>`;
         }).join("");
       }
       $("#expenseLegend").innerHTML = filteredExpenses.map(item => `<div class="legend-row"><span class="dot" style="background:${item.color}"></span><span>${escapeHtml(expenseName(item))}</span><span class="legend-value">${money(amountForItem(item))}</span></div>`).join("") || `<div class="empty">${t("Нет данных.")}</div>`;
@@ -2117,16 +2152,41 @@
     let editingExpenseId = null;
     let editingSubscriptionId = null;
 
+    function localISODate(date = new Date()) {
+      const pad = n => String(n).padStart(2, "0");
+      return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`;
+    }
+    function transactionDate(item) {
+      if (item?.date && /^\d{4}-\d{2}-\d{2}$/.test(item.date)) return item.date;
+      // Old entries only stored a month. Keep that month and mark the date as approximate.
+      const month = Math.min(11, Math.max(0, Number(item?.month ?? new Date().getMonth()) || 0));
+      return `${new Date().getFullYear()}-${String(month + 1).padStart(2, "0")}-01`;
+    }
+    function transactionDateLabel(item) {
+      if (!item?.date) return `${monthLabel(Number(item?.month ?? 0))} · ${t("дата не указана")}`;
+      const [year, month, day] = item.date.split("-").map(Number);
+      return new Intl.DateTimeFormat(appLocale(), { day: "2-digit", month: "2-digit", year: "numeric" }).format(new Date(year, month - 1, day));
+    }
+    function validatedDate(inputId) {
+      const value = $(inputId).value;
+      if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) return null;
+      const [year, month, day] = value.split("-").map(Number);
+      const d = new Date(year, month - 1, day);
+      if (d.getFullYear() !== year || d.getMonth() !== month - 1 || d.getDate() !== day) return null;
+      return { date: value, month: month - 1 };
+    }
+
     function openExpenseDialog(id = null, trigger = null) {
       editingExpenseId = id;
       const form = $("#expenseForm");
       form.reset();
+      $("#expenseDate").value = localISODate();
       const item = id == null ? null : data.expenses.find(entry => Number(entry.id) === Number(id));
       $("#expenseDialogTitle").textContent = item ? t("Изменить расход") : t("Добавить расход");
       if (item) {
         $("#expenseName").value = expenseName(item);
         $("#expenseAmount").value = Number(item.amount || 0);
-        $("#expenseMonth").value = String(item.month ?? 0);
+        $("#expenseDate").value = transactionDate(item);
         $("#expenseColor").value = item.color || "#ff596d";
       }
       showActionDialog($("#expenseDialog"), trigger);
@@ -2163,7 +2223,7 @@
       if (!filteredIncomes.length) { list.innerHTML = `<div class="empty">${t("Доходов за этот период нет.")}</div>`; } else {
         list.innerHTML = filteredIncomes.map(item => {
           const share = total ? Math.round(item.amount / total * 100) : 0;
-          return `<div class="list-item income-item"><div class="item-info"><div class="item-name"><span class="dot" style="background:${escapeHtml(item.color)};color:${escapeHtml(item.color)}"></span>${escapeHtml(item.name)}</div><div class="item-sub"><span>${share}% ${t("от общего дохода")}</span><span class="amount">${money(item.amount)}</span></div><div class="track"><div class="fill" style="width:${share}%;background:${escapeHtml(item.color)}"></div></div></div><div class="item-actions"><button class="icon-button" title="Изменить" data-edit-income="${item.id}">✎</button><button class="icon-button delete" title="${t("Удалить")}" data-delete-income="${item.id}">×</button></div></div>`;
+          return `<div class="list-item income-item"><div class="item-info"><div class="item-name"><span class="dot" style="background:${escapeHtml(item.color)};color:${escapeHtml(item.color)}"></span>${escapeHtml(item.name)}</div><div class="item-sub"><span>${transactionDateLabel(item)} · ${share}% ${t("от общего дохода")}</span><span class="amount">${money(item.amount)}</span></div><div class="track"><div class="fill" style="width:${share}%;background:${escapeHtml(item.color)}"></div></div></div><div class="item-actions"><button class="icon-button" title="Изменить" data-edit-income="${item.id}">✎</button><button class="icon-button delete" title="${t("Удалить")}" data-delete-income="${item.id}">×</button></div></div>`;
         }).join("");
       }
       $("#incomeLegend").innerHTML = filteredIncomes.map(item => `<div class="legend-row"><span class="dot" style="background:${escapeHtml(item.color)};color:${escapeHtml(item.color)}"></span><span>${escapeHtml(item.name)}</span><span class="legend-value">${money(item.amount)}</span></div>`).join("") || `<div class="empty">${t("Нет данных для диаграммы.")}</div>`;
@@ -2652,7 +2712,7 @@
       $("#incomeName").value = existing?.name || "";
       $("#incomeAmount").value = existing?.amount ?? "";
       $("#incomeColor").value = existing?.color || "#48e184";
-      $("#incomeMonth").value = existing?.month !== undefined ? existing.month : new Date().getMonth();
+      $("#incomeDate").value = existing ? transactionDate(existing) : localISODate();
       showActionDialog($("#incomeDialog"), trigger);
     }
 
@@ -2745,7 +2805,9 @@
 
     $("#incomeForm").addEventListener("submit", event => {
       event.preventDefault();
-      const item = { name: $("#incomeName").value.trim(), amount: Number($("#incomeAmount").value), color: $("#incomeColor").value, month: Number($("#incomeMonth").value) };
+      const chosenDate = validatedDate("#incomeDate");
+      if (!chosenDate) { alert(t("Выбери корректную дату дохода.")); return; }
+      const item = { name: $("#incomeName").value.trim(), amount: Number($("#incomeAmount").value), color: $("#incomeColor").value, ...chosenDate };
       if (!item.name || !Number.isFinite(item.amount) || item.amount < 0) { alert(t("Проверь название и сумму дохода.")); return; }
       const existing = editingIncomeId ? data.incomes.find(entry => entry.id === editingIncomeId) : null;
       if (existing) {
@@ -2758,7 +2820,9 @@
 
     $("#expenseForm").addEventListener("submit", event => {
       event.preventDefault();
-      const item = { month: Number($("#expenseMonth").value), name: $("#expenseName").value.trim(), amount: Number($("#expenseAmount").value), color: $("#expenseColor").value };
+      const chosenDate = validatedDate("#expenseDate");
+      if (!chosenDate) { alert(t("Выбери корректную дату расхода.")); return; }
+      const item = { ...chosenDate, name: $("#expenseName").value.trim(), amount: Number($("#expenseAmount").value), color: $("#expenseColor").value };
       if (!item.name || !Number.isFinite(item.amount) || item.amount < 0) { alert(t("Проверь название и сумму.")); return; }
       const existing = editingExpenseId == null ? null : data.expenses.find(entry => Number(entry.id) === Number(editingExpenseId));
       if (existing) {
@@ -2967,10 +3031,12 @@
       const available = data === rootData;
       setChatStatus(available ? '' : 'ИИ-ассистент доступен только для первого счёта.');
       digestLoading = false;
-      renderDigest(null);
+      digestAdvice = []; digestNotice = ""; ++digestRequestSerial; renderDigest();
       if (available && userId) {
         loadConversations();
-        maybeGenerateDigest(assistantRevision);
+        // Показываем итоги сразу; советы загружаем из кеша либо создаём раз в 7 дней.
+        renderDigest();
+        maybeGenerateDigest(assistantRevision, false);
       }
     }
     newChatButton.addEventListener('click', () => {
@@ -3124,7 +3190,7 @@
       "Добавить расход": "Add expense",
       "Доход за год": "Income for the year",
       "Забыли пароль?": "Forgot your password?",
-      "ИИ сформирует сводку в начале каждой недели — за неделю, месяц и год, плюс советы.": "At the start of each week, the assistant creates a weekly, monthly, and yearly summary with tips.",
+      "ИИ автоматически подготовит три персональных совета на неделю.": "At the start of each week, the assistant creates a weekly, monthly, and yearly summary with tips.",
       "ИИ-ассистент для персональных советов по финансам": "AI assistant with personalized finance tips",
       "Каждый месяц": "Every month",
       "Личный финансовый помощник": "Personal finance assistant",
@@ -3372,7 +3438,7 @@
         Array.from($("#accountStatsMonth").options).forEach((option, month) => { option.textContent = monthLabel(month); });
         renderAccountStats();
       }
-      if (userId) renderDigest(digestContent);
+      if (userId) renderDigest();
     }
 
     document.querySelectorAll("[data-lang]").forEach(button => {
