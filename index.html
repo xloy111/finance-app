@@ -745,6 +745,77 @@
       .account-stats-totals { grid-template-columns: repeat(2, minmax(0, 1fr)); }
       .account-stats-totals > :last-child { grid-column: 1 / -1; }
     }
+    .analytics-tabs{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 18px}
+    .analytics-tab{border:1px solid var(--border);background:var(--panel);color:var(--muted);border-radius:12px;padding:11px 15px;cursor:pointer;font-weight:700;min-height:44px}
+    .analytics-tab.active{border-color:var(--accent);background:var(--panel-2);color:var(--accent)}
+    .analytics-metrics{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-bottom:16px}
+    .analytics-metric{border:1px solid var(--border);border-radius:16px;background:var(--panel);padding:18px;min-width:0}
+    .analytics-metric small{display:block;color:var(--muted);font-size:12px;margin-bottom:10px}
+    .analytics-metric strong{display:block;color:var(--accent);font-size:clamp(20px,2.5vw,28px);font-weight:800;line-height:1.2;letter-spacing:-.025em;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+    #view-analytics .analytics-metric .analytics-amount{font-family:inherit;font-weight:850;text-shadow:0 1px 0 color-mix(in srgb,var(--accent) 8%,transparent)}
+    .analytics-metric span{display:block;color:var(--muted);font-size:12px;margin-top:7px}
+    .analytics-chart{width:100%;height:auto;display:block;overflow:visible}
+    .analytics-chart text{fill:var(--muted);font-size:11px;font-family:inherit}
+    .analytics-chart .axisline{stroke:var(--border);stroke-width:1}
+    .analytics-empty{padding:16px;color:var(--muted);background:var(--panel-2);border-radius:12px;line-height:1.6}
+    .analytics-rows{display:grid;gap:11px}
+    .analytics-row{display:flex;align-items:center;justify-content:space-between;gap:12px;border-bottom:1px solid var(--border);padding:10px 0}
+    .analytics-row span{min-width:0;overflow-wrap:anywhere}
+    .analytics-row strong{white-space:nowrap}
+    .analytics-note{font-size:12px;color:var(--muted);line-height:1.6}
+    @media(max-width:520px){.analytics-metrics{gap:9px}.analytics-metric{padding:13px}.analytics-tabs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}.analytics-tab{padding:10px 6px;font-size:12px}}
+
+    /* Аналитика: волна карточек, плавное появление чисел и графиков. */
+    #view-analytics .analytics-metric, #view-analytics .analytics-chart,
+    #view-analytics .analytics-tab { transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease; }
+    #view-analytics .analytics-metric:hover { transform: translateY(-3px); border-color: var(--accent); box-shadow: 0 10px 26px color-mix(in srgb,var(--accent) 13%,transparent); }
+    #view-analytics.active .analytics-wave-card { animation: sectionWaveIn .46s cubic-bezier(.2,.75,.25,1) both !important; animation-delay: var(--wave-delay,0ms) !important; }
+    #view-analytics .analytics-chart rect { transform-box: fill-box; transform-origin: center bottom; animation: analyticsBarGrow .72s cubic-bezier(.22,1,.36,1) both; }
+    @keyframes analyticsBarGrow { from { transform: scaleY(.04); opacity: .15; } to { transform: scaleY(1); opacity: 1; } }
+    @media (hover:none) { #view-analytics .analytics-metric:hover { transform:none; } }
+    @media (prefers-reduced-motion:reduce) {
+      #view-analytics.active .analytics-wave-card, #view-analytics .analytics-chart rect { animation:none !important; opacity:1 !important; transform:none !important; }
+    }
+
+
+    /* Аналитика: отдельная адаптация для телефонов без изменения расчётов. */
+    #view-analytics, #analyticsPanel { min-width:0; max-width:100%; }
+    #view-analytics .analytics-chart-scroll { width:100%; max-width:100%; overflow-x:auto; overflow-y:hidden; overscroll-behavior-x:contain; -webkit-overflow-scrolling:touch; scrollbar-width:thin; padding-bottom:5px; }
+    #view-analytics .analytics-chart-scroll .analytics-chart { min-width:680px; width:100%; height:auto; }
+    #view-analytics .analytics-amount { font-variant-numeric:tabular-nums; }
+    @media(max-width:760px) {
+      #view-analytics .page-heading { font-size:clamp(24px,6.5vw,32px); line-height:1.15; overflow-wrap:anywhere; }
+      #view-analytics .page-subtitle { font-size:13px; line-height:1.5; margin-bottom:14px; }
+      #view-analytics .analytics-tabs { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:9px; margin-bottom:14px; }
+      #view-analytics .analytics-tab { width:100%; min-width:0; min-height:46px; padding:10px 8px; font-size:13px; line-height:1.25; white-space:normal; }
+      #view-analytics .analytics-metrics { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px; margin-bottom:13px; }
+      #view-analytics .analytics-metric { padding:14px 12px; border-radius:15px; overflow:hidden; }
+      #view-analytics .analytics-metric small { font-size:11px; line-height:1.4; min-height:31px; margin-bottom:7px; }
+      #view-analytics .analytics-metric strong { font-size:clamp(17px,4.7vw,24px); line-height:1.22; letter-spacing:-.035em; overflow-wrap:anywhere; word-break:normal; }
+      #view-analytics .analytics-metric span { font-size:11px; line-height:1.45; margin-top:6px; }
+      #view-analytics #analyticsPanel > .card { min-width:0; padding:15px 12px; }
+      #view-analytics .analytics-chart-scroll .analytics-chart { min-width:660px; }
+      #view-analytics .analytics-chart-scroll { margin-top:4px; }
+      #view-analytics .analytics-row { align-items:flex-start; flex-wrap:wrap; gap:6px 12px; line-height:1.45; }
+      #view-analytics .analytics-row span { flex:1 1 170px; font-size:13px; }
+      #view-analytics .analytics-row strong { white-space:normal; overflow-wrap:anywhere; font-size:13px; margin-left:auto; }
+      #view-analytics .analytics-note { font-size:11px; line-height:1.6; }
+      #view-analytics #refreshDigestButton { width:100%; margin-left:0 !important; min-height:44px; white-space:normal; }
+      #view-analytics .card-title:has(#refreshDigestButton) { display:flex; flex-direction:column; align-items:stretch; gap:11px !important; }
+      #view-analytics #digestContent { min-width:0; overflow-wrap:anywhere; line-height:1.6; }
+      #view-analytics .card { max-width:100%; }
+    }
+    @media(max-width:380px) {
+      #view-analytics .analytics-metrics { grid-template-columns:1fr; }
+      #view-analytics .analytics-metric { padding:13px 15px; }
+      #view-analytics .analytics-metric small { min-height:0; }
+      #view-analytics .analytics-metric strong { font-size:24px; }
+      #view-analytics .analytics-tab { font-size:12px; }
+    }
+    @media(prefers-reduced-motion:reduce) {
+      #view-analytics .analytics-metric, #view-analytics .analytics-tab { transition:none; }
+    }
+
 </style>
 <base target="_blank">
 </head>
@@ -803,6 +874,7 @@
     <div class="layout">
       <nav class="sidebar" id="sidebar" aria-label="Разделы приложения">
         <button class="nav-button active" data-view="home" aria-current="page"><svg class="nav-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M3 11 12 3l9 8M5 10v10h5v-6h4v6h5V10"/></svg><span class="nav-label">Главная</span></button>
+        <button class="nav-button" data-view="analytics"><svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 19V5M3 19h18M7 15l4-5 4 3 5-7"/></svg><span class="nav-label">Аналитика</span></button>
         <button class="nav-button" data-view="income"><svg class="nav-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M6 18 18 6M8 6h10v10"/></svg><span class="nav-label">Доходы</span></button>
         <button class="nav-button" data-view="expenses"><svg class="nav-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M18 6 6 18M6 8v10h10"/></svg><span class="nav-label">Расходы</span></button>
         <button class="nav-button" data-view="banks"><svg class="nav-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M3 9 12 4l9 5H3Zm2 11h14M7 9v7m5-7v7m5-7v7"/></svg><span class="nav-label">Банки</span></button>
@@ -1034,10 +1106,25 @@
           <div class="grid two-col"><div class="grid"><article class="card"><h2 class="card-title">Основная цель</h2><div id="primaryGoal"></div><div class="button-row"><button class="button" id="setPrimaryButton">+ Добавить основную цель</button></div></article><article class="card"><h2 class="card-title">Другие цели</h2><div class="list" id="goalsList"></div><div class="button-row"><button class="button" id="addGoalButton">+ Добавить цель</button></div></article></div><article class="card"><h2 class="card-title">Задачи</h2><div class="list" id="tasksList"></div><div class="button-row"><button class="button" id="addTaskButton">+ Добавить задачу</button></div></article></div>
         </section>
 
+        <!-- Финансовая аналитика: локальные расчёты без расхода токенов -->
+        <section class="view" id="view-analytics">
+          <h1 class="page-heading">Финансовая аналитика</h1>
+          <p class="page-subtitle">Прогнозы, динамика и рекомендации на основе ваших операций. Расчёты выполняются на устройстве.</p>
+          <div class="analytics-tabs" role="tablist" aria-label="Разделы аналитики">
+            <button class="analytics-tab active" data-analytics-tab="overview" type="button">Обзор</button>
+            <button class="analytics-tab" data-analytics-tab="forecast" type="button">Прогнозы</button>
+            <button class="analytics-tab" data-analytics-tab="spending" type="button">Анализ трат</button>
+            <button class="analytics-tab" data-analytics-tab="advice" type="button">Рекомендации</button>
+          </div>
+          <div id="analyticsPanel" aria-live="polite"></div>
+          <article class="card" style="margin-bottom:16px;"><h2 class="card-title" style="gap:10px;flex-wrap:wrap"><span>Финансовая сводка</span><button class="button secondary" type="button" id="refreshDigestButton" style="margin-left:auto;font-size:12px">Обновить анализ ИИ</button></h2><div id="digestContent"><div class="empty">ИИ автоматически подготовит три персональных совета на неделю.</div></div></article>
+        </section>
+
+
         <!-- ИИ-ассистент -->
         <section class="view " id="view-assistant">
           <h1 class="page-heading">ИИ-ассистент</h1><p class="page-subtitle">Задай вопрос — получи совет по финансам.</p>
-          <article class="card" style="margin-bottom:16px;"><h2 class="card-title" style="gap:10px;flex-wrap:wrap"><span>Финансовая сводка</span><button class="button secondary" type="button" id="refreshDigestButton" style="margin-left:auto;font-size:12px">Обновить анализ ИИ</button></h2><div id="digestContent"><div class="empty">ИИ автоматически подготовит три персональных совета на неделю.</div></div></article>
+          
           <article class="card"><div class="button-row" style="margin-bottom:12px;align-items:center;gap:8px;flex-wrap:wrap"><select id="chatConversations" aria-label="История диалогов" style="flex:1;min-width:160px;min-height:42px;padding:9px;background:var(--panel-2);color:var(--text);border:1px solid var(--border);border-radius:9px"></select><button class="button secondary" id="newChatButton" type="button">+ Новый чат</button><button class="button secondary" id="deleteChatButton" type="button">Удалить чат</button></div><div id="chatStatus" role="status" style="font-size:12px;color:var(--muted);margin-bottom:8px"></div><div class="list" id="chatMessages" style="min-height: 200px; margin-bottom: 16px;"><div class="empty">Напиши свой первый вопрос...</div></div><div class="button-row"><input type="text" id="chatInput" placeholder="Например: как накопить на машину?" style="flex:1; min-height:42px; padding:10px 12px; border:1px solid var(--border); border-radius:9px; background:var(--panel-2); color:var(--text);"><span id="chatDailyLimit" title="Лимит: 15 запросов к ИИ за сутки. Фактический остаток контролируется сервером." style="display:inline-flex;align-items:center;gap:5px;white-space:nowrap;color:var(--accent);font-size:12px;font-weight:700;padding:9px 10px;border:1px solid var(--border);border-radius:9px;background:var(--panel-2)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><span>15 запросов/день</span></span><button class="button" id="sendChatButton">Отправить</button></div></article>
         </section>
 
@@ -1272,7 +1359,7 @@
       const warning = snapshot.undated ? `<div class="item-sub" style="margin-top:10px">Внимание: ${snapshot.undated} записей без точной даты не включены в расчёты. Для корректной сводки укажи даты операций.</div>` : '';
       const subs = data.expenses.some(isSubscriptionExpense) ? '<div class="item-sub" style="margin-top:7px">Регулярные подписки не включены в фактические расходы: для них нет подтверждённых дат списания.</div>' : '';
       const advice = digestAdvice.length ? `<h2 class="card-title" style="margin-top:15px">Советы ИИ</h2><div class="legend">${digestAdvice.map(a=>`<div class="legend-row" style="display:flex;align-items:flex-start;gap:9px">${svg('bulb')}<span>${escapeHtml(a)}</span></div>`).join('')}</div>` : '';
-      box.innerHTML = rows + top + warning + subs + advice + `<div class="item-sub" role="status" style="margin-top:12px">${escapeHtml(digestLoading ? 'ИИ анализирует данные...' : digestNotice || 'Итоги рассчитаны по датированным операциям. Три совета ИИ обновляются раз в 7 дней или вручную.')}</div>`;
+      box.innerHTML = rows + top + warning + subs + advice + `<div class="item-sub" role="status" style="margin-top:12px">${escapeHtml(digestLoading ? 'ИИ анализирует данные...' : digestNotice || 'Итоги рассчитаны по датированным операциям. Советы ИИ сохраняются и могут обновляться вручную.')}</div>`;
       const button = document.getElementById('refreshDigestButton');
       if (button) button.disabled = digestLoading || data !== rootData;
     }
@@ -2590,8 +2677,161 @@
 
     function update() { save(); renderApp(); }
 
+    let analyticsTab = 'overview';
+    const analyticsMonths = ['Янв','Фев','Мар','Апр','Май','Июн','Июл','Авг','Сен','Окт','Ноя','Дек'];
+    function analyticsTotals() {
+      const now = new Date(), year = now.getFullYear(), current = now.getMonth();
+      const income = Array(12).fill(0), expense = Array(12).fill(0);
+      const byName = new Map();
+      let undated = 0;
+      const valid = item => typeof item?.date === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(item.date) && !Number.isNaN(new Date(item.date + 'T12:00:00').getTime());
+      for (const item of data.incomes || []) {
+        if (!valid(item)) { undated++; continue; }
+        if (Number(item.date.slice(0,4)) !== year || item.date > localISODate(now)) continue;
+        const m = Number(item.date.slice(5,7)) - 1, amount = Number(item.amount);
+        if (Number.isFinite(amount) && amount >= 0) income[m] += amount;
+      }
+      for (const item of data.expenses || []) {
+        if (!valid(item)) { undated++; continue; }
+        if (Number(item.date.slice(0,4)) !== year || item.date > localISODate(now)) continue;
+        // Подписки без подтверждённого списания не считаем фактическими расходами.
+        if (isSubscriptionExpense(item)) continue;
+        const m = Number(item.date.slice(5,7)) - 1, amount = Number(item.amount);
+        if (!Number.isFinite(amount) || amount < 0) continue;
+        expense[m] += amount;
+        const name = String(item.name || 'Без названия').trim();
+        byName.set(name, (byName.get(name) || 0) + amount);
+      }
+      const sum = arr => arr.reduce((a,b)=>a+b,0);
+      const actualMonths = Array.from({length:12},(_,i)=>i).filter(i => income[i] > 0 || expense[i] > 0);
+      const completed = actualMonths.filter(i => i < current);
+      const last = completed.slice(-3);
+      const avg = (arr, ids) => ids.length ? ids.reduce((a,i)=>a+arr[i],0)/ids.length : null;
+      return {income,expense,byName,current,year,undated,actualMonths,completed,last,avgIncome:avg(income,last),avgExpense:avg(expense,last),totalIncome:sum(income),totalExpense:sum(expense)};
+    }
+    function analyticsMetric(label, value, sub) {
+      const display = String(value);
+      const numeric = /^([+−-]?)([\d\s\u00a0\u202f]+(?:[.,]\d+)?)\s*(₽|%|мес\.)?$/.exec(display.trim());
+      const n = numeric ? Number(numeric[2].replace(/[\s\u00a0\u202f]/g, '').replace(',', '.')) * (numeric[1] === '-' || numeric[1] === '−' ? -1 : 1) : NaN;
+      const animate = Number.isFinite(n) && Math.abs(n) < 1e12;
+      const unit = numeric ? (numeric[3] || '') : '';
+      const sign = numeric && numeric[1] === '+' ? '+' : '';
+      return `<div class="analytics-metric"><small>${escapeHtml(label)}</small><strong class="analytics-amount" ${animate ? `data-analytics-value="${n}" data-analytics-unit="${escapeHtml(unit)}" data-analytics-sign="${sign}"` : ''}>${escapeHtml(display)}</strong><span>${escapeHtml(sub)}</span></div>`;
+    }
+    let analyticsCounterFrame = 0;
+    let analyticsOpenedOnce = false;
+    const analyticsSeenValues = new Map();
+    function animateAnalyticsCounters() {
+      cancelAnimationFrame(analyticsCounterFrame);
+      // Анимируем только при первом открытии раздела или изменении конкретной суммы.
+      // Переключение вкладок и повторный вход без изменений не запускают счётчик.
+      if (!document.getElementById('view-analytics')?.classList.contains('active')) return;
+      const firstOpen = !analyticsOpenedOnce;
+      analyticsOpenedOnce = true;
+      const all = [...document.querySelectorAll('#analyticsPanel [data-analytics-value]')];
+      const items = [];
+      for (const el of all) {
+        const label = el.closest('.analytics-metric')?.querySelector('small')?.textContent?.trim() || '';
+        const key = label + '|' + (el.dataset.analyticsUnit || '');
+        const target = Number(el.dataset.analyticsValue);
+        const old = analyticsSeenValues.get(key);
+        analyticsSeenValues.set(key, target);
+        if (firstOpen || (old !== undefined && old !== target)) items.push(el);
+      }
+      if (matchMedia('(prefers-reduced-motion: reduce)').matches || !items.length) return;
+      const formatter = new Intl.NumberFormat('ru-RU', { maximumFractionDigits: 1 });
+      const start = performance.now();
+      const duration = 1050;
+      function tick(now) {
+        const progress = Math.min(1, (now - start) / duration);
+        const eased = 1 - Math.pow(1 - progress, 3);
+        for (const el of items) {
+          const target = Number(el.dataset.analyticsValue);
+          const unit = el.dataset.analyticsUnit || '';
+          const value = target * eased;
+          const shown = unit === '%' ? Math.round(value * 10) / 10 : Math.round(value);
+          el.textContent = (el.dataset.analyticsSign || '') + formatter.format(shown) + (unit ? ' ' + unit : '');
+        }
+        if (progress < 1) analyticsCounterFrame = requestAnimationFrame(tick);
+      }
+      analyticsCounterFrame = requestAnimationFrame(tick);
+    }
+    function analyticsChart(a) {
+      const rawMax = Math.max(1, ...a.income, ...a.expense);
+      const magnitude = Math.pow(10, Math.floor(Math.log10(rawMax)));
+      const step = Math.max(1, Math.ceil(rawMax / magnitude / 4) * magnitude);
+      const max = step * 4;
+      const left = 86, right = 790, top = 22, bottom = 215;
+      const y = v => bottom - (v / max) * (bottom - top);
+      const compactRub = value => {
+        if (value >= 1000000) return new Intl.NumberFormat('ru-RU', { maximumFractionDigits: 1 }).format(value / 1000000) + ' млн ₽';
+        if (value >= 1000) return new Intl.NumberFormat('ru-RU', { maximumFractionDigits: 1 }).format(value / 1000) + ' тыс ₽';
+        return new Intl.NumberFormat('ru-RU', { maximumFractionDigits: 0 }).format(value) + ' ₽';
+      };
+      let out = `<svg class="analytics-chart" viewBox="0 0 830 285" role="img" aria-label="График доходов и расходов по месяцам, вертикальная шкала в рублях">`;
+      for (let i = 0; i <= 4; i++) {
+        const value = max - i * step;
+        const yy = y(value);
+        out += `<line class="axisline" x1="${left}" x2="${right}" y1="${yy}" y2="${yy}"/>`;
+        out += `<text x="${left - 12}" y="${yy + 4}" text-anchor="end" fill="var(--muted)" font-size="12">${compactRub(value)}</text>`;
+      }
+      const spacing = (right - left) / 12;
+      for (let i = 0; i < 12; i++) {
+        const x = left + i * spacing + (spacing - 36) / 2;
+        const h1 = bottom - y(a.income[i]), h2 = bottom - y(a.expense[i]);
+        if (h1 > 0) out += `<rect x="${x}" y="${y(a.income[i])}" width="17" height="${h1}" rx="3" fill="var(--accent)" opacity=".95"><title>${analyticsMonths[i]}: доход ${a.income[i]} ₽</title></rect>`;
+        if (h2 > 0) out += `<rect x="${x + 19}" y="${y(a.expense[i])}" width="17" height="${h2}" rx="3" fill="var(--red)" opacity=".82"><title>${analyticsMonths[i]}: расход ${a.expense[i]} ₽</title></rect>`;
+        out += `<text x="${x + 18}" y="238" text-anchor="middle">${analyticsMonths[i]}</text>`;
+      }
+      out += `<circle cx="92" cy="269" r="5" fill="var(--accent)"/><text x="105" y="273">Доходы</text><circle cx="200" cy="269" r="5" fill="var(--red)"/><text x="213" y="273">Расходы</text></svg>`;
+      return out;
+    }
+    function renderAnalytics() {
+      const panel = document.getElementById('analyticsPanel'); if (!panel) return;
+      document.querySelectorAll('[data-analytics-tab]').forEach(b=>{
+        const active = b.dataset.analyticsTab === analyticsTab;
+        b.classList.toggle('active',active);b.setAttribute('aria-selected',String(active));
+      });
+      const a=analyticsTotals(), cash=a.totalIncome-a.totalExpense;
+      const hasData=a.actualMonths.length>0;
+      const note='<p class="analytics-note">Показатели рассчитаны по операциям с точными датами за текущий календарный год.</p>';
+      const metrics=`<div class="analytics-metrics">${analyticsMetric('Учтённые доходы',money(a.totalIncome),'По записям активного счёта')}${analyticsMetric('Учтённые расходы',money(a.totalExpense),'Без неподтверждённых списаний подписок')}${analyticsMetric('Разница',money(cash),'Доходы минус расходы')}${analyticsMetric('Месяцев с операциями',String(a.actualMonths.length),'Не обязательно полные месяцы')}</div>`;
+      if(analyticsTab==='overview'){
+        panel.innerHTML=metrics+`<article class="card"><h2 class="card-title">Динамика доходов и расходов</h2>${hasData?`<div class="analytics-chart-scroll" tabindex="0" role="region" aria-label="График доходов и расходов, прокручивается по горизонтали">${analyticsChart(a)}</div>`:'<div class="analytics-empty">Добавьте доходы или расходы, чтобы увидеть график.</div>'}</article>`+note;
+      } else if(analyticsTab==='forecast'){
+        const enough=a.last.length>=2;
+        const forecastIncome=enough?a.avgIncome:null,forecastExpense=enough?a.avgExpense:null;
+        const month=analyticsMonths[(a.current+1)%12];
+        panel.innerHTML=`<div class="analytics-metrics">${analyticsMetric('Ожидаемые расходы',enough?money(forecastExpense):'Недостаточно данных',`Оценка на ${month}`)}${analyticsMetric('Ожидаемые доходы',enough?money(forecastIncome):'Недостаточно данных',`Оценка на ${month}`)}${analyticsMetric('Ожидаемая разница',enough?money(forecastIncome-forecastExpense):'—','Доходы минус расходы')}${analyticsMetric('Основа прогноза',a.last.length+' мес.','Последние месяцы с операциями до текущего')}</div><article class="card"><h2 class="card-title">Как рассчитывается прогноз</h2><p class="analytics-note">Среднее арифметическое за последние три месяца с операциями, не включая текущий. Нужно минимум два таких месяца. Регулярные подписки учитываются в расходах.</p>${!enough?'<div class="analytics-empty">Добавьте операции хотя бы за два предыдущих месяца. Тогда появится предварительная оценка.</div>':''}</article>`+note;
+      } else if(analyticsTab==='spending'){
+        const sorted=[...a.byName.entries()].sort((x,y)=>y[1]-x[1]);
+        const rows=sorted.slice(0,12).map(([name,v])=>`<div class="analytics-row"><span>${escapeHtml(name)}</span><strong>${escapeHtml(money(v))}</strong></div>`).join('');
+        const cur=a.current, prev=(cur+11)%12;
+        const comparison=a.expense[prev]>0?((a.expense[cur]/a.expense[prev]-1)*100):null;
+        panel.innerHTML=`<div class="analytics-metrics">${analyticsMetric('Расходы текущего месяца',money(a.expense[cur]),analyticsMonths[cur])}${analyticsMetric('Изменение к предыдущему',comparison===null?'Нет базы':`${comparison>=0?'+':''}${comparison.toFixed(1)}%`,comparison===null?'Нет расходов в прошлом месяце':'Текущий месяц может быть неполным')}</div><article class="card"><h2 class="card-title">Крупнейшие статьи расходов</h2>${rows||'<div class="analytics-empty">Расходов пока нет.</div>'}<p class="analytics-note">Группировка по названиям операций. Для полноценного анализа категорий понадобятся категории в самих операциях.</p></article>`+note;
+      } else {
+        const tips=[];
+        if(!hasData)tips.push('Добавьте доходы и расходы за несколько месяцев, чтобы получать рекомендации на основе своих данных.');
+        if(a.totalExpense>a.totalIncome && hasData)tips.push('Расходы превышают доходы в учтённых записях. Проверьте самые крупные статьи трат.');
+        if(a.byName.size){const top=[...a.byName.entries()].sort((x,y)=>y[1]-x[1])[0];tips.push(`Наибольшая статья расходов — «${top[0]}» (${money(top[1])}). Посмотрите, есть ли там необязательные покупки.`);}
+        const subs=(data.subscriptions||[]).length;
+        if(subs)tips.push(`У вас ${subs} активных записей подписок. Проверьте, всеми ли сервисами вы пользуетесь.`);
+        if(a.completed.length<2)tips.push('Для более полезного прогноза добавьте операции хотя бы за два предыдущих месяца.');
+        if(!tips.length)tips.push('Продолжайте записывать операции регулярно — это сделает анализ точнее.');
+        panel.innerHTML=`<article class="card"><h2 class="card-title">Персональные рекомендации</h2><div class="analytics-rows">${tips.slice(0,4).map((tip,i)=>`<div class="analytics-row"><span>${escapeHtml(String(i+1)+'. '+tip)}</span></div>`).join('')}</div></article>`+note;
+      }
+      animateAnalyticsCounters();
+    }
+    document.querySelectorAll('[data-analytics-tab]').forEach(button=>button.addEventListener('click',()=>{
+      analyticsTab=button.dataset.analyticsTab;
+      renderAnalytics();
+      animateSectionCards('analytics');
+      animateStatNumbers();
+    }));
+
+
     const renderViews = {
-      home: renderHome, income: renderIncome, expenses: renderExpenses, banks: renderBanks,
+      home: renderHome, analytics: renderAnalytics, income: renderIncome, expenses: renderExpenses, banks: renderBanks,
       savings: renderSavings, debts: renderDebts, subscriptions: renderSubscriptions,
       goals() { renderGoals(); renderTasks(); }
     };
