@@ -447,7 +447,7 @@
     .bank-mini-card::after {
       content: ""; position: absolute; top: 0; left: -100%; width: 50%; height: 100%;
       background: linear-gradient(to right, transparent, rgba(255,255,255,0.3), transparent);
-      transform: skewX(-25deg); animation: shine 3s infinite;
+      transform: skewX(-25deg); animation: shine 3s infinite; 
     }
     @keyframes shine { 0% { left: -100%; } 20% { left: 100%; } 100% { left: 100%; } }
     
@@ -769,7 +769,7 @@
     #view-analytics .analytics-metric, #view-analytics .analytics-chart,
     #view-analytics .analytics-tab { transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease; }
     #view-analytics .analytics-metric:hover { transform: translateY(-3px); border-color: var(--accent); box-shadow: 0 10px 26px color-mix(in srgb,var(--accent) 13%,transparent); }
-    #view-analytics.active .analytics-wave-card { animation: sectionWaveIn .46s cubic-bezier(.2,.75,.25,1) both !important; animation-delay: var(--wave-delay,0ms) !important; }
+    #view-analytics.active .analytics-wave-card, .main > #view-analytics.active .card.analytics-wave-card { animation: sectionWaveIn .40s cubic-bezier(.22,.75,.25,1) both !important; animation-delay: var(--wave-delay,0ms) !important; }
     #view-analytics .analytics-chart rect { transform-box: fill-box; transform-origin: center bottom; animation: analyticsBarGrow .72s cubic-bezier(.22,1,.36,1) both; }
     @keyframes analyticsBarGrow { from { transform: scaleY(.04); opacity: .15; } to { transform: scaleY(1); opacity: 1; } }
     @media (hover:none) { #view-analytics .analytics-metric:hover { transform:none; } }
@@ -815,6 +815,63 @@
     @media(prefers-reduced-motion:reduce) {
       #view-analytics .analytics-metric, #view-analytics .analytics-tab { transition:none; }
     }
+
+
+    #view-analytics .analytics-amount, #view-analytics [data-analytics-value] { font-variant-numeric: tabular-nums; }
+    #view-analytics .analytics-metric strong { min-height: 1.25em; }
+    @media (hover:none) { #view-analytics .analytics-metric:hover { box-shadow:none; } }
+
+.tool-fields {display:flex;flex-wrap:wrap;gap:16px;margin:12px 0 24px}.tool-fields label{flex:1 1 160px;min-width:0}.tool-result .list-item{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}.tool-result table{width:100%;border-collapse:collapse}.tool-result td,.tool-result th{padding:8px 3px;text-align:end}.tool-result th:first-child{text-align:start}.tool-result{overflow:auto}.tool-result strong{overflow-wrap:anywhere}html[data-theme="ocean"][data-accent]{--bg:#091927;--panel:#10283c;--panel-2:#18364d;--border:#3d667e;--text:#f1f3f5;--muted:#b6bdc3;}html[data-theme="plum"][data-accent]{--bg:#1b1120;--panel:#291d30;--panel-2:#392840;--border:#745978;--text:#f1f3f5;--muted:#b6bdc3;}html[data-theme="graphite"][data-accent]{--bg:#151719;--panel:#232629;--panel-2:#303438;--border:#545a61;--text:#f1f3f5;--muted:#b6bdc3;}
+.pay-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:clamp(3px,1vw,9px);text-align:center}
+.pay-grid span{font-size:.8rem;color:var(--muted);padding:6px}
+.pay-grid button{position:relative;min-height:46px;border-radius:10px;background:var(--panel-2);border:1px solid var(--border);cursor:pointer;font-variant-numeric:tabular-nums}
+.pay-grid button[aria-current=date]{border-color:var(--accent)}
+.pay-grid button[aria-pressed=true]{background:var(--accent);color:var(--bg)}
+.pay-grid button.has-payments::after{content:"";position:absolute;bottom:4px;left:calc(50% - 2px);width:5px;height:5px;background:currentColor;border-radius:50%}
+.pay-layout{display:grid;grid-template-columns:minmax(0,2fr) minmax(0,3fr);gap:20px;margin:24px 0 4px;align-items:start}
+.pay-card{padding:18px;border-radius:16px;display:grid;gap:10px;overflow-wrap:anywhere}.pay-card>strong{font-size:1.45rem}
+.pay-select{width:100%;background:var(--panel);color:var(--text);margin-top:10px;border:1px solid var(--border);padding:9px;border-radius:8px}
+.pay-list h3{margin:0 0 12px}.pay-row{display:flex;justify-content:space-between;gap:10px;padding:10px 0;border-top:1px solid var(--border);overflow-wrap:anywhere}.pay-row small{display:block;color:var(--muted);margin-top:3px}
+@media(max-width:600px){.pay-layout{grid-template-columns:minmax(0,1fr);gap:14px}}
+@media(prefers-reduced-motion:no-preference){.pay-left{animation:cal-card .23s ease-out}.pay-list{animation:cal-rows .22s ease-out}.pay-grid button{transition:background-color .15s,color .15s}@keyframes cal-card{from{opacity:0;transform:translateX(-6px)}}@keyframes cal-rows{from{opacity:0;transform:translateY(5px)}}}
+
+#calendarDayDialog{box-sizing:border-box;width:min(760px,calc(100% - 24px));max-height:85dvh;overflow:auto;border:1px solid var(--border);border-radius:20px;padding:clamp(16px,3vw,28px);background:var(--panel);color:var(--text);box-shadow:0 22px 80px #0005}
+#calendarDayDialog::backdrop{background:rgb(0 0 0 / .58)}
+.pay-dialog-head{display:flex;align-items:center;justify-content:space-between;gap:16px}
+.pay-dialog-head h2{margin:0;font-size:1.3rem}.pay-dismiss{min-width:44px;min-height:44px;border:1px solid var(--border);border-radius:50%;background:var(--panel-2);font-size:23px;cursor:pointer}
+@media(max-width:600px){#calendarDayDialog{width:100%;max-width:none;margin:auto 0 0;border-radius:22px 22px 0 0;padding-bottom:max(20px,env(safe-area-inset-bottom))}}
+@media(prefers-reduced-motion:no-preference){#calendarDayDialog[open]{animation:pay-open .24s cubic-bezier(.2,.8,.2,1)}#calendarDayDialog[open]::backdrop{animation:pay-dim .18s ease-out}@keyframes pay-open{from{transform:translateY(32px);opacity:.3}}@keyframes pay-dim{from{opacity:0}}}
+.pay-switch{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:5px;margin-top:10px}.pay-switch .pay-select{margin:0}.pay-switch button{min-width:40px;min-height:44px;padding:4px;font-size:22px}.pay-left>.button{margin-top:10px}
+@media(prefers-reduced-motion:reduce){.bank-mini-card::after{animation:none}}
+
+/* Premium card surfaces: static layered finish, no extra animation loops. */
+.bank-mini-card,.current-account-card,.account-stats-card {
+ position:relative; isolation:isolate; overflow:hidden;
+ border:1px solid #ffffff38; box-shadow:inset 0 1px 1px #ffffff40,inset 0 -1px 2px #0005,0 7px 16px #0004;
+}
+.bank-mini-card::before,.current-account-card::before,.account-stats-card::before {
+ content:""; position:absolute; inset:0; border:0; border-radius:inherit; z-index:-1; pointer-events:none;
+ background:linear-gradient(115deg,#ffffff25 0%,transparent 38%,#00000012 70%,#ffffff15 100%),repeating-linear-gradient(120deg,transparent 0 3px,#ffffff08 3px 4px),radial-gradient(ellipse at 110% 115%,#ffffff24 0 30%,transparent 30.5% 38%,#ffffff12 38.5% 39%,transparent 39.5%);
+}
+.bank-mini-card::after {content:none;animation:none;}
+.bank-mini-card {width:84px;height:53px;border-radius:9px;padding:7px;flex-shrink:0;}
+.mini-card-logo {font-size:10px;right:7px;bottom:5px;letter-spacing:.3px;text-shadow:none;}
+.mini-card-chip,.current-account-chip,.card-chip,.premium-stats-chip {
+ display:block;flex:none;position:relative;width:24px;height:18px;border-radius:4px;border:1px solid #69542d88;
+ background:linear-gradient(90deg,transparent 29%,#75603b99 30% 33%,transparent 34% 66%,#75603b99 67% 70%,transparent 71%),linear-gradient(0deg,transparent 30%,#75603b99 31% 35%,transparent 36% 65%,#75603b99 66% 70%,transparent 71%),linear-gradient(135deg,#fff2c5,#b49a63 48%,#f5e5b7 72%,#9b8051);
+ box-shadow:inset 0 1px 1px #fff8;
+}
+.mini-card-chip {width:17px;height:13px;border-radius:3px;}
+.current-account-card {min-height:126px;padding:13px;gap:7px;border-radius:13px;}
+.current-account-top strong {font-size:13px;letter-spacing:.15px;}
+.current-account-card > strong,.account-stats-card > strong:last-child {font-size:clamp(19px,3vw,28px);font-weight:800;font-variant-numeric:tabular-nums;}
+.account-stats-card {min-height:155px;padding:20px;gap:8px;align-content:space-between;}
+.premium-card-network {font-size:11px;font-weight:850;letter-spacing:.4px;align-self:end;}
+.premium-card-network[data-network="mastercard"]::before {content:"";display:inline-block;width:23px;height:13px;vertical-align:middle;margin-right:4px;background:radial-gradient(circle at 35% 50%,#eb001b 0 39%,transparent 42%),radial-gradient(circle at 65% 50%,#f79e1b 0 39%,transparent 42%);}
+.hero-card-visual {background:linear-gradient(135deg,#ccc 0%,#4d4d4d 100%);}
+.hero-card-visual .card-chip {width:30px;height:22px;background:linear-gradient(135deg,#e2e8f0,#94a3b8);border:0;box-shadow:none;}
+.account-info {min-width:0;align-items:center;}.account-info > div:last-child {min-width:0;overflow-wrap:anywhere;}
+@media(max-width:420px){.bank-mini-card{width:76px;height:48px}.account-stats-card{padding:16px}.current-account-card{min-height:120px}}
 
 </style>
 <base target="_blank">
@@ -882,7 +939,12 @@
         <button class="nav-button" data-view="debts"><svg class="nav-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M4 6h16v12H4zM4 7l8 6 8-6"/></svg><span class="nav-label">Долги</span></button>
         <button class="nav-button" data-view="subscriptions"><svg class="nav-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M4 11a8 8 0 0 1 14-4l2 2m0-5v5h-5m5 4a8 8 0 0 1-14 4l-2-2m0 5v-5h5"/></svg><span class="nav-label">Подписки</span></button>
         <button class="nav-button" data-view="goals"><svg class="nav-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M5 12l4 4L19 6"/></svg><span class="nav-label">Задачи и цели</span></button>
-        <button class="nav-button" data-view="assistant"><svg class="nav-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M3 4h18v13H3zM8 21h8m-4-4v4"/></svg><span class="nav-label">ИИ-ассистент</span></button>
+        
+<button class="nav-button" data-view="calendar"><svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M3 6h18v15H3z M7 3v6m10-6v6M3 11h18"/></svg><span class="nav-label">Календарь</span></button>
+
+
+
+<button class="nav-button" data-view="assistant"><svg class="nav-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M3 4h18v13H3zM8 21h8m-4-4v4"/></svg><span class="nav-label">ИИ-ассистент</span></button>
         <div class="current-account">
           <p class="current-account-label" id="currentAccountLabel" hidden>Текущий счёт</p>
           <div class="current-account-card" id="currentAccountCard" role="button" tabindex="0" aria-haspopup="dialog" data-account-stats-trigger aria-live="polite" hidden></div>
@@ -902,8 +964,8 @@
         <!-- Главная -->
         <section class="view active " id="view-home">
           <div class="welcome-card card">
-            <h2>Добро пожаловать</h2>
-            <p>Следи за доходами, планируй накопления и отмечай выполненные задачи — всё в одном месте.</p>
+            <h2>Добро пожаловать</h2><p>Следи за доходами, планируй накопления и отмечай выполненные задачи — всё в одном месте.</p>
+            
             <div class="welcome-actions">
               <button class="button" data-go="income">Анализ доходов</button>
               <button class="button secondary" data-go="savings">Мои накопления</button>
@@ -1019,9 +1081,9 @@
         <section class="view" id="view-banks">
           <div class="banks-hero">
             <div class="banks-hero-content">
-              <span class="eyebrow">Финансы в одном месте</span>
-              <h1>Мои банки</h1>
-              <p>Собери счета разных банков на одной удобной панели и следи за общим балансом.</p>
+              
+              <span class="eyebrow">Финансы в одном месте</span><h1>Мои банки</h1><p>Собери счета разных банков на одной удобной панели и следи за общим балансом.</p>
+              
               <div class="hero-actions">
                 <button class="button" id="addBankAccountButton">+ Добавить счёт</button>
                 <div class="secure-badge">
@@ -1151,14 +1213,21 @@
           </article>
 
           <article class="card"><h2 class="card-title">Валюта по умолчанию</h2><div class="button-row"><button class="button" data-currency="₽">₽ Рубль</button><button class="button secondary" data-currency="$">$ Доллар</button><button class="button secondary" data-currency="€">€ Евро</button></div></article>
-          <article class="card" style="margin-top: 16px;"><h2 class="card-title">Тема</h2><div class="button-row"><button class="button" data-theme="dark">Тёмная</button><button class="button secondary" data-theme="light">Светлая</button></div></article>
-          <article class="card" style="margin-top: 16px;"><h2 class="card-title">Язык</h2><div class="button-row"><button class="button" data-lang="ru">Русский</button><button class="button secondary" data-lang="en">Английский</button></div></article>
+          <article class="card" style="margin-top: 16px;"><h2 class="card-title">Тема</h2><div class="button-row"><button class="button" data-theme="dark">Тёмная</button><button class="button secondary" data-theme="light">Светлая</button><button class="button secondary" data-theme="ocean">Океан</button><button class="button secondary" data-theme="plum">Слива</button><button class="button secondary" data-theme="graphite">Графит</button></div></article>
+          <article class="card" style="margin-top: 16px;"><h2 class="card-title">Язык</h2><div class="button-row"><button class="button" data-lang="ru">Русский</button><button class="button secondary" data-lang="en">Английский</button><button class="button secondary" data-lang="uk">Українська</button><button class="button secondary" data-lang="be">Беларуская</button></div></article>
+        <article class="card" style="border:1px solid var(--red)"><h2 class="card-title">Управление аккаунтом</h2><p>Удаление профиля и связанных финансовых данных необратимо.</p><button class="button danger" type="button" id="deleteProfileOpen">Удалить аккаунт</button></article>
         </section> 
-      </main>
+      
+<section class="view" id="view-calendar"><h1 class="page-heading">Календарь</h1><article class="card"><div class="tool-fields"><label class="field"><span>Месяц</span><input type="month" data-field="month" /></label></div><div class="tool-result"></div></article></section>
+
+
+
+</main>
     </div>
   </div>
     <div style="text-align: center; padding: 20px 0; font-size: 13px; color: var(--muted); border-top: 1px solid var(--border); margin-top: 20px;">Made by Kirill Kuvardin</div>
   
+  <dialog class="modal" id="deleteProfileDialog"><form class="modal-inner" id="deleteProfileForm"><h2>Удаление аккаунта</h2><p>Профиль и связанные данные будут удалены без возможности восстановления.</p><label class="field">Введите УДАЛИТЬ<input id="deleteProfileConfirm" required autocomplete="off"></label><label class="field">Текущий пароль<input id="deleteProfilePassword" type="password" autocomplete="current-password" required></label><p id="deleteProfileStatus" role="status"></p><div class="modal-actions"><button class="button secondary" type="button" id="deleteProfileCancel">Отмена</button><button class="button danger" type="submit" id="deleteProfileSubmit" disabled>Удалить навсегда</button></div></form></dialog>
   <!-- Добавление и редактирование банковского счёта -->
   <dialog class="modal" id="accountStatsDialog" aria-labelledby="accountStatsTitle">
     <div class="modal-inner">
@@ -1222,6 +1291,10 @@
   </dialog>
 
   <!-- Диалоги -->
+  <dialog id="calendarDayDialog" aria-labelledby="calendarDayTitle">
+    <header class="pay-dialog-head"><h2 id="calendarDayTitle"></h2><button type="button" class="pay-dismiss" aria-label="Закрыть">×</button></header>
+    <div class="pay-detail"></div>
+  </dialog>
   <dialog class="modal" id="goalDialog"><form class="modal-inner" id="goalForm"><h2 id="goalDialogTitle">Добавить цель</h2><label class="field">Название<input id="goalName" required maxlength="60" placeholder="Например, отпуск"></label><label class="field">Уже накоплено<input id="goalCurrent" type="number" min="0" step="0.01" value="0" required></label><label class="field">Целевая сумма<input id="goalTarget" type="number" min="0.01" step="0.01" required placeholder="25000"></label><div class="modal-actions"><button class="button secondary" type="button" data-close>Отмена</button><button class="button" type="submit">Сохранить</button></div></form></dialog>
   <dialog class="modal" id="expenseDialog"><form class="modal-inner" id="expenseForm"><h2 id="expenseDialogTitle">Добавить расход</h2><label class="field">Название траты<input id="expenseName" required maxlength="50" placeholder="Например, Продукты"></label><label class="field">Сумма за месяц<input id="expenseAmount" type="number" min="0" step="0.01" required placeholder="5000"></label><label class="field">Дата операции (день, месяц, год)<input id="expenseDate" type="date" required style="width:100%;min-width:0;box-sizing:border-box;max-width:100%;color-scheme:dark"></label><label class="field">Цвет на диаграмме<select id="expenseColor"><option value="#48e184">Зелёный</option><option value="#ff596d">Красный</option><option value="#e4db52">Жёлтый</option><option value="#d064ca">Фиолетовый</option><option value="#50b8ff">Голубой</option><option value="#ff9f43">Оранжевый</option><option value="#00d2d3">Бирюзовый</option><option value="#f368e0">Розовый</option><option value="#a29bfe">Лавандовый</option><option value="#cd6133">Коричневый</option><option value="#c8d6e5">Серый</option><option value="#1dd1a1">Изумрудный</option></select></label><div class="modal-actions"><button class="button secondary" type="button" data-close>Отмена</button><button class="button" type="submit">Сохранить</button></div></form></dialog>
   <dialog class="modal" id="incomeDialog"><form class="modal-inner" id="incomeForm"><h2 id="incomeDialogTitle">Добавить доход</h2><label class="field">Источник дохода<input id="incomeName" required maxlength="50" placeholder="Например, фриланс"></label><label class="field">Сумма за месяц<input id="incomeAmount" type="number" min="0" step="0.01" required placeholder="5000"></label><label class="field">Дата операции (день, месяц, год)<input id="incomeDate" type="date" required style="width:100%;min-width:0;box-sizing:border-box;max-width:100%;color-scheme:dark"></label><label class="field">Цвет на диаграмме<select id="incomeColor"><option value="#48e184">Зелёный</option><option value="#ff596d">Красный</option><option value="#e4db52">Жёлтый</option><option value="#d064ca">Фиолетовый</option><option value="#50b8ff">Голубой</option><option value="#ff9f43">Оранжевый</option><option value="#00d2d3">Бирюзовый</option><option value="#f368e0">Розовый</option><option value="#a29bfe">Лавандовый</option><option value="#cd6133">Коричневый</option><option value="#c8d6e5">Серый</option><option value="#1dd1a1">Изумрудный</option></select></label><div class="modal-actions"><button class="button secondary" type="button" data-close>Отмена</button><button class="button" type="submit">Сохранить</button></div></form></dialog>
@@ -1282,9 +1355,18 @@
 
     // ПРИМЕНЕНИЕ СОХРАНЕННОЙ ТЕМЫ ПРИ ЗАГРУЗКЕ
     const savedTheme = localStorage.getItem('app_theme');
-    if (savedTheme === 'light') {
-      document.documentElement.setAttribute('data-theme', 'light');
+    function selectTheme(name) {
+      const buttons = [...document.querySelectorAll("button[data-theme]")];
+      const theme = buttons.some(b => b.dataset.theme === name) ? name : "dark";
+      document.documentElement.dataset.theme = theme;
+      for (const button of buttons) {
+        const active = button.dataset.theme === theme;
+        button.classList.toggle("active",active);
+        button.classList.toggle("secondary",!active);
+        button.setAttribute("aria-pressed",String(active));
+      }
     }
+    selectTheme(savedTheme);
 
     async function checkAuth() {
       const app = document.querySelector(".app");
@@ -1354,7 +1436,7 @@
         ? '<path d="M9 18h6m-5 4h4m-5.5-7.5a6 6 0 1 1 7 0c-.9.7-1.5 1.7-1.5 3h-4c0-1.3-.6-2.3-1.5-3Z"/>'
         : '<rect x="3" y="4" width="18" height="17" rx="2"/><path d="M8 2v4m8-4v4M3 10h18"/>';
       const svg = kind => `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="color:var(--accent);flex:none">${icon(kind)}</svg>`;
-      const rows = snapshot.stats.map(p => `<div class="list-item" style="display:block"><div class="item-name" style="display:flex;gap:9px;align-items:center;margin-bottom:7px">${svg('calendar')}<strong>${escapeHtml(p.title)}</strong></div><div class="item-sub" style="line-height:1.8">Доходы: <strong>${escapeHtml(money(p.income))}</strong> · Расходы: <strong>${escapeHtml(money(p.expenses))}</strong><div>Разница: <strong style="color:${p.balance < 0 ? 'var(--danger, #ff596d)' : 'var(--accent)'}">${escapeHtml(money(p.balance))}</strong></div></div></div>`).join('');
+      const rows = snapshot.stats.map(p => `<div class="list-item" style="display:block"><div class="item-name" style="display:flex;gap:9px;align-items:center;margin-bottom:7px">${svg('calendar')}<strong>${escapeHtml(p.title)}</strong></div><div class="item-sub" style="line-height:1.8">Доходы: <strong data-analytics-key="digest:${escapeHtml(p.title)}:income" data-analytics-value="${p.income}" data-analytics-unit="₽">${escapeHtml(money(p.income))}</strong> · Расходы: <strong data-analytics-key="digest:${escapeHtml(p.title)}:expenses" data-analytics-value="${p.expenses}" data-analytics-unit="₽">${escapeHtml(money(p.expenses))}</strong><div>Разница: <strong data-analytics-key="digest:${escapeHtml(p.title)}:balance" data-analytics-value="${p.balance}" data-analytics-unit="₽" style="color:${p.balance < 0 ? 'var(--danger, #ff596d)' : 'var(--accent)'}">${escapeHtml(money(p.balance))}</strong></div></div></div>`).join('');
       const top = snapshot.topExpenses.length ? `<div class="item-sub" style="margin-top:10px">Крупнейшие расходы месяца: ${snapshot.topExpenses.map(x=>`${escapeHtml(x.name)} — ${escapeHtml(money(x.amount))}`).join('; ')}</div>` : '';
       const warning = snapshot.undated ? `<div class="item-sub" style="margin-top:10px">Внимание: ${snapshot.undated} записей без точной даты не включены в расчёты. Для корректной сводки укажи даты операций.</div>` : '';
       const subs = data.expenses.some(isSubscriptionExpense) ? '<div class="item-sub" style="margin-top:7px">Регулярные подписки не включены в фактические расходы: для них нет подтверждённых дат списания.</div>' : '';
@@ -1362,6 +1444,7 @@
       box.innerHTML = rows + top + warning + subs + advice + `<div class="item-sub" role="status" style="margin-top:12px">${escapeHtml(digestLoading ? 'ИИ анализирует данные...' : digestNotice || 'Итоги рассчитаны по датированным операциям. Советы ИИ сохраняются и могут обновляться вручную.')}</div>`;
       const button = document.getElementById('refreshDigestButton');
       if (button) button.disabled = digestLoading || data !== rootData;
+      if (document.getElementById('view-analytics')?.classList.contains('active')) { animateAnalyticsCounters(); animateSectionCards('analytics', document.getElementById('digestContent')); }
     }
     async function maybeGenerateDigest(revision, force = false) {
       if (data !== rootData || !userId) return;
@@ -1519,13 +1602,40 @@
 
     const $ = selector => document.querySelector(selector);
     function save() {
-      if (!userId) return;
+      if (!userId || deletingProfile) return;
       const snapshot = { id: userId, data: JSON.parse(JSON.stringify(rootData)) };
       saveQueue = saveQueue.then(async () => {
         const { error } = await window.supabase.from("user_data").upsert(snapshot);
         if (error) throw error;
       }).catch(error => console.error("Ошибка сохранения в облако:", error));
     }
+
+    let deletingProfile = false;
+    const dp = document.getElementById('deleteProfileDialog');
+    const dc = document.getElementById('deleteProfileConfirm');
+    const pw = document.getElementById('deleteProfilePassword');
+    const ds = document.getElementById('deleteProfileSubmit');
+    const status = document.getElementById('deleteProfileStatus');
+    function updateDeleteButton(){ ds.disabled = deletingProfile || dc.value.trim() !== 'УДАЛИТЬ' || !pw.value; }
+    dc.addEventListener('input', updateDeleteButton); pw.addEventListener('input', updateDeleteButton);
+    document.getElementById('deleteProfileOpen').onclick = () => { dc.value=''; pw.value=''; status.textContent=''; updateDeleteButton(); dp.showModal(); };
+    document.getElementById('deleteProfileCancel').onclick = () => { if(!deletingProfile) dp.close(); };
+    dp.addEventListener('cancel', e => { if(deletingProfile) e.preventDefault(); });
+    dp.addEventListener('close', () => { pw.value=''; dc.value=''; });
+    document.getElementById('deleteProfileForm').addEventListener('submit', async e => {
+      e.preventDefault(); if(deletingProfile || ds.disabled || !userId) return;
+      deletingProfile=true; updateDeleteButton(); status.textContent='Удаление…';
+      const owner=userId;
+      try {
+        await saveQueue;
+        const {data,error}=await window.supabase.functions.invoke('delete-account',{body:{password:pw.value,confirm:'УДАЛИТЬ'}});
+        if(error || data?.deleted !== true) throw new Error('Deletion not confirmed');
+        userId=null; localStorage.removeItem(`${KEY}:account:${owner}`);
+        await window.supabase.auth.signOut({scope:'local'}).catch(()=>{});
+        location.reload();
+      } catch(e) { status.textContent='Удаление не подтверждено. Проверьте пароль и подключение к серверу.'; }
+      finally { pw.value=''; deletingProfile=false; updateDeleteButton(); }
+    });
 
     function escapeHtml(value) { return String(value).replace(/[&<>"']/g, char => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#039;" })[char]); }
     
@@ -1570,7 +1680,22 @@
       homeCardsAnimated = true;
     }
 
-    function animateSectionCards(name) {
+    function animateSectionCards(name, scope = null) {
+      if (name === 'analytics') {
+        const view = document.getElementById('view-analytics');
+        if (!view?.classList.contains('active') || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+        const root = scope || view;
+        const cards = [...root.querySelectorAll('.analytics-metric, .card, #digestContent .list-item, #digestContent .legend-row')];
+        cards.forEach((card, i) => {
+          card.style.setProperty('--wave-delay', `${Math.min(i, 7) * 35}ms`);
+          if (!card.classList.contains('analytics-wave-card')) card.classList.add('analytics-wave-card');
+          else if (!scope) {
+            const animation = card.getAnimations?.().find(a => a.animationName === 'sectionWaveIn');
+            if (animation && animation.playState === 'finished') { animation.currentTime = 0; animation.play(); }
+          }
+        });
+        return;
+      }
       const mobile = mobileViewport.matches;
       if ((!mobile && !["income", "expenses", "subscriptions"].includes(name)) ||
           matchMedia("(prefers-reduced-motion: reduce)").matches) return;
@@ -1658,19 +1783,19 @@
     closeMobileMenu();
 
     const BANK_META = {
-      sber: { name: "Сбербанк", short: "СБ", color: "#21a038", gradient: "linear-gradient(135deg, #21a038 0%, #0f5c1e 100%)" },
-      tbank: { name: "Т-Банк", short: "Т", color: "#ffdd2d", text: "#171717", gradient: "linear-gradient(135deg, #ffdd2d 0%, #d4a800 100%)" },
-      alfa: { name: "Альфа-Банк", short: "А", color: "#ef3124", gradient: "linear-gradient(135deg, #ef3124 0%, #9e160b 100%)" },
-      vtb: { name: "ВТБ", short: "ВТБ", color: "#1688d4", gradient: "linear-gradient(135deg, #1688d4 0%, #0b4f7d 100%)" },
-      wb: { name: "ВБ Банк", short: "ВБ", color: "#481173", gradient: "linear-gradient(135deg, #481173 0%, #2c0a46 100%)" },
-      ozon: { name: "Озон Банк", short: "О", color: "#005bff", gradient: "linear-gradient(135deg, #005bff 0%, #003ba3 100%)" },
-      revolut: { name: "Revolut", short: "R", gradient: "linear-gradient(135deg, #343956 0%, #151827 100%)", international: true },
-      bunq: { name: "bunq", short: "b", gradient: "linear-gradient(135deg, #305b9a 0%, #21604c 100%)", international: true },
-      hsbc: { name: "HSBC Expat", short: "HS", gradient: "linear-gradient(135deg, #d32931 0%, #801923 100%)", international: true },
-      visa: { name: "Карта Visa", short: "V", gradient: "linear-gradient(135deg, #244bba 0%, #17296f 100%)" },
-      mastercard: { name: "Карта Mastercard", short: "MC", gradient: "linear-gradient(135deg, #292c34 0%, #111217 100%)" },
-      other: { name: "Другой банк", short: "Б", color: "#718096", gradient: "linear-gradient(135deg, #718096 0%, #3d4654 100%)" },
-      cash: { name: "Наличные", short: "₽", color: "#16a085", gradient: "linear-gradient(135deg, #16a085 0%, #0b5e4d 100%)" }
+      sber: { name: "Сбербанк", short: "СБ", color: "#21a038", gradient: "linear-gradient(145deg, #086a37 0%, #159b49 48%, #06452c 100%)" },
+      tbank: { name: "Т-Банк", short: "Т", color: "#ffdd2d", text: "#171717", gradient: "linear-gradient(145deg, #fff3a0 0%, #ffdc32 48%, #d6a70a 100%)" },
+      alfa: { name: "Альфа-Банк", short: "А", color: "#ef3124", gradient: "linear-gradient(145deg, #8b101b 0%, #e92335 48%, #740c18 100%)" },
+      vtb: { name: "ВТБ", short: "ВТБ", color: "#1688d4", gradient: "linear-gradient(145deg, #073579 0%, #1268c8 48%, #081e55 100%)" },
+      wb: { name: "ВБ Банк", short: "ВБ", color: "#481173", gradient: "linear-gradient(145deg, #53107c 0%, #a42bc3 48%, #360b55 100%)" },
+      ozon: { name: "Озон Банк", short: "О", color: "#005bff", gradient: "linear-gradient(145deg, #00329d 0%, #1268ff 48%, #001e77 100%)" },
+      revolut: { name: "Revolut", short: "R", gradient: "linear-gradient(145deg, #202333 0%, #535b82 48%, #151722 100%)", international: true },
+      bunq: { name: "bunq", short: "b", gradient: "linear-gradient(145deg, #194887 0%, #367e83 48%, #154b3a 100%)", international: true },
+      hsbc: { name: "HSBC Expat", short: "HS", gradient: "linear-gradient(145deg, #83121d 0%, #cf2838 48%, #650c15 100%)", international: true },
+      visa: { name: "Карта Visa", short: "V", gradient: "linear-gradient(145deg, #162a70 0%, #3554b3 48%, #101d50 100%)" },
+      mastercard: { name: "Карта Mastercard", short: "MC", gradient: "linear-gradient(145deg, #14151a 0%, #41454e 48%, #101114 100%)" },
+      other: { name: "Другой банк", short: "Б", color: "#718096", gradient: "linear-gradient(145deg, #344354 0%, #65788d 48%, #28313e 100%)" },
+      cash: { name: "Наличные", short: "₽", color: "#16a085", gradient: "linear-gradient(145deg, #075c4a 0%, #168b70 48%, #064336 100%)" }
     };
     const BANK_TYPE_LABELS = {
       card: "Дебетовая карта", credit: "Кредитная карта",
@@ -1751,7 +1876,10 @@
       account.balance = (balanceInCents(balance) - accountTransactionsInCents(account)) / 100;
     }
 
+    let sidebarBalanceState = null;
+    let sidebarBalanceFrame = 0;
     function renderCurrentAccount() {
+      cancelAnimationFrame(sidebarBalanceFrame);
       const accounts = rootData.bankAccounts;
       const index = accounts.findIndex(account => String(account.id) === activeAccountId);
       const account = accounts[index];
@@ -1762,6 +1890,7 @@
       $("#accountSwitcher").hidden = accounts.length < 2;
       if (!account) {
         card.replaceChildren();
+        sidebarBalanceState = null;
         return;
       }
       const meta = BANK_META[account.provider] || BANK_META.other;
@@ -1769,9 +1898,35 @@
       const localizedType = [t(type), cardNetwork(account)].filter(Boolean).join(" · ");
       card.style.background = meta.gradient;
       card.style.color = meta.text || "#fff";
-      card.innerHTML = `<div class="current-account-top"><strong>${escapeHtml(t(meta.name))}</strong><span class="current-account-chip" aria-hidden="true"></span></div>
+      card.innerHTML = `<div class="current-account-top"><strong>${escapeHtml(t(meta.name))}</strong>${isCardType(account.type) ? '<span class="current-account-chip" aria-hidden="true"></span>' : ""}</div>
         <span class="current-account-type">${escapeHtml(localizedType)}${account.last4 ? ` · •••• ${escapeHtml(account.last4)}` : ""}</span>
-        <span>${escapeHtml(accountName(account))}</span><strong>${escapeHtml(money(accountBalanceInCents(account) / 100, accountCurrency(account)))}</strong>`;
+        <span>${escapeHtml(accountName(account))}</span><strong class="sidebar-balance">${escapeHtml(money(accountBalanceInCents(account) / 100, accountCurrency(account)))}</strong>`;
+      const target = accountBalanceInCents(account) / 100;
+      const currency = accountCurrency(account);
+      const key = JSON.stringify([userId, String(account.id), currency]);
+      const previous = sidebarBalanceState;
+      const from = previous?.key === key ? previous.value : 0;
+      const state = sidebarBalanceState = { key, value: target, target };
+      const el = card.querySelector('.sidebar-balance');
+      if (!matchMedia('(prefers-reduced-motion: reduce)').matches && from !== target) {
+        state.value = from;
+        el.textContent = money(from, currency);
+        const started = performance.now();
+        const duration = mobileViewport.matches ? 620 : 1050;
+        let lastPaint = -Infinity;
+        function tick(now) {
+          if (sidebarBalanceState !== state || !el.isConnected) return;
+          const p = Math.min(1, (now - started) / duration);
+          state.value = p === 1 ? target : from + (target - from) * (1 - Math.pow(1 - p, 3));
+          if (p === 1 || now - lastPaint >= 30) {
+            const label = money(p === 1 ? target : Math.round(state.value), currency);
+            if (el.textContent !== label) el.textContent = label;
+            lastPaint = now;
+          }
+          if (p < 1) sidebarBalanceFrame = requestAnimationFrame(tick);
+        }
+        sidebarBalanceFrame = requestAnimationFrame(tick);
+      }
       $("#accountPosition").textContent = `${index + 1} / ${accounts.length}`;
     }
 
@@ -1854,7 +2009,8 @@
       const card = $("#accountStatsCard");
       card.style.background = meta.gradient;
       card.style.color = meta.text || "#fff";
-      card.innerHTML = `<strong>${escapeHtml(t(meta.name))}</strong><span>${escapeHtml(accountName(account))}</span>
+      card.innerHTML = `<div class="current-account-top"><strong>${escapeHtml(t(meta.name))}</strong>${isCardType(account.type) ? '<span class="premium-stats-chip" aria-hidden="true"></span>' : ""}</div><span>${escapeHtml(accountName(account))}${account.last4 ? ` · •••• ${escapeHtml(account.last4)}` : ""}</span>
+        ${cardNetwork(account) ? `<span class="premium-card-network" data-network="${escapeHtml(account.network)}">${escapeHtml(cardNetwork(account))}</span>` : ""}
         <strong>${money(accountBalanceInCents(account) / 100, currency)}</strong>`;
 
       const totals = [["Доходы", income], ["Расходы", expense], ["Разница", income - expense]];
@@ -1922,7 +2078,7 @@
           <div class="account-card-top" role="button" tabindex="0" aria-haspopup="dialog" data-account-stats-trigger>
             <div class="account-info">
               <div class="bank-mini-card" style="background: ${cardGradient};">
-                <div class="mini-card-chip"></div>
+                ${isCardType(account.type) ? '<div class="mini-card-chip" aria-hidden="true"></div>' : ""}
                 <div class="mini-card-logo" style="color: ${meta.text || '#fff'}">${escapeHtml(bankAbbreviation(meta))}</div>
               </div>
               <div>
@@ -2098,12 +2254,18 @@
       const startTime = performance.now();
       if (start === target) { el.textContent = money(target, currency); return; }
 
+      el.textContent = money(start, currency);
+      let lastPaint = -Infinity;
       function tick(t) {
         if (!el.isConnected || !$("#view-banks").classList.contains("active")) return;
         const p = Math.min(1, (t - startTime) / duration);
         const easeOut = 1 - Math.pow(1 - p, 3);
         const current = start + (target - start) * easeOut;
-        el.textContent = money(p === 1 ? target : Math.round(current), currency);
+        if (p === 1 || t - lastPaint >= 30) {
+          const label = money(p === 1 ? target : Math.round(current), currency);
+          if (el.textContent !== label) el.textContent = label;
+          lastPaint = t;
+        }
         if (p < 1) requestAnimationFrame(tick);
       }
       requestAnimationFrame(tick);
@@ -2719,42 +2881,43 @@
       return `<div class="analytics-metric"><small>${escapeHtml(label)}</small><strong class="analytics-amount" ${animate ? `data-analytics-value="${n}" data-analytics-unit="${escapeHtml(unit)}" data-analytics-sign="${sign}"` : ''}>${escapeHtml(display)}</strong><span>${escapeHtml(sub)}</span></div>`;
     }
     let analyticsCounterFrame = 0;
-    let analyticsOpenedOnce = false;
     const analyticsSeenValues = new Map();
+    const analyticsRunning = new Map();
+    const analyticsFormatter = new Intl.NumberFormat('ru-RU', {maximumFractionDigits:1});
     function animateAnalyticsCounters() {
-      cancelAnimationFrame(analyticsCounterFrame);
-      // Анимируем только при первом открытии раздела или изменении конкретной суммы.
-      // Переключение вкладок и повторный вход без изменений не запускают счётчик.
       if (!document.getElementById('view-analytics')?.classList.contains('active')) return;
-      const firstOpen = !analyticsOpenedOnce;
-      analyticsOpenedOnce = true;
-      const all = [...document.querySelectorAll('#analyticsPanel [data-analytics-value]')];
-      const items = [];
-      for (const el of all) {
+      const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+      for (const [el] of analyticsRunning) if (!el.isConnected) analyticsRunning.delete(el);
+      const now = performance.now();
+      for (const el of document.querySelectorAll('#view-analytics [data-analytics-value]')) {
+        if (analyticsRunning.has(el)) continue;
         const label = el.closest('.analytics-metric')?.querySelector('small')?.textContent?.trim() || '';
-        const key = label + '|' + (el.dataset.analyticsUnit || '');
-        const target = Number(el.dataset.analyticsValue);
-        const old = analyticsSeenValues.get(key);
-        analyticsSeenValues.set(key, target);
-        if (firstOpen || (old !== undefined && old !== target)) items.push(el);
+        const key = el.dataset.analyticsKey || analyticsTab + '|' + label + '|' + (el.dataset.analyticsUnit || '');
+        const target = Number(el.dataset.analyticsValue), old = analyticsSeenValues.get(key);
+        if (!Number.isFinite(target)) continue;
+        analyticsSeenValues.set(key,target);
+        if (reduced || old === target || (old === undefined && target === 0)) continue;
+        analyticsRunning.set(el,{target, from:old ?? 0, start:now, final:el.textContent, unit:el.dataset.analyticsUnit || '', sign:el.dataset.analyticsSign || ''});
       }
-      if (matchMedia('(prefers-reduced-motion: reduce)').matches || !items.length) return;
-      const formatter = new Intl.NumberFormat('ru-RU', { maximumFractionDigits: 1 });
-      const start = performance.now();
-      const duration = 1050;
-      function tick(now) {
-        const progress = Math.min(1, (now - start) / duration);
-        const eased = 1 - Math.pow(1 - progress, 3);
-        for (const el of items) {
-          const target = Number(el.dataset.analyticsValue);
-          const unit = el.dataset.analyticsUnit || '';
-          const value = target * eased;
-          const shown = unit === '%' ? Math.round(value * 10) / 10 : Math.round(value);
-          el.textContent = (el.dataset.analyticsSign || '') + formatter.format(shown) + (unit ? ' ' + unit : '');
+      if (analyticsCounterFrame || !analyticsRunning.size) return;
+      let last = -Infinity;
+      function tick(time) {
+        analyticsCounterFrame = 0;
+        if (time-last >= 30) {
+          last=time;
+          for (const [el,item] of analyticsRunning) {
+            if (!el.isConnected) { analyticsRunning.delete(el); continue; }
+            const p=Math.min(1,(time-item.start)/1050);
+            const v=item.from+(item.target-item.from)*(1-Math.pow(1-p,3));
+            const rounded=item.unit==='%'?Math.round(v*10)/10:Math.round(v);
+            const text=p===1?item.final:(rounded>=0?item.sign:'')+analyticsFormatter.format(rounded)+(item.unit?(item.unit==='%'?'':' ')+item.unit:'');
+            if(el.textContent!==text) el.textContent=text;
+            if(p===1) analyticsRunning.delete(el);
+          }
         }
-        if (progress < 1) analyticsCounterFrame = requestAnimationFrame(tick);
+        if(analyticsRunning.size) analyticsCounterFrame=requestAnimationFrame(tick);
       }
-      analyticsCounterFrame = requestAnimationFrame(tick);
+      analyticsCounterFrame=requestAnimationFrame(tick);
     }
     function analyticsChart(a) {
       const rawMax = Math.max(1, ...a.income, ...a.expense);
@@ -2805,7 +2968,7 @@
         panel.innerHTML=`<div class="analytics-metrics">${analyticsMetric('Ожидаемые расходы',enough?money(forecastExpense):'Недостаточно данных',`Оценка на ${month}`)}${analyticsMetric('Ожидаемые доходы',enough?money(forecastIncome):'Недостаточно данных',`Оценка на ${month}`)}${analyticsMetric('Ожидаемая разница',enough?money(forecastIncome-forecastExpense):'—','Доходы минус расходы')}${analyticsMetric('Основа прогноза',a.last.length+' мес.','Последние месяцы с операциями до текущего')}</div><article class="card"><h2 class="card-title">Как рассчитывается прогноз</h2><p class="analytics-note">Среднее арифметическое за последние три месяца с операциями, не включая текущий. Нужно минимум два таких месяца. Регулярные подписки учитываются в расходах.</p>${!enough?'<div class="analytics-empty">Добавьте операции хотя бы за два предыдущих месяца. Тогда появится предварительная оценка.</div>':''}</article>`+note;
       } else if(analyticsTab==='spending'){
         const sorted=[...a.byName.entries()].sort((x,y)=>y[1]-x[1]);
-        const rows=sorted.slice(0,12).map(([name,v])=>`<div class="analytics-row"><span>${escapeHtml(name)}</span><strong>${escapeHtml(money(v))}</strong></div>`).join('');
+        const rows=sorted.slice(0,12).map(([name,v])=>`<div class="analytics-row"><span>${escapeHtml(name)}</span><strong data-analytics-key="spending:${escapeHtml(name)}" data-analytics-value="${v}" data-analytics-unit="₽">${escapeHtml(money(v))}</strong></div>`).join('');
         const cur=a.current, prev=(cur+11)%12;
         const comparison=a.expense[prev]>0?((a.expense[cur]/a.expense[prev]-1)*100):null;
         panel.innerHTML=`<div class="analytics-metrics">${analyticsMetric('Расходы текущего месяца',money(a.expense[cur]),analyticsMonths[cur])}${analyticsMetric('Изменение к предыдущему',comparison===null?'Нет базы':`${comparison>=0?'+':''}${comparison.toFixed(1)}%`,comparison===null?'Нет расходов в прошлом месяце':'Текущий месяц может быть неполным')}</div><article class="card"><h2 class="card-title">Крупнейшие статьи расходов</h2>${rows||'<div class="analytics-empty">Расходов пока нет.</div>'}<p class="analytics-note">Группировка по названиям операций. Для полноценного анализа категорий понадобятся категории в самих операциях.</p></article>`+note;
@@ -2818,11 +2981,12 @@
         if(subs)tips.push(`У вас ${subs} активных записей подписок. Проверьте, всеми ли сервисами вы пользуетесь.`);
         if(a.completed.length<2)tips.push('Для более полезного прогноза добавьте операции хотя бы за два предыдущих месяца.');
         if(!tips.length)tips.push('Продолжайте записывать операции регулярно — это сделает анализ точнее.');
-        panel.innerHTML=`<article class="card"><h2 class="card-title">Персональные рекомендации</h2><div class="analytics-rows">${tips.slice(0,4).map((tip,i)=>`<div class="analytics-row"><span>${escapeHtml(String(i+1)+'. '+tip)}</span></div>`).join('')}</div></article>`+note;
+        panel.innerHTML=`<article class="card"><h2 class="card-title">Персональные рекомендации</h2><div class="analytics-rows">${tips.slice(0,4).map((tip,i)=>`<div class="analytics-row"><span>${escapeHtml(String(i+1)+'. '+tip).replace(/([\d\s\u00a0\u202f]+(?:[.,]\d+)?)\s*₽/g,(full,num)=>{const n=Number(num.replace(/\s/g,'').replace(',','.'));return Number.isFinite(n)?`<strong data-analytics-key="advice:${i}:amount" data-analytics-value="${n}" data-analytics-unit="₽">${full}</strong>`:full;})}</span></div>`).join('')}</div></article>`+note;
       }
       animateAnalyticsCounters();
     }
     document.querySelectorAll('[data-analytics-tab]').forEach(button=>button.addEventListener('click',()=>{
+      if (analyticsTab === button.dataset.analyticsTab) return;
       analyticsTab=button.dataset.analyticsTab;
       renderAnalytics();
       animateSectionCards('analytics');
@@ -2830,7 +2994,146 @@
     }));
 
 
+    function calendarEntries(ledger, month) {
+      const [year, m] = month.split('-').map(Number);
+      const last = new Date(year,m,0).getDate();
+      const days = Array.from({length:last+1},()=>[]);
+      for (const [items, kind] of [[ledger.incomes,'Доходы'],[ledger.expenses,'Расходы']]) {
+        for (const item of items || []) {
+          if (!item.date?.startsWith(month+'-') || (kind==='Расходы' && isSubscriptionExpense(item))) continue;
+          days[Number(item.date.slice(8))]?.push({item,kind});
+        }
+      }
+      for (const item of ledger.subscriptions || []) {
+        const start = Number(item.month ?? 0);
+        if (item.frequency==='yearly' ? m-1!==start : m-1<start) continue;
+        const day = Math.max(1,Math.min(last,Number(item.day)||1));
+        days[day]?.push({item,kind:'Подписки'});
+      }
+      return days;
+    }
+
+    function calendarAccount(view) {
+      const accounts=rootData.bankAccounts;
+      return accounts.find(a=>String(a.id)===view.dataset.calendarAccount)
+        || accounts.find(a=>String(a.id)===activeAccountId) || accounts[0];
+    }
+
+    function chooseCalendarAccount(view,id) {
+      view.dataset.calendarAccount=String(id);
+      renderCalendar();
+    }
+
+    function renderDayCalendar(view,target,month) {
+      const account=calendarAccount(view);
+      const days=calendarEntries(account?.ledger || rootData,month);
+      const [year,m]=month.split('-').map(Number);
+      const date = day => new Date(year,m-1,day,12);
+      const today = localISODate();
+      const e = escapeHtml;
+      const label = (ru,en,uk,be) => ({en,uk,be})[currentLang] || ru;
+      let selected = Number(view.dataset.day);
+      if (view.dataset.month!==month) selected=0;
+      view.dataset.month=month;
+      view.dataset.day=String(selected);
+      const grid = document.createElement('div');
+      grid.className='pay-grid';
+      for (let i=0;i<7;i++) {
+        const el=document.createElement('span');
+        el.textContent=new Date(2024,0,1+i).toLocaleDateString(appLocale(),{weekday:'short'});
+        grid.append(el);
+      }
+      for(let day=1;day<days.length;day++) {
+        const button=document.createElement('button');
+        button.type='button';button.dataset.day=day;
+        button.textContent=day;
+        if(day===1) button.style.gridColumnStart=String((date(1).getDay()+6)%7+1);
+        if(days[day].length) button.classList.add('has-payments');
+        button.setAttribute('aria-label',date(day).toLocaleDateString(appLocale(),{dateStyle:'full'})+' · '+label('Операции','Transactions','Операції','Аперацыі')+' '+days[day].length);
+        button.setAttribute('aria-pressed',String(day===selected));
+        if(localISODate(date(day))===today) button.setAttribute('aria-current','date');
+        grid.append(button);
+      }
+      const dialog=document.getElementById('calendarDayDialog');
+      const detail=dialog.querySelector('.pay-detail');
+      const close=dialog.querySelector('.pay-dismiss');
+      close.setAttribute('aria-label',label('Закрыть','Close','Закрити','Закрыць'));
+      close.onclick=()=>dialog.close();
+      dialog.onclick=event=>{
+        if(event.target!==dialog) return;
+        const box=dialog.getBoundingClientRect();
+        if(event.clientX<box.left || event.clientX>box.right || event.clientY<box.top || event.clientY>box.bottom) dialog.close();
+      };
+      dialog.onclose=()=>{if(view.classList.contains('active')) grid.querySelector('[aria-pressed="true"]')?.focus({preventScroll:true});};
+      target.replaceChildren(grid);
+      function showDay(day) {
+        view.dataset.day=String(day);
+        grid.querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed',String(Number(b.dataset.day)===day)));
+        const title=date(day).toLocaleDateString(appLocale(),{day:'numeric',month:'long',year:'numeric'});
+        dialog.querySelector('#calendarDayTitle').textContent=title;
+        const rows=days[day].map(({item,kind})=>'<div class="pay-row"><div><strong>'+e(item.name)+'</strong><small>'+e(kind==='Подписки'?label('По расписанию','Scheduled','За розкладом','Паводле раскладу'):t(kind))+'</small></div><b>'+(kind==='Доходы'?'+':'−')+e(money(item.amount,accountCurrency(account)))+'</b></div>').join('');
+        detail.innerHTML='<div class="pay-layout"><div class="pay-left"></div><section class="pay-list"><h3>'+label('Операции за день','Daily transactions','Операції за день','Аперацыі за дзень')+'</h3>'+ (rows || '<p>'+label('На этот день операций нет','No transactions on this day','На цей день операцій немає','На гэты дзень аперацый няма')+'</p>')+'</section></div>';
+        const left=detail.querySelector('.pay-left');
+        if(account) {
+          const card=document.createElement('div');card.className='pay-card';
+          const bank=BANK_META[account.provider] || BANK_META.other;
+          card.style.background=bank.gradient;card.style.color=bank.text || '#fff';
+          card.innerHTML='<strong>'+e(t(bank.name))+'</strong><span>'+e(accountName(account))+
+            (account.last4?' · •••• '+e(account.last4):'')+'</span><strong>'+e(money(accountBalanceInCents(account)/100,accountCurrency(account)))+'</strong>';
+          left.append(card);
+          const select=document.createElement('select');select.className='pay-select';
+          const caption=label('Выбрать счёт','Choose account','Вибрати рахунок','Выбраць рахунак');
+          select.setAttribute('aria-label',caption);
+          const prompt=new Option(caption,'');
+          prompt.disabled=true;
+          select.add(prompt);
+          for(const a of rootData.bankAccounts) {
+            const meta=BANK_META[a.provider]||BANK_META.other;
+            select.add(new Option([t(meta.name),accountName(a),a.last4?'•• '+a.last4:''].filter(Boolean).join(' · '),String(a.id)));
+          }
+          select.value='';
+            select.onchange=()=>{chooseCalendarAccount(view,select.value);detail.querySelector('.pay-select')?.focus({preventScroll:true});};
+          if(rootData.bankAccounts.length>1) {
+            const controls=document.createElement('div');
+            controls.className='pay-switch';
+            const arrow=(direction,caption)=>{
+              const button=document.createElement('button');
+              button.type='button';button.className='button';
+              button.textContent=direction<0?'‹':'›';
+              button.setAttribute('aria-label',caption);
+              button.onclick=()=>{const accounts=rootData.bankAccounts;const i=accounts.indexOf(account);chooseCalendarAccount(view,accounts[(i+direction+accounts.length)%accounts.length].id);detail.querySelector(direction<0?'.pay-switch button:first-child':'.pay-switch button:last-child')?.focus({preventScroll:true});};
+              return button;
+            };
+            controls.append(arrow(-1,label('Предыдущая карта','Previous card','Попередня картка','Папярэдняя карта')),select,arrow(1,label('Следующая карта','Next card','Наступна картка','Наступная карта')));
+            left.append(controls);
+          } else left.append(select);
+        }
+        if(!account) {
+          const empty=document.createElement('p');
+          empty.textContent=label('Нет сохранённых счетов','No saved accounts','Немає збережених рахунків','Няма захаваных рахункаў');
+          left.append(empty);
+        }
+      }
+      grid.onclick=event=>{const b=event.target.closest('button[data-day]');if(b) {showDay(Number(b.dataset.day));dialog.showModal();close.focus({preventScroll:true});}};
+      if(dialog.open && selected>0 && selected<days.length) showDay(selected);
+    }
+
+    function renderCalendar() {
+      const view = document.getElementById('view-calendar');
+      const input = view.querySelector('input[type=month]');
+      if (!input.dataset.initialized) {
+        input.value = localISODate().slice(0,7);
+        input.dataset.initialized = '1';
+      }
+      input.oninput = renderCalendar;
+      const target = view.querySelector('.tool-result');
+      if (input.value) renderDayCalendar(view,target,input.value);
+      else target.replaceChildren();
+    }
+
     const renderViews = {
+      calendar: renderCalendar,
+
       home: renderHome, analytics: renderAnalytics, income: renderIncome, expenses: renderExpenses, banks: renderBanks,
       savings: renderSavings, debts: renderDebts, subscriptions: renderSubscriptions,
       goals() { renderGoals(); renderTasks(); }
@@ -3375,21 +3678,9 @@
       });
     });
 
-    document.querySelectorAll("[data-theme]").forEach(button => {
-      button.addEventListener("click", function() {
-        const theme = this.getAttribute("data-theme"); 
-        const root = document.documentElement;
-        document.querySelectorAll("[data-theme]").forEach(b => { b.classList.remove("active"); b.classList.add("secondary"); });
-        this.classList.remove("secondary"); this.classList.add("active");
-        
-        if (theme === "light") {
-          root.setAttribute('data-theme', 'light');
-          localStorage.setItem('app_theme', 'light');
-        } else {
-          root.removeAttribute('data-theme');
-          localStorage.setItem('app_theme', 'dark');
-        }
-      });
+    document.querySelectorAll("button[data-theme]").forEach(button => button.onclick = () => {
+      selectTheme(button.dataset.theme);
+      localStorage.setItem("app_theme",button.dataset.theme);
     });
 
     document.querySelectorAll("[data-currency]").forEach(button => {
@@ -3563,11 +3854,13 @@
       "Нет операций за этот месяц.": "There are no transactions this month."
     };
 
+    const newLabels = {"Журнал операций": {"en": "Transaction history", "uk": "Журнал операцій", "be": "Гісторыя аперацый"}, "Календарь": {"en": "Calendar", "uk": "Календар", "be": "Каляндар"}, "Сравнение месяцев": {"en": "Monthly comparison", "uk": "Порівняння місяців", "be": "Параўнанне месяцаў"}, "Крупные расходы": {"en": "Largest expenses", "uk": "Найбільші витрати", "be": "Найбуйнейшыя выдаткі"}, "План накоплений": {"en": "Savings planner", "uk": "План заощаджень", "be": "План назапашванняў"}, "Месяц": {"en": "Month", "uk": "Місяць", "be": "Месяц"}, "Поиск по названию": {"en": "Search by name", "uk": "Пошук за назвою", "be": "Пошук паводле назвы"}, "Первый месяц": {"en": "First month", "uk": "Перший місяць", "be": "Першы месяц"}, "Второй месяц": {"en": "Second month", "uk": "Другий місяць", "be": "Другі месяц"}, "Изменение": {"en": "Change", "uk": "Зміна", "be": "Змена"}, "Целевая сумма": {"en": "Target amount", "uk": "Цільова сума", "be": "Мэтавая сума"}, "Уже накоплено": {"en": "Already saved", "uk": "Вже накопичено", "be": "Ужо назапашана"}, "Взнос в месяц": {"en": "Monthly contribution", "uk": "Внесок на місяць", "be": "Унёсак за месяц"}, "Осталось внести": {"en": "Left to save", "uk": "Залишилось внести", "be": "Засталося ўнесці"}, "Месяцев до цели": {"en": "Months to goal", "uk": "Місяців до мети", "be": "Месяцаў да мэты"}, "Введите суммы для расчёта": {"en": "Enter amounts to calculate", "uk": "Введіть суми для розрахунку", "be": "Увядзіце сумы для разліку"}, "Нет записей за этот период": {"en": "No entries for this period", "uk": "Немає записів за цей період", "be": "Няма запісаў за гэты перыяд"}, "Доходы": {"en": "Income", "uk": "Доходи", "be": "Даходы"}, "Расходы": {"en": "Expenses", "uk": "Витрати", "be": "Выдаткі"}, "Главная": {"en": "Home", "uk": "Головна", "be": "Галоўная"}, "Аналитика": {"en": "Analytics", "uk": "Аналітика", "be": "Аналітыка"}, "Банки": {"en": "Banks", "uk": "Банки", "be": "Банкі"}, "Мои банки": {"en": "My banks", "uk": "Мої банки", "be": "Мае банкі"}, "Накопления": {"en": "Savings", "uk": "Заощадження", "be": "Назапашванні"}, "Долги": {"en": "Debts", "uk": "Борги", "be": "Даўгі"}, "Подписки": {"en": "Subscriptions", "uk": "Підписки", "be": "Падпіскі"}, "Задачи и цели": {"en": "Tasks and goals", "uk": "Завдання та цілі", "be": "Задачы і мэты"}, "ИИ-ассистент": {"en": "AI assistant", "uk": "ШІ-помічник", "be": "ШІ-памочнік"}, "Оплата": {"en": "Payment", "uk": "Оплата", "be": "Аплата"}, "Настройки": {"en": "Settings", "uk": "Налаштування", "be": "Налады"}, "Валюта по умолчанию": {"en": "Default currency", "uk": "Типова валюта", "be": "Валюта па змаўчанні"}, "Тема": {"en": "Theme", "uk": "Тема", "be": "Тэма"}, "Язык": {"en": "Language", "uk": "Мова", "be": "Мова"}, "Акцентный цвет": {"en": "Accent color", "uk": "Акцентний колір", "be": "Акцэнтны колер"}, "Тёмная": {"en": "Dark", "uk": "Темна", "be": "Цёмная"}, "Светлая": {"en": "Light", "uk": "Світла", "be": "Светлая"}, "Океан": {"en": "Ocean", "uk": "Океан", "be": "Акіян"}, "Слива": {"en": "Plum", "uk": "Слива", "be": "Сліва"}, "Графит": {"en": "Graphite", "uk": "Графіт", "be": "Графіт"}, "Анализ доходов": {"en": "Income analysis", "uk": "Аналіз доходів", "be": "Аналіз даходаў"}, "Анализ расходов": {"en": "Expense analysis", "uk": "Аналіз витрат", "be": "Аналіз выдаткаў"}, "Мои накопления": {"en": "My savings", "uk": "Мої заощадження", "be": "Мае назапашванні"}, "Долги и кредиты": {"en": "Debts and loans", "uk": "Борги та кредити", "be": "Даўгі і крэдыты"}, "Регулярные платежи": {"en": "Recurring payments", "uk": "Регулярні платежі", "be": "Рэгулярныя плацяжы"}, "Текущий счёт": {"en": "Current account", "uk": "Поточний рахунок", "be": "Бягучы рахунак"}, "Основная цель": {"en": "Primary goal", "uk": "Основна мета", "be": "Асноўная мэта"}, "Сохранить": {"en": "Save", "uk": "Зберегти", "be": "Захаваць"}, "Отмена": {"en": "Cancel", "uk": "Скасувати", "be": "Скасаваць"}, "Финансовая аналитика": {"en": "Financial analytics", "uk": "Фінансова аналітика", "be": "Фінансавая аналітыка"}};
     function t(text) {
+      if (newLabels[text]?.[currentLang]) return newLabels[text][currentLang];
       return currentLang === "en" ? extraTranslations[text] || translations.en[text] || text : text;
     }
 
-    function appLocale() { return currentLang === "en" ? "en-US" : "ru-RU"; }
+    function appLocale() { return ({en:"en-US",uk:"uk-UA",be:"be-BY"})[currentLang] || "ru-RU"; }
 
     function monthLabel(month) {
       const value = new Date(2020, month, 1);
@@ -3646,7 +3939,7 @@
     for (let node = textWalker.nextNode(); node; node = textWalker.nextNode()) {
       const label = node.nodeValue.trim();
       if (!label || node.parentElement.closest("style, script") ||
-          !(Object.hasOwn(translations.en, label) || Object.hasOwn(extraTranslations, label))) continue;
+          !(Object.hasOwn(newLabels,label) || Object.hasOwn(translations.en, label) || Object.hasOwn(extraTranslations, label))) continue;
       staticText.push([node, label, node.nodeValue]);
     }
     const staticAttributes = [];
@@ -3658,7 +3951,7 @@
     }
 
     function applyLanguage(language, refreshAll = true) {
-      currentLang = language === "en" ? "en" : "ru";
+      currentLang = ["ru","en","uk","be"].includes(language) ? language : "ru";
       document.documentElement.lang = currentLang;
       localStorage.setItem("app_lang", currentLang);
       for (const [node, label, original] of staticText) node.nodeValue = original.replace(label, t(label));
@@ -3692,14 +3985,6 @@
           savedCurrencyBtn.classList.remove("secondary"); savedCurrencyBtn.classList.add("active");
         }
         
-        if (savedTheme === 'light') {
-          document.querySelector('[data-theme="light"]').classList.add('active');
-          document.querySelector('[data-theme="light"]').classList.remove('secondary');
-        } else {
-          document.querySelector('[data-theme="dark"]').classList.add('active');
-          document.querySelector('[data-theme="dark"]').classList.remove('secondary');
-        }
-
         applyLanguage(currentLang, false);
 
         const savedAccentBtn = document.querySelector(`[data-accent="${currentAccent}"]`);
