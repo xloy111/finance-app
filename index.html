@@ -873,8 +873,50 @@
 .account-info {min-width:0;align-items:center;}.account-info > div:last-child {min-width:0;overflow-wrap:anywhere;}
 @media(max-width:420px){.bank-mini-card{width:76px;height:48px}.account-stats-card{padding:16px}.current-account-card{min-height:120px}}
 
+
+.current-account-card {min-height:100px!important;padding:9px 11px;gap:3px;}
+.current-account-card > strong.sidebar-balance {font-size:20px;}
+#digestAccountSelect {background:var(--surface, #222);color:var(--text, #fff);border:1px solid var(--border, #777);border-radius:9px;padding:7px;}
+
+#confirmDialog { width:min(420px,calc(100vw - 32px)); max-width:420px!important; border:1px solid var(--border); border-radius:24px; background:var(--panel); color:var(--text); box-shadow:0 24px 90px #0007; }
+#confirmDialog::backdrop { background:#0008; backdrop-filter:blur(7px); }
+#confirmDialog .confirm-symbol { display:grid; place-items:center; width:60px; height:60px; margin:0 auto 16px; border-radius:20px; background:#ef44441a; color:#ef4444; }
+#confirmDialog .modal-actions { display:flex; gap:10px; } #confirmDialog .modal-actions button { flex:1; min-height:44px; } #confirmBtn { background:#c92f42; color:white; border-color:#c92f42; }
+#confirmDialog[open] .modal-inner { animation:confirmIn .24s cubic-bezier(.2,.8,.2,1) both; } @keyframes confirmIn { from {opacity:0;transform:translateY(10px) scale(.96)} to {opacity:1;transform:none} }
+#confirmDialog.closing { animation:confirmOut .16s ease both; } @keyframes confirmOut { to {opacity:0;transform:scale(.96)} }
+@media(prefers-reduced-motion:reduce){#confirmDialog,#confirmDialog .modal-inner{animation:none!important}}
+
+@media (max-width:760px) and (pointer:coarse) {
+#accountStatsDialog .modal-inner > .current-account-top {margin-bottom:10px;}
+#accountStatsDialog .modal-inner > .current-account-top > [data-close] {position:relative;top:-6px;z-index:2;}
+#expandedChartClose {position:relative;z-index:6;flex:0 0 44px;width:44px;height:44px;border:1px solid #ffffff55;border-radius:14px;background:#18212b;color:#fff;font-size:28px;line-height:1;box-shadow:0 3px 12px #0004;display:grid;place-items:center;cursor:pointer;}
+#expandedChartDialog {width:min(960px,100%);max-height:95dvh;overflow:auto;}
+#expandedChartDialog .expanded-head {display:flex;align-items:center;justify-content:space-between;gap:12px;position:sticky;top:0;background:var(--panel);z-index:2;padding:8px 0;}
+#expandedChartDialog h2 {margin:0;font-size:clamp(18px,4vw,26px);}
+#expandedChartSvg {width:100%;height:auto;display:block;overflow:visible;}
+#expandedChartSvg text {fill:var(--muted);font-size:11px;}
+#expandedChartValues {display:grid;grid-template-columns:repeat(auto-fit,minmax(125px,1fr));gap:8px;margin-top:14px;}
+#expandedChartValues > div {display:grid;gap:5px;padding:10px;border:1px solid var(--border);border-radius:12px;background:var(--panel-2);overflow-wrap:anywhere;}
+#expandedChartValues span {color:var(--muted);font-size:12px;}
+#expandedChartDialog[open] .modal-inner {animation:expandedChartIn .28s ease both;}
+@keyframes expandedChartIn {from{opacity:0;transform:translateY(12px) scale(.97)}to{opacity:1;transform:none}}
+#view-income .chart-wrap,#view-expenses .chart-wrap {touch-action:manipulation;}
+#expandedChartDialog{margin:auto 0 0;width:100%;max-height:calc(100dvh - 12px);} #expandedChartValues{grid-template-columns:repeat(2,minmax(0,1fr));}
+}
+@media(prefers-reduced-motion:reduce){#expandedChartDialog[open] .modal-inner{animation:none;}}
 </style>
 <base target="_blank">
+<style>
+#verifyEmailDialog { text-align:center; margin:auto; width:min(420px,calc(100% - 28px)); max-height:90dvh; border-radius:24px; }
+#verifyEmailDialog[open] { animation:verifyIn .35s cubic-bezier(.22,1,.36,1) both; }
+@keyframes verifyIn { from {opacity:0;transform:translateY(16px) scale(.96)} to {opacity:1;transform:none} }
+#verifyEmailDialog .verify-icon { display:grid;place-items:center;width:72px;height:72px;margin:0 auto 18px;border-radius:24px;background:color-mix(in srgb,var(--accent) 15%,var(--panel));color:var(--accent); }
+#verifyEmailDialog p { color:var(--muted);line-height:1.55;font-size:14px; }
+#verifyEmailDialog .verify-address { padding:14px;background:var(--panel-2);border:1px solid var(--border);border-radius:12px;overflow-wrap:anywhere;color:var(--accent); }
+#verifyEmailDialog button { width:100%;margin-top:10px;min-height:44px; }
+#verifyEmailDialog button:disabled { opacity:.5;cursor:default; }
+@media(prefers-reduced-motion:reduce){#verifyEmailDialog[open]{animation:none}}
+</style>
 </head>
 <body>
 <!-- Экран входа -->
@@ -916,6 +958,18 @@
         </div>
       </div>
 </div>
+
+<dialog class="modal" id="verifyEmailDialog" aria-labelledby="verifyEmailTitle">
+<div class="modal-inner">
+<div class="verify-icon"><svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="4" width="20" height="16" rx="3"/><path d="m3 6 9 7 9-7"/></svg></div>
+<h2 id="verifyEmailTitle">Подтвердите почту</h2>
+<p>Для завершения регистрации откройте письмо со ссылкой подтверждения.</p>
+<div class="verify-address" id="verifyEmailAddress"></div>
+<p>Перейдите по ссылке в письме, затем войдите в аккаунт. Проверьте папку «Спам», если письма нет.</p>
+<button class="button" type="button" id="verifyLogin">Перейти ко входу</button>
+<button class="button secondary" type="button" id="verifyResend">Отправить письмо повторно</button>
+<p id="verifyStatus" role="status" aria-live="polite"></p>
+</div></dialog>
 
   <div class="sidebar-overlay" id="sidebarOverlay" aria-hidden="true" onclick="closeMobileMenu(true)"></div>
 
@@ -1179,7 +1233,7 @@
             <button class="analytics-tab" data-analytics-tab="advice" type="button">Рекомендации</button>
           </div>
           <div id="analyticsPanel" aria-live="polite"></div>
-          <article class="card" style="margin-bottom:16px;"><h2 class="card-title" style="gap:10px;flex-wrap:wrap"><span>Финансовая сводка</span><button class="button secondary" type="button" id="refreshDigestButton" style="margin-left:auto;font-size:12px">Обновить анализ ИИ</button></h2><div id="digestContent"><div class="empty">ИИ автоматически подготовит три персональных совета на неделю.</div></div></article>
+          <article class="card" style="margin-bottom:16px;"><h2 class="card-title" style="gap:10px;flex-wrap:wrap"><span>Финансовая сводка</span><label style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;font-size:12px">Советы по счёту <select id="digestAccountSelect" aria-label="Счёт для советов ИИ" style="max-width:100%;min-width:130px"></select></label><button class="button secondary" type="button" id="refreshDigestButton" style="margin-left:auto;font-size:12px">Обновить анализ ИИ</button></h2><div id="digestContent"><div class="empty">ИИ автоматически подготовит три персональных совета на неделю.</div></div></article>
         </section>
 
 
@@ -1229,7 +1283,8 @@
   
   <dialog class="modal" id="deleteProfileDialog"><form class="modal-inner" id="deleteProfileForm"><h2>Удаление аккаунта</h2><p>Профиль и связанные данные будут удалены без возможности восстановления.</p><label class="field">Введите УДАЛИТЬ<input id="deleteProfileConfirm" required autocomplete="off"></label><label class="field">Текущий пароль<input id="deleteProfilePassword" type="password" autocomplete="current-password" required></label><p id="deleteProfileStatus" role="status"></p><div class="modal-actions"><button class="button secondary" type="button" id="deleteProfileCancel">Отмена</button><button class="button danger" type="submit" id="deleteProfileSubmit" disabled>Удалить навсегда</button></div></form></dialog>
   <!-- Добавление и редактирование банковского счёта -->
-  <dialog class="modal" id="accountStatsDialog" aria-labelledby="accountStatsTitle">
+  <dialog class="modal" id="expandedChartDialog" aria-labelledby="expandedChartTitle"><div class="modal-inner"><div class="expanded-head"><h2 id="expandedChartTitle"></h2><button type="button" id="expandedChartClose" aria-label="Закрыть" autofocus>×</button></div><svg id="expandedChartSvg" viewBox="0 0 360 220" role="img" aria-labelledby="expandedChartTitle"></svg><div id="expandedChartValues"></div></div></dialog>
+<dialog class="modal" id="accountStatsDialog" aria-labelledby="accountStatsTitle">
     <div class="modal-inner">
       <div class="current-account-top">
         <h2 id="accountStatsTitle">Статистика счёта</h2>
@@ -1302,7 +1357,7 @@
   <dialog class="modal" id="debtDialog"><form class="modal-inner" id="debtForm"><h2 id="debtDialogTitle">Добавить долг</h2><label class="field">Название<input id="debtName" required maxlength="50" placeholder="Например: Кредит / Друг Вася"></label><label class="field">Тип<select id="debtType"><option value="owe">Я должен</option><option value="owed">Мне должны</option></select></label><label class="field">Общая сумма<input id="debtTotal" type="number" min="0.01" step="0.01" required placeholder="50000"></label><label class="field">Уже выплачено<input id="debtPaid" type="number" min="0" step="0.01" value="0" required></label><div class="modal-actions"><button class="button secondary" type="button" data-close>Отмена</button><button class="button" type="submit">Сохранить</button></div></form></dialog>
   <dialog class="modal" id="payDebtDialog"><form class="modal-inner" id="payDebtForm"><h2 id="payDebtTitle">Погасить долг</h2><label class="field">Сумма к выплате<input id="payDebtAmount" type="number" min="0.01" step="0.01" required placeholder="500"></label><div class="modal-actions"><button class="button secondary" type="button" data-close>Отмена</button><button class="button" type="submit">Выплатить</button></div></form></dialog>
   <dialog class="modal" id="editAmountDialog"><form class="modal-inner" id="editAmountForm"><h2 id="editAmountTitle">Изменить сумму</h2><label class="field">Новое значение<input id="editAmountInput" type="number" min="0" step="0.01" required></label><div class="modal-actions"><button class="button secondary" type="button" data-close>Отмена</button><button class="button" type="submit">Сохранить</button></div></form></dialog>
-  <dialog class="modal" id="confirmDialog" style="max-width: 350px; text-align: center;"><div class="modal-inner"><h2 id="confirmTitle" style="margin-bottom: 10px; font-size: 18px;">Подтверждение</h2><p id="confirmText" style="color: var(--muted); margin-bottom: 20px; font-size: 14px;">Вы уверены?</p><div class="modal-actions" style="justify-content: center;"><button class="button secondary" type="button" onclick="closeConfirm()">Отмена</button><button class="button danger" type="button" id="confirmBtn">Удалить</button></div></div></dialog>
+  <dialog class="modal" id="confirmDialog" style="max-width: 350px; text-align: center;"><div class="modal-inner"><div class="confirm-symbol" aria-hidden="true"><svg width="27" height="27" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M3 6h18M9 6V3h6v3M5 6l1 15h12l1-15M10 10v7M14 10v7"/></svg></div><h2 id="confirmTitle" style="margin-bottom: 10px; font-size: 18px;">Подтверждение</h2><p id="confirmText" style="color: var(--muted); margin-bottom: 20px; font-size: 14px;">Вы уверены?</p><div class="modal-actions" style="justify-content: center;"><button class="button secondary" type="button" onclick="closeConfirm()">Отмена</button><button class="button danger" type="button" id="confirmBtn">Удалить</button></div></div></dialog>
   <dialog class="modal" id="forgotPasswordDialog"><form class="modal-inner" id="forgotPasswordForm"><h2>Восстановление пароля</h2><p style="color: var(--muted); font-size: 13px; margin-bottom: 15px;">Введите ваш Email, и мы отправим ссылку для сброса пароля.</p><label class="field">Email<input id="forgotEmail" type="email" required placeholder="example@mail.ru"></label><div class="modal-actions"><button class="button secondary" type="button" onclick="document.getElementById('forgotPasswordDialog').close()">Отмена</button><button class="button" type="submit">Отправить ссылку</button></div></form></dialog>
   <dialog class="modal" id="resetPasswordDialog"><form class="modal-inner" id="resetPasswordForm"><h2>Новый пароль</h2><p style="color: var(--muted); font-size: 13px; margin-bottom: 15px;">Придумайте новый пароль для вашего аккаунта.</p><label class="field">Новый пароль<input id="newPassword" type="password" required minlength="6" placeholder="Минимум 6 символов"></label><div class="modal-actions"><button class="button" type="submit">Сохранить пароль</button></div></form></dialog>
   <dialog class="modal" id="subDialog"><form class="modal-inner" id="subForm"><h2 id="subDialogTitle">Добавить подписку</h2><label class="field">Название<input id="subName" required maxlength="50" placeholder="Например: Яндекс Плюс"></label><label class="field">Сумма списания<input id="subAmount" type="number" min="0.01" step="0.01" required placeholder="399"></label><label class="field">Периодичность<select id="subFrequency"><option value="monthly">Каждый месяц</option><option value="yearly">1 раз ежегодно</option></select></label><label class="field">День списания<input id="subDay" type="number" min="1" max="31" required placeholder="15" value="1"></label><label class="field">За какой месяц<select id="subMonth"><option value="0">Январь</option><option value="1">Февраль</option><option value="2">Март</option><option value="3">Апрель</option><option value="4">Май</option><option value="5">Июнь</option><option value="6">Июль</option><option value="7">Август</option><option value="8">Сентябрь</option><option value="9">Октябрь</option><option value="10">Ноябрь</option><option value="11">Декабрь</option></select></label><div class="modal-actions"><button class="button secondary" type="button" data-close>Отмена</button><button class="button" type="submit">Сохранить</button></div></form></dialog>
@@ -1398,7 +1453,23 @@
     }
 
     // --- Сводка: точная арифметика на клиенте + необязательные советы от ИИ ---
-    let digestContent = null;
+    let digestScope = '';
+    let digestOwner = null;
+    function renderDigestSelector() {
+      const select = document.getElementById('digestAccountSelect');
+      if (!select) return;
+      const accounts = rootData.bankAccounts;
+      const scopes = accounts.map(a => 'account:' + String(a.id));
+      if (digestOwner !== userId || !scopes.includes(digestScope)) {
+        digestOwner = userId;
+        digestScope = scopes.find(x => x === 'account:' + activeAccountId) || scopes[0] || '';
+        digestAdvice = []; digestNotice = ''; digestLoading = false; ++digestRequestSerial;
+      }
+      select.replaceChildren(...accounts.map(a => new Option(`${t((BANK_META[a.provider] || BANK_META.other).name)} — ${accountName(a)}${a.last4 ? ' · ' + a.last4 : ''}`, 'account:' + String(a.id))));
+      if (!accounts.length) select.add(new Option('Добавьте банковский счёт', ''));
+      select.disabled = !accounts.length;
+      select.value = digestScope;
+    }
     let digestLoading = false;
     let digestAdvice = [];
     let digestNotice = '';
@@ -1431,6 +1502,7 @@
     function renderDigest() {
       const box = document.getElementById('digestContent');
       if (!box || !data) return;
+      renderDigestSelector();
       const snapshot = financialDigestSnapshot();
       const icon = kind => kind === 'bulb'
         ? '<path d="M9 18h6m-5 4h4m-5.5-7.5a6 6 0 1 1 7 0c-.9.7-1.5 1.7-1.5 3h-4c0-1.3-.6-2.3-1.5-3Z"/>'
@@ -1441,46 +1513,36 @@
       const warning = snapshot.undated ? `<div class="item-sub" style="margin-top:10px">Внимание: ${snapshot.undated} записей без точной даты не включены в расчёты. Для корректной сводки укажи даты операций.</div>` : '';
       const subs = data.expenses.some(isSubscriptionExpense) ? '<div class="item-sub" style="margin-top:7px">Регулярные подписки не включены в фактические расходы: для них нет подтверждённых дат списания.</div>' : '';
       const advice = digestAdvice.length ? `<h2 class="card-title" style="margin-top:15px">Советы ИИ</h2><div class="legend">${digestAdvice.map(a=>`<div class="legend-row" style="display:flex;align-items:flex-start;gap:9px">${svg('bulb')}<span>${escapeHtml(a)}</span></div>`).join('')}</div>` : '';
-      box.innerHTML = rows + top + warning + subs + advice + `<div class="item-sub" role="status" style="margin-top:12px">${escapeHtml(digestLoading ? 'ИИ анализирует данные...' : digestNotice || 'Итоги рассчитаны по датированным операциям. Советы ИИ сохраняются и могут обновляться вручную.')}</div>`;
+      box.innerHTML = rows + top + warning + subs + advice + `<div class="item-sub" role="status" style="margin-top:12px">${escapeHtml(digestLoading ? 'ИИ анализирует данные...' : digestNotice || (!digestScope ? 'Добавьте банковский счёт, чтобы получить советы ИИ.' : '') || 'Итоги рассчитаны по датированным операциям. Советы ИИ сохраняются и могут обновляться вручную.')}</div>`;
       const button = document.getElementById('refreshDigestButton');
-      if (button) button.disabled = digestLoading || data !== rootData;
+      if (button) button.disabled = digestLoading || !userId || !digestScope;
       if (document.getElementById('view-analytics')?.classList.contains('active')) { animateAnalyticsCounters(); animateSectionCards('analytics', document.getElementById('digestContent')); }
     }
     async function maybeGenerateDigest(revision, force = false) {
-      if (data !== rootData || !userId) return;
+      if (!userId) return;
+      renderDigestSelector();
+      if (!digestScope) { renderDigest(); return; }
+      const scope = digestScope;
       const request = ++digestRequestSerial;
       digestLoading = true;
       digestNotice = '';
       renderDigest();
       try {
         await saveQueue;
+        if (cloudSaveFailed) throw new Error("Cloud save failed");
         if (revision !== assistantRevision || request !== digestRequestSerial) return;
         const { data: { session } } = await window.supabase.auth.getSession();
         if (!session) throw new Error('Требуется вход в аккаунт');
-        if (!force) {
-          const { data: cached, error: cacheError } = await window.supabase.from('digests').select('digest,updated_at').eq('user_id',session.user.id).maybeSingle();
-          if (!cacheError && cached && new Date(cached.updated_at).getTime() > Date.now()-7*86400000 && Array.isArray(cached.digest?.advice) && cached.digest.advice.length === 3) {
-            digestAdvice = cached.digest.advice.slice(0,3).map(String);
-            digestLoading = false;
-            digestNotice = 'Советы ИИ из последней сохранённой сводки. Для актуализации нажми «Обновить анализ ИИ». При этом финансовые итоги всегда пересчитываются.';
-            renderDigest();
-            return;
-          }
-        }
-        const snapshot = financialDigestSnapshot();
         const { data: response, error } = await window.supabase.functions.invoke('ai-assistant', {
-          body: { mode:'digest', language:currentLang, force, summary: {
-            periods:snapshot.stats.map(p=>({period:p.key,income:p.income,expenses:p.expenses,difference:p.balance})),
-            topExpenses:snapshot.topExpenses, undatedEntries:snapshot.undated,
-            note:'Use only these dated transaction totals. Subscription charges without dates are excluded. Return short grounded advice.'
-          }}
+          body: { mode:'digest', language:currentLang, force, scope }
         });
-        if (error) throw error;
+        if (error) { let detail; try { detail = await error.context?.json(); } catch {} throw new Error(detail?.error || error.message); }
         if (revision !== assistantRevision || request !== digestRequestSerial) return;
+        if (response?.scope !== scope) throw new Error('Сервер не поддерживает выбранный счёт');
         const tips = response?.digest?.advice;
         if (!Array.isArray(tips) || tips.length !== 3) throw new Error('Сервер не вернул рекомендации в digest.advice');
         digestAdvice = tips.slice(0,3).map(String);
-        digestNotice = 'Советы получены от ИИ. Числовые итоги рассчитаны по операциям приложения.';
+        digestNotice = response.cached ? 'Сохранённые советы выбранного счёта. Можно обновить вручную.' : 'Советы ИИ по выбранному счёту. Итоги выше относятся к текущему счёту приложения.';
       } catch(e) {
         if (revision !== assistantRevision || request !== digestRequestSerial) return;
         digestNotice = 'Не удалось получить советы ИИ. Итоги операций доступны выше. ' + (e?.message || '');
@@ -1490,6 +1552,8 @@
       }
     }
     document.getElementById('refreshDigestButton').addEventListener('click',()=>maybeGenerateDigest(assistantRevision,true));
+
+    document.getElementById('digestAccountSelect').addEventListener('change', e => { digestScope = e.target.value; digestAdvice = []; digestNotice = ''; maybeGenerateDigest(assistantRevision, false); });
 
     let authMode = 'login';
 
@@ -1515,36 +1579,78 @@
         document.getElementById('auth-message').textContent = '';
     };
 
+    const verifyDialog = document.getElementById('verifyEmailDialog');
+    const verifyResend = document.getElementById('verifyResend');
+    const verifyStatus = document.getElementById('verifyStatus');
+    let verifyAddress = '', resendUntil = 0, resendTimer = null, resendBusy = false;
+    const resendDeadlines = new Map();
+    function updateResend() {
+      const seconds = Math.max(0, Math.ceil((resendUntil-Date.now())/1000));
+      verifyResend.disabled = resendBusy || seconds > 0;
+      verifyResend.textContent = resendBusy ? 'Отправляем…' : seconds ? `Повторить через ${seconds} сек.` : 'Отправить письмо повторно';
+    }
+    function showVerifyEmail(email, justRegistered) {
+      verifyAddress = email;
+      document.getElementById('verifyEmailAddress').textContent = email;
+      if (justRegistered) resendDeadlines.set(email, Date.now()+60000);
+      resendUntil = resendDeadlines.get(email) || 0;
+      verifyStatus.textContent = justRegistered ? 'Если адрес доступен для регистрации, письмо будет отправлено.' : 'Почта ещё не подтверждена.';
+      updateResend();
+      if (!verifyDialog.open) verifyDialog.showModal();
+      clearInterval(resendTimer); resendTimer = setInterval(updateResend, 1000);
+    }
+    verifyDialog.addEventListener('close', () => { clearInterval(resendTimer); switchAuthTab('login'); });
+    document.getElementById('verifyLogin').addEventListener('click', () => verifyDialog.close());
+    function authErrorText(error, mode) {
+      if (error?.status === 429 || ['over_email_send_rate_limit','over_request_rate_limit'].includes(error?.code)) return 'Слишком много запросов. Подождите и попробуйте снова.';
+      if (error?.code === 'weak_password') return 'Пароль слишком простой. Выберите более надёжный пароль.';
+      if (error?.code === 'email_address_invalid' || error?.code === 'validation_failed') return 'Проверьте адрес почты и пароль.';
+      return mode === 'login' ? 'Не удалось войти. Проверьте email и пароль.' : 'Не удалось создать аккаунт или отправить письмо. Попробуйте позже.';
+    }
+    verifyResend.addEventListener('click', async () => {
+      if (resendBusy || Date.now() < resendUntil) return;
+      const email = verifyAddress;
+      resendBusy = true; updateResend();
+      try {
+        const {error} = await window.supabase.auth.resend({type:'signup',email});
+        if (error) throw error;
+        resendUntil = Date.now()+60000; resendDeadlines.set(email,resendUntil);
+        verifyStatus.textContent = 'Запрос принят. Проверьте входящие и спам.';
+      } catch(error) {
+        verifyStatus.textContent = authErrorText(error,'register');
+        if (error?.status === 429) { resendUntil=Date.now()+60000; resendDeadlines.set(email,resendUntil); }
+      } finally { resendBusy=false; updateResend(); }
+    });
+    let authBusy = false;
     window.handleAuthAction = async function() {
-        const email = document.getElementById('auth-email').value;
-        const password = document.getElementById('auth-password').value;
-        const msg = document.getElementById('auth-message');
-        
-        if(!email || !password) {
-            msg.textContent = t("Заполни email и пароль");
-            return;
-        }
-
-        msg.textContent = t("Загрузка...");
-        
-        if (authMode === 'login') {
-            const { error } = await window.supabase.auth.signInWithPassword({ email, password });
-            if (error) {
-                msg.textContent = t("Не удалось войти. Проверь email и пароль.");
-            } else {
-                msg.textContent = '';
-                checkAuth();
-            }
+      if (authBusy) return;
+      const emailInput = document.getElementById('auth-email');
+      const passwordInput = document.getElementById('auth-password');
+      const email = emailInput.value.trim();
+      const password = passwordInput.value;
+      const msg = document.getElementById('auth-message');
+      const submit = document.getElementById('auth-submit-btn');
+      const tabs = [document.getElementById('tab-login'),document.getElementById('tab-register')];
+      const mode = authMode;
+      if (!email || !password || !emailInput.checkValidity()) { msg.textContent = 'Введите корректный email и пароль.'; return; }
+      authBusy=true; submit.disabled=true; tabs.forEach(tab=>tab.disabled=true);
+      msg.textContent=t('Загрузка...');
+      try {
+        if (mode === 'login') {
+          const {error} = await window.supabase.auth.signInWithPassword({email,password});
+          if (error) {
+            if (error.code === 'email_not_confirmed' || /email not confirmed/i.test(error.message || '')) { msg.textContent=''; showVerifyEmail(email,false); return; }
+            throw error;
+          }
+          msg.textContent=''; await checkAuth();
         } else {
-            const { error } = await window.supabase.auth.signUp({ email, password });
-            if (error) {
-                msg.textContent = t("Не удалось создать аккаунт.");
-            } else {
-                msg.textContent = '';
-                alert(t("Аккаунт создан! Теперь войдите."));
-                switchAuthTab('login');
-            }
+          const {data,error} = await window.supabase.auth.signUp({email,password});
+          if (error) throw error;
+          msg.textContent=''; passwordInput.value='';
+          if (data?.session) { await checkAuth(); } else { showVerifyEmail(email,true); }
         }
+      } catch(error) { msg.textContent=authErrorText(error,mode); }
+      finally { authBusy=false; submit.disabled=false; tabs.forEach(tab=>tab.disabled=false); }
     };
 
     window.openForgotPasswordDialog = function(trigger) {
@@ -1596,18 +1702,44 @@
 
     window.signOut = async function() {
         await saveQueue;
+        if (cloudSaveFailed && !window.confirm(currentLang === "en" ? "Unsaved changes. Sign out anyway?" : "Есть несохранённые изменения. Всё равно выйти?")) return;
         await window.supabase.auth.signOut();
         location.reload();
     };
 
     const $ = selector => document.querySelector(selector);
+    let cloudSaveFailed = false;
+    function cloudSaveNotice(failed) {
+      cloudSaveFailed = failed;
+      let notice = document.getElementById('cloudSaveNotice');
+      if (!notice && failed) {
+        notice = document.createElement('div');
+        notice.id = 'cloudSaveNotice';
+        notice.setAttribute('role', 'alert');
+        notice.style.cssText = 'position:fixed;top:12px;left:50%;transform:translateX(-50%);z-index:9999;width:min(92vw,480px);padding:14px;border-radius:12px;background:#7f1d1d;color:white;box-shadow:0 4px 20px #0005;font-size:14px';
+        const message = document.createElement('span');
+        message.textContent = currentLang === 'en' ? 'Cloud save failed. Do not close the app.' : 'Не удалось сохранить данные в облаке. Не закрывайте приложение.';
+        const retry = document.createElement('button');
+        retry.type = 'button';
+        retry.textContent = currentLang === 'en' ? 'Retry' : 'Повторить';
+        retry.style.cssText = 'margin-left:10px;padding:6px 10px;cursor:pointer';
+        retry.onclick = () => save();
+        notice.append(message, retry);
+        document.body.append(notice);
+      }
+      if (!failed) notice?.remove();
+    }
+    window.addEventListener('beforeunload', event => {
+      if (cloudSaveFailed) { event.preventDefault(); event.returnValue = ''; }
+    });
     function save() {
       if (!userId || deletingProfile) return;
       const snapshot = { id: userId, data: JSON.parse(JSON.stringify(rootData)) };
       saveQueue = saveQueue.then(async () => {
         const { error } = await window.supabase.from("user_data").upsert(snapshot);
         if (error) throw error;
-      }).catch(error => console.error("Ошибка сохранения в облако:", error));
+        cloudSaveNotice(false);
+      }).catch(() => cloudSaveNotice(true));
     }
 
     let deletingProfile = false;
@@ -1637,6 +1769,7 @@
       finally { pw.value=''; deletingProfile=false; updateDeleteButton(); }
     });
 
+    function safeChartColor(value) { return /^#[0-9a-f]{6}$/i.test(String(value)) ? String(value) : "#718096"; }
     function escapeHtml(value) { return String(value).replace(/[&<>"']/g, char => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#039;" })[char]); }
     
     const moneyFormats = new Map();
@@ -1651,7 +1784,7 @@
           minimumFractionDigits: digits, maximumFractionDigits: digits
         }));
       }
-      return `${moneyFormats.get(key).format(num)} ${currency}`;
+      return `${moneyFormats.get(key).format(num)} ${["₽", "€", "$"] .includes(currency) ? currency : "₽"}`;
     }
 
     function percent(current, target) { if (!Number(target) || target <= 0) return 0; return Math.min(100, Math.round((Number(current) / Number(target)) * 100)); }
@@ -2377,12 +2510,12 @@
         list.innerHTML = filteredExpenses.map(item => {
           const itemAmount = amountForItem(item);
           const share = total ? Math.round(itemAmount / total * 100) : 0;
-          return `<div class="list-item"><div class="item-info"><div class="item-name"><span class="dot" style="background:${item.color}"></span>${escapeHtml(expenseName(item))}</div><div class="item-sub"><span>${transactionDateLabel(item)} · ${share}% ${t("от всех трат")}</span><span class="amount">${money(itemAmount)}</span></div><div class="track"><div class="fill" style="width:${share}%;background:${item.color}"></div></div></div><div class="item-actions"><button class="icon-button" title="${t("Изменить расход")}" data-edit-expense="${item.id}">✎</button><button class="icon-button delete" data-delete-expense="${item.id}">×</button></div></div>`;
+          return `<div class="list-item"><div class="item-info"><div class="item-name"><span class="dot" style="background:${safeChartColor(item.color)}"></span>${escapeHtml(expenseName(item))}</div><div class="item-sub"><span>${transactionDateLabel(item)} · ${share}% ${t("от всех трат")}</span><span class="amount">${money(itemAmount)}</span></div><div class="track"><div class="fill" style="width:${share}%;background:${safeChartColor(item.color)}"></div></div></div><div class="item-actions"><button class="icon-button" title="${t("Изменить расход")}" data-edit-expense="${escapeHtml(item.id)}">✎</button><button class="icon-button delete" data-delete-expense="${escapeHtml(item.id)}">×</button></div></div>`;
         }).join("");
       }
-      $("#expenseLegend").innerHTML = filteredExpenses.map(item => `<div class="legend-row"><span class="dot" style="background:${item.color}"></span><span>${escapeHtml(expenseName(item))}</span><span class="legend-value">${money(amountForItem(item))}</span></div>`).join("") || `<div class="empty">${t("Нет данных.")}</div>`;
+      $("#expenseLegend").innerHTML = filteredExpenses.map(item => `<div class="legend-row"><span class="dot" style="background:${safeChartColor(item.color)}"></span><span>${escapeHtml(expenseName(item))}</span><span class="legend-value">${money(amountForItem(item))}</span></div>`).join("") || `<div class="empty">${t("Нет данных.")}</div>`;
       const stops = []; let cursor = 0;
-      filteredExpenses.forEach(item => { const share = total ? amountForItem(item) / total * 100 : 0; stops.push(`${item.color} ${cursor}% ${cursor + share}%`); cursor += share; });
+      filteredExpenses.forEach(item => { const share = total ? amountForItem(item) / total * 100 : 0; stops.push(`${safeChartColor(item.color)} ${cursor}% ${cursor + share}%`); cursor += share; });
       $("#expenseDonut").style.background = stops.length ? `conic-gradient(${stops.join(",")})` : "#203328";
       list.querySelectorAll("[data-edit-expense]").forEach(button => {
         button.addEventListener("click", () => openExpenseDialog(Number(button.dataset.editExpense), button));
@@ -2472,12 +2605,12 @@
       if (!filteredIncomes.length) { list.innerHTML = `<div class="empty">${t("Доходов за этот период нет.")}</div>`; } else {
         list.innerHTML = filteredIncomes.map(item => {
           const share = total ? Math.round(item.amount / total * 100) : 0;
-          return `<div class="list-item income-item"><div class="item-info"><div class="item-name"><span class="dot" style="background:${escapeHtml(item.color)};color:${escapeHtml(item.color)}"></span>${escapeHtml(item.name)}</div><div class="item-sub"><span>${transactionDateLabel(item)} · ${share}% ${t("от общего дохода")}</span><span class="amount">${money(item.amount)}</span></div><div class="track"><div class="fill" style="width:${share}%;background:${escapeHtml(item.color)}"></div></div></div><div class="item-actions"><button class="icon-button" title="Изменить" data-edit-income="${item.id}">✎</button><button class="icon-button delete" title="${t("Удалить")}" data-delete-income="${item.id}">×</button></div></div>`;
+          return `<div class="list-item income-item"><div class="item-info"><div class="item-name"><span class="dot" style="background:${safeChartColor(item.color)};color:${safeChartColor(item.color)}"></span>${escapeHtml(item.name)}</div><div class="item-sub"><span>${transactionDateLabel(item)} · ${share}% ${t("от общего дохода")}</span><span class="amount">${money(item.amount)}</span></div><div class="track"><div class="fill" style="width:${share}%;background:${safeChartColor(item.color)}"></div></div></div><div class="item-actions"><button class="icon-button" title="Изменить" data-edit-income="${escapeHtml(item.id)}">✎</button><button class="icon-button delete" title="${t("Удалить")}" data-delete-income="${escapeHtml(item.id)}">×</button></div></div>`;
         }).join("");
       }
-      $("#incomeLegend").innerHTML = filteredIncomes.map(item => `<div class="legend-row"><span class="dot" style="background:${escapeHtml(item.color)};color:${escapeHtml(item.color)}"></span><span>${escapeHtml(item.name)}</span><span class="legend-value">${money(item.amount)}</span></div>`).join("") || `<div class="empty">${t("Нет данных для диаграммы.")}</div>`;
+      $("#incomeLegend").innerHTML = filteredIncomes.map(item => `<div class="legend-row"><span class="dot" style="background:${safeChartColor(item.color)};color:${safeChartColor(item.color)}"></span><span>${escapeHtml(item.name)}</span><span class="legend-value">${money(item.amount)}</span></div>`).join("") || `<div class="empty">${t("Нет данных для диаграммы.")}</div>`;
       const stops = []; let cursor = 0;
-      filteredIncomes.forEach(item => { const share = total ? item.amount / total * 100 : 0; stops.push(`${item.color} ${cursor}% ${cursor + share}%`); cursor += share; });
+      filteredIncomes.forEach(item => { const share = total ? item.amount / total * 100 : 0; stops.push(`${safeChartColor(item.color)} ${cursor}% ${cursor + share}%`); cursor += share; });
       $("#incomeDonut").style.background = stops.length ? `conic-gradient(${stops.join(",")})` : "#203328";
       list.querySelectorAll("[data-edit-income]").forEach(button => { button.addEventListener("click", () => openIncomeDialog(Number(button.dataset.editIncome), button)); });
       list.querySelectorAll("[data-delete-income]").forEach(button => { 
@@ -2627,7 +2760,7 @@
       $("#nearestGoal").textContent = nearest ? nearest.name : t("Все выполнены");
       const list = $("#savingsList");
       if (!data.savings.length) { list.innerHTML = `<div class="empty">${t("Целей накопления пока нет.")}</div>`; return; }
-      list.innerHTML = data.savings.map(item => `<div class="list-item"><div class="item-info"><div class="item-name">${escapeHtml(item.name)}</div>${progressMarkup(item.current, item.target)}</div><div class="item-actions"><button class="icon-button" title="${t("Изменить результат")}" data-saving-result="${item.id}">↗</button><button class="icon-button" title="${t("Изменить цель")}" data-saving-edit="${item.id}">✎</button><button class="icon-button delete" title="${t("Удалить")}" data-saving-delete="${item.id}">×</button></div></div>`).join("");
+      list.innerHTML = data.savings.map(item => `<div class="list-item"><div class="item-info"><div class="item-name">${escapeHtml(item.name)}</div>${progressMarkup(item.current, item.target)}</div><div class="item-actions"><button class="icon-button" title="${t("Изменить результат")}" data-saving-result="${escapeHtml(item.id)}">↗</button><button class="icon-button" title="${t("Изменить цель")}" data-saving-edit="${escapeHtml(item.id)}">✎</button><button class="icon-button delete" title="${t("Удалить")}" data-saving-delete="${escapeHtml(item.id)}">×</button></div></div>`).join("");
       list.querySelectorAll("[data-saving-result]").forEach(button => { button.addEventListener("click", () => updateAmount('savings', Number(button.dataset.savingResult), button)); });
       list.querySelectorAll("[data-saving-edit]").forEach(button => { button.addEventListener("click", () => openGoalDialog("saving", Number(button.dataset.savingEdit), button)); });
       list.querySelectorAll("[data-saving-delete]").forEach(button => { 
@@ -2667,8 +2800,8 @@
                 <div class="track"><div class="fill" style="width:${p}%; background:${isOwe ? 'var(--red)' : 'var(--accent)'}"></div></div>
               </div>
               <div class="item-actions">
-                <button class="icon-button" title="${t("Погасить часть")}" data-debt-pay="${debt.id}">₽</button>
-                <button class="icon-button delete" title="${t("Удалить")}" data-debt-delete="${debt.id}">×</button>
+                <button class="icon-button" title="${t("Погасить часть")}" data-debt-pay="${escapeHtml(debt.id)}">₽</button>
+                <button class="icon-button delete" title="${t("Удалить")}" data-debt-delete="${escapeHtml(debt.id)}">×</button>
               </div>
             </div>
           `;
@@ -2710,7 +2843,7 @@
         list.innerHTML = `<div class="empty">${t("Подписок пока нет. Добавь первую!")}</div>`;
       } else {
         list.innerHTML = data.subscriptions.map(sub => {
-          const monthName = document.querySelector(`#subMonth option[value="${sub.month}"]`)?.textContent || '';
+          const monthName = document.querySelector(`#subMonth option[value="${Number(sub.month)}"]`)?.textContent || '';
           const frequency = sub.frequency || "monthly";
           const frequencyLabel = frequency === "yearly" ? "1 раз ежегодно" : t("Каждый месяц");
           return `
@@ -2718,13 +2851,13 @@
               <div class="item-info">
                 <div class="item-name">${escapeHtml(sub.name)}</div>
                 <div class="item-sub">
-                  <span>${frequencyLabel} • ${currentLang === "en" ? `Day ${sub.day}` : `${sub.day}-го числа`} • ${monthName}</span>
+                  <span>${frequencyLabel} • ${currentLang === "en" ? `Day ${escapeHtml(sub.day)}` : `${escapeHtml(sub.day)}-го числа`} • ${escapeHtml(monthName)}</span>
                   <span class="amount">${money(sub.amount)} ${t(frequency === "yearly" ? "/ год" : "/ мес")}</span>
                 </div>
               </div>
               <div class="item-actions">
-                <button class="icon-button" title="${t("Изменить подписку")}" data-sub-edit="${sub.id}">✎</button>
-                <button class="icon-button delete" title="${t("Удалить")}" data-sub-delete="${sub.id}">×</button>
+                <button class="icon-button" title="${t("Изменить подписку")}" data-sub-edit="${escapeHtml(sub.id)}">✎</button>
+                <button class="icon-button delete" title="${t("Удалить")}" data-sub-delete="${escapeHtml(sub.id)}">×</button>
               </div>
             </div>
           `;
@@ -2773,7 +2906,7 @@
     function renderGoals() {
       const list = $("#goalsList");
       if (!data.goals.length) { list.innerHTML = `<div class="empty">${t("Других целей пока нет.")}</div>`; } else {
-        list.innerHTML = data.goals.map(goal => `<div class="list-item"><div class="item-info"><div class="item-name">${escapeHtml(goal.name)}</div>${progressMarkup(goal.current, goal.target, `${goal.current} ${t(goal.unit || "")} ${t("из")} ${goal.target} ${t(goal.unit || "")}`)}</div><div class="item-actions"><button class="icon-button" title="${t("Изменить результат")}" data-goal-result="${goal.id}">↗</button><button class="icon-button" title="${t("Сделать основной")}" data-make-primary="${goal.id}">★</button><button class="icon-button delete" title="${t("Удалить")}" data-goal-delete="${goal.id}">×</button></div></div>`).join("");
+        list.innerHTML = data.goals.map(goal => `<div class="list-item"><div class="item-info"><div class="item-name">${escapeHtml(goal.name)}</div>${progressMarkup(goal.current, goal.target, `${goal.current} ${t(goal.unit || "")} ${t("из")} ${goal.target} ${t(goal.unit || "")}`)}</div><div class="item-actions"><button class="icon-button" title="${t("Изменить результат")}" data-goal-result="${escapeHtml(goal.id)}">↗</button><button class="icon-button" title="${t("Сделать основной")}" data-make-primary="${escapeHtml(goal.id)}">★</button><button class="icon-button delete" title="${t("Удалить")}" data-goal-delete="${escapeHtml(goal.id)}">×</button></div></div>`).join("");
       }
       list.querySelectorAll("[data-goal-result]").forEach(button => { button.addEventListener("click", () => updateAmount('goals', Number(button.dataset.goalResult), button)); });
       list.querySelectorAll("[data-make-primary]").forEach(button => { button.addEventListener("click", () => { const goal = data.goals.find(item => item.id === Number(button.dataset.makePrimary)); if (!goal) return; data.primaryGoal = { name: goal.name, current: Number(goal.current), target: Number(goal.target) }; data.goals = data.goals.filter(item => item.id !== goal.id); update(); }); });
@@ -2791,7 +2924,7 @@
     function renderTasks() {
       const list = $("#tasksList");
       if (!data.tasks.length) { list.innerHTML = `<div class="empty">${t("Задач пока нет. Добавь первую!")}</div>`; return; }
-      list.innerHTML = data.tasks.map(task => `<label class="list-item task-item ${task.done ? "done" : ""}"><input type="checkbox" data-task-check="${task.id}" ${task.done ? "checked" : ""}><span class="task-text">${escapeHtml(task.text)}</span><button class="icon-button delete" type="button" title="${t("Удалить")}" data-task-delete="${task.id}">×</button></label>`).join("");
+      list.innerHTML = data.tasks.map(task => `<label class="list-item task-item ${task.done ? "done" : ""}"><input type="checkbox" data-task-check="${escapeHtml(task.id)}" ${task.done ? "checked" : ""}><span class="task-text">${escapeHtml(task.text)}</span><button class="icon-button delete" type="button" title="${t("Удалить")}" data-task-delete="${escapeHtml(task.id)}">×</button></label>`).join("");
       list.querySelectorAll("[data-task-check]").forEach(input => { input.addEventListener("change", () => { const task = data.tasks.find(item => item.id === Number(input.dataset.taskCheck)); if (task) task.done = input.checked; update(); }); });
       list.querySelectorAll("[data-task-delete]").forEach(button => { 
         button.addEventListener("click", event => { 
@@ -3465,10 +3598,15 @@
       showActionDialog($("#confirmDialog"), trigger);
     };
     window.closeConfirm = function() {
-      document.getElementById('confirmDialog').close();
+      const dialog = document.getElementById('confirmDialog');
       window.confirmCallback = null;
+      if (!dialog.open || dialog.classList.contains('closing')) return;
+      if (matchMedia('(prefers-reduced-motion: reduce)').matches) { dialog.close(); return; }
+      dialog.classList.add('closing');
+      setTimeout(() => { dialog.classList.remove('closing'); if(dialog.open) dialog.close(); }, 160);
     };
     document.getElementById('confirmBtn').addEventListener('click', () => {
+      if (document.getElementById('confirmDialog').classList.contains('closing')) return;
       if (window.confirmCallback) window.confirmCallback();
       window.closeConfirm();
     });
@@ -3574,13 +3712,14 @@
       const available = data === rootData;
       setChatStatus(available ? '' : 'ИИ-ассистент доступен только для первого счёта.');
       digestLoading = false;
+      digestScope = activeAccountId ? 'account:' + activeAccountId : '';
       digestAdvice = []; digestNotice = ""; ++digestRequestSerial; renderDigest();
       if (available && userId) {
         loadConversations();
         // Показываем итоги сразу; советы загружаем из кеша либо создаём раз в 7 дней.
         renderDigest();
-        maybeGenerateDigest(assistantRevision, false);
       }
+      if (userId) maybeGenerateDigest(assistantRevision, false);
     }
     newChatButton.addEventListener('click', () => {
       if (chatBusy) return;
@@ -3593,11 +3732,17 @@
     });
     deleteChatButton.addEventListener('click', async () => {
       if (!activeConversationId || chatBusy) return;
-      if (!confirm('Удалить этот диалог и все его сообщения без возможности восстановления?')) return;
+      const targetId = activeConversationId, owner = userId, revision = assistantRevision;
+      const accepted = await new Promise(resolve => {
+        const dialog = document.getElementById('confirmDialog');
+        dialog.addEventListener('close', () => resolve(false), {once:true});
+        window.showConfirm('Удалить чат?', 'Диалог и все его сообщения будут удалены без возможности восстановления.', () => resolve(true), deleteChatButton);
+      });
+      if (!accepted || targetId !== activeConversationId || owner !== userId || revision !== assistantRevision || chatBusy) return;
       setChatBusy(true);
       try {
         const { error } = await window.supabase.from('ai_conversations')
-          .delete().eq('id', activeConversationId).eq('user_id', userId);
+          .delete().eq('id', targetId).eq('user_id', owner);
         if (error) throw error;
         activeConversationId = null; chatHistory = [];
         await loadConversations();
@@ -3629,6 +3774,7 @@
         chatInput.value = ''; drawChat();
         setChatStatus('ИИ думает...');
         await saveQueue;
+        if (cloudSaveFailed) throw new Error("Cloud save failed");
         if (revision !== assistantRevision) return;
         // Последние 10 сообщений ограничивают стоимость и дают модели контекст диалога.
         const context = chatHistory.slice(-10).map(m =>
@@ -3993,6 +4139,59 @@
           savedAccentBtn.classList.remove("secondary"); savedAccentBtn.classList.add("active");
         }
     });
+
+    (() => {
+      const mobile = window.matchMedia('(max-width:760px) and (pointer:coarse)');
+      const dialog = document.getElementById('expandedChartDialog');
+      const svg = document.getElementById('expandedChartSvg');
+      const values = document.getElementById('expandedChartValues');
+      const ns = 'http://www.w3.org/2000/svg';
+      function element(tag, attrs, text) {
+        const el = document.createElementNS(ns, tag);
+        for (const [k,v] of Object.entries(attrs)) el.setAttribute(k,String(v));
+        if (text !== undefined) el.textContent = text;
+        svg.append(el); return el;
+      }
+      function openChart(kind) {
+        if (!mobile.matches || dialog.open) return;
+        const income = kind === 'income';
+        const totals = buildMonthlySeries(income ? data.incomes : data.expenses, kind);
+        const color = income ? 'var(--accent)' : 'var(--red)';
+        const max = Math.max(1,...totals)*1.15;
+        const x = i => 48+i*27.3, y = v => 176-v/max*150;
+        const months = chartMonths();
+        document.getElementById('expandedChartTitle').textContent = currentLang === 'en' ? (income?'Annual income':'Annual expenses') : (income?'Доходы за год':'Расходы за год');
+        svg.replaceChildren(); values.replaceChildren();
+        const fmt = new Intl.NumberFormat(appLocale(),{notation:'compact',maximumFractionDigits:1});
+        for(let i=0;i<=3;i++) { const v=max*i/3; element('line',{x1:48,x2:348,y1:y(v),y2:y(v),stroke:'var(--border)'}); element('text',{x:43,y:y(v)+4,'text-anchor':'end'},fmt.format(v)); }
+        const points=totals.map((v,i)=>`${x(i)},${y(v)}`).join(' ');
+        element('polygon',{points:`48,176 ${points} 348.3,176`,fill:color,opacity:.12});
+        element('polyline',{points,fill:'none',stroke:color,'stroke-width':2.5,'stroke-linejoin':'round','stroke-linecap':'round'});
+        totals.forEach((v,i)=>{
+          element('circle',{cx:x(i),cy:y(v),r:3,fill:color});
+          element('text',{x:x(i),y:192,transform:`rotate(-55 ${x(i)} 192)`,'text-anchor':'end'},months[i]);
+          const cell=document.createElement('div'), label=document.createElement('span'), amount=document.createElement('strong');
+          label.textContent=monthLabel(i); amount.textContent=money(v); cell.append(label,amount); values.append(cell);
+        });
+        dialog.showModal();
+      }
+      mobile.addEventListener('change',()=>{if(!mobile.matches && dialog.open)dialog.close();});
+      document.getElementById('expandedChartClose').addEventListener('click',()=>dialog.close());
+      dialog.addEventListener('click',e=>{if(e.target===dialog){const r=dialog.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)dialog.close();}});
+      for(const [id,kind] of [['view-income','income'],['view-expenses','expense']]) {
+        const wrap=document.querySelector(`#${id} .chart-wrap`); if(!wrap)continue;
+        let start=null,last=null;
+        wrap.addEventListener('pointerdown',e=>{if(mobile.matches && e.pointerType==='touch' && e.isPrimary)start={x:e.clientX,y:e.clientY,id:e.pointerId};});
+        wrap.addEventListener('pointercancel',()=>{start=null;last=null;});
+        wrap.addEventListener('pointerup',e=>{
+          if(!mobile.matches||e.pointerType!=='touch'||!start||start.id!==e.pointerId){start=null;last=null;return;}
+          const moved=Math.hypot(e.clientX-start.x,e.clientY-start.y);start=null;
+          if(moved>12){last=null;return;}
+          const now=performance.now();
+          if(last&&now-last.time<350&&Math.hypot(e.clientX-last.x,e.clientY-last.y)<32){last=null;openChart(kind);}else last={time:now,x:e.clientX,y:e.clientY};
+        });
+      }
+    })();
     checkAuth();
     if ('serviceWorker' in navigator) { navigator.serviceWorker.register('sw.js').catch(error => console.warn('Service worker:', error)); }
  </script>
